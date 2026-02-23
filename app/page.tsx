@@ -1,65 +1,285 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Camera,
+  Shield,
+  MessageCircle,
+  Bell,
+  ChevronRight,
+  Mail,
+  Sparkles,
+  Heart,
+} from "lucide-react";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-dvh bg-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b">
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-4 h-14">
+          <span className="text-xl font-bold text-[#2C4A7C]">Fumuly</span>
+          <div className="flex items-center gap-2">
+            <Link href="/login">
+              <Button variant="ghost" size="sm" className="text-[#2C4A7C]">
+                ログイン
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button
+                size="sm"
+                className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white"
+              >
+                無料で始める
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F8FA] to-white">
+        <div className="max-w-4xl mx-auto px-4 pt-16 pb-20 text-center">
+          <div className="inline-flex items-center gap-1.5 bg-[#2C4A7C]/10 text-[#2C4A7C] rounded-full px-3 py-1 text-sm font-medium mb-6">
+            <Sparkles className="h-3.5 w-3.5" />
+            ADHDの人のために作られたアプリ
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#2D2D2D] leading-tight">
+            封筒、無理ー！
+            <br />
+            <span className="text-[#2C4A7C]">を解決する。</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-4 text-[#757575] text-base sm:text-lg max-w-md mx-auto leading-relaxed">
+            写真を撮るだけでAIが書類を読んで整理。
+            <br />
+            督促も、年金も、何をすべきか教えてくれる。
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link href="/register">
+              <Button
+                size="lg"
+                className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white text-base px-8 h-12 rounded-full shadow-lg"
+              >
+                無料で始める
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+            <p className="text-xs text-[#ABABAB]">
+              クレジットカード不要・1分で登録
+            </p>
+          </div>
+
+          {/* Phone mockup area */}
+          <div className="mt-12 mx-auto max-w-xs">
+            <div className="bg-[#F7F8FA] rounded-3xl border-2 border-[#E5E7EB] p-4 shadow-xl">
+              <div className="space-y-3">
+                {/* Mock urgent card */}
+                <div className="bg-[#FDF0F0] rounded-xl p-3 text-left border border-[#E05252]/20">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="bg-[#E05252] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      緊急対応
+                    </span>
+                  </div>
+                  <p className="font-bold text-sm text-[#2D2D2D]">
+                    八王子市 徴収課
+                  </p>
+                  <p className="text-xs text-[#757575]">差押調書（謄本）</p>
+                  <p className="text-xs text-[#2C4A7C] mt-1 bg-white/60 rounded px-2 py-1">
+                    💡 市役所の窓口で分割納付の相談ができます
+                  </p>
+                </div>
+                {/* Mock action card */}
+                <div className="bg-[#FDF8EC] rounded-xl p-3 text-left border border-[#F0A500]/20">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="bg-[#F0A500] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      要対応
+                    </span>
+                  </div>
+                  <p className="font-bold text-sm text-[#2D2D2D]">JASSO</p>
+                  <p className="text-xs text-[#757575]">奨学金返還の督促</p>
+                  <p className="text-xs text-[#2C4A7C] mt-1 bg-white/60 rounded px-2 py-1">
+                    💡 Webから猶予申請が可能です
+                  </p>
+                </div>
+                {/* Mock keep card */}
+                <div className="bg-[#F0F8F3] rounded-xl p-3 text-left border border-[#52A06E]/20">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="bg-[#52A06E] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      保管
+                    </span>
+                  </div>
+                  <p className="font-bold text-sm text-[#2D2D2D]">日本年金機構</p>
+                  <p className="text-xs text-[#757575]">被保険者資格通知</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-[#2D2D2D] mb-12">
+            使い方は、たったの3ステップ
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-[#F4845F]/10 rounded-2xl flex items-center justify-center mb-4">
+                <Camera className="h-7 w-7 text-[#F4845F]" />
+              </div>
+              <div className="text-sm font-bold text-[#F4845F] mb-1">
+                Step 1
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">写真を撮る</h3>
+              <p className="text-sm text-[#757575]">
+                封筒の中身をスマホで撮影。
+                <br />
+                開封するだけでOK。
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-[#2C4A7C]/10 rounded-2xl flex items-center justify-center mb-4">
+                <Sparkles className="h-7 w-7 text-[#2C4A7C]" />
+              </div>
+              <div className="text-sm font-bold text-[#2C4A7C] mb-1">
+                Step 2
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">AIが読む</h3>
+              <p className="text-sm text-[#757575]">
+                送付元、金額、期限を自動抽出。
+                <br />
+                緊急度を色で表示。
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-[#52A06E]/10 rounded-2xl flex items-center justify-center mb-4">
+                <MessageCircle className="h-7 w-7 text-[#52A06E]" />
+              </div>
+              <div className="text-sm font-bold text-[#52A06E] mb-1">
+                Step 3
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">相談する</h3>
+              <p className="text-sm text-[#757575]">
+                「これどうすれば？」をAIに相談。
+                <br />
+                電話なしの対処法を案内。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-16 px-4 bg-[#F7F8FA]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-[#2D2D2D] mb-12">
+            Fumulyがあなたを守る
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl p-5 shadow-sm">
+              <div className="w-10 h-10 bg-[#E05252]/10 rounded-xl flex items-center justify-center mb-3">
+                <Bell className="h-5 w-5 text-[#E05252]" />
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">
+                期限を見逃さない
+              </h3>
+              <p className="text-sm text-[#757575]">
+                差押や督促など、緊急の書類を自動で最優先表示。
+                期限が近づくとリマインドします。
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-5 shadow-sm">
+              <div className="w-10 h-10 bg-[#2C4A7C]/10 rounded-xl flex items-center justify-center mb-3">
+                <Shield className="h-5 w-5 text-[#2C4A7C]" />
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">
+                電話しなくていい
+              </h3>
+              <p className="text-sm text-[#757575]">
+                Web申請、コンビニ払い、郵送など
+                電話不要の対処法を優先的にご案内。
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-5 shadow-sm">
+              <div className="w-10 h-10 bg-[#F0A500]/10 rounded-xl flex items-center justify-center mb-3">
+                <Heart className="h-5 w-5 text-[#F0A500]" />
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">
+                あなたの状況を理解する
+              </h3>
+              <p className="text-sm text-[#757575]">
+                収入、借金、ADHDの特性を踏まえて、
+                あなたに合ったアドバイスを提供。
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-5 shadow-sm">
+              <div className="w-10 h-10 bg-[#52A06E]/10 rounded-xl flex items-center justify-center mb-3">
+                <Mail className="h-5 w-5 text-[#52A06E]" />
+              </div>
+              <h3 className="font-bold text-[#2D2D2D] mb-1">
+                「読まなくていい」も教える
+              </h3>
+              <p className="text-sm text-[#757575]">
+                DMや広告は「無視OK」と明確に判定。
+                大事な書類だけに集中できます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial / Story */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-xl mx-auto text-center">
+          <p className="text-lg text-[#2D2D2D] leading-relaxed">
+            「机の上の封筒、何日も開けてなかった。
+            <br />
+            <span className="text-[#E05252] font-bold">
+              差押の通知
+            </span>
+            が混ざってたなんて知らなかった」
+          </p>
+          <p className="mt-4 text-sm text-[#757575]">
+            ── そんな経験から生まれたアプリです。
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 px-4 bg-[#2C4A7C] text-white text-center">
+        <h2 className="text-2xl font-bold mb-3">
+          封筒を開けるのは、あなた。
+          <br />
+          中身を読むのは、Fumuly。
+        </h2>
+        <p className="text-white/70 mb-8 text-sm">
+          まずは1通、写真を撮ってみてください。
+        </p>
+        <Link href="/register">
+          <Button
+            size="lg"
+            className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white text-base px-8 h-12 rounded-full shadow-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            無料で始める
+            <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-4 bg-[#F7F8FA] text-center">
+        <p className="text-sm text-[#757575]">
+          © 2026 Fumuly. All rights reserved.
+        </p>
+        <div className="mt-2 flex items-center justify-center gap-4 text-xs text-[#ABABAB]">
+          <Link href="/privacy" className="hover:text-[#757575]">
+            プライバシーポリシー
+          </Link>
+          <Link href="/terms" className="hover:text-[#757575]">
+            利用規約
+          </Link>
         </div>
-      </main>
+      </footer>
     </div>
   );
 }
