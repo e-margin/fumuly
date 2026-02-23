@@ -108,5 +108,7 @@ export async function analyzeDocument(
 
   const data = await response.json();
   const text = data.content[0].text;
-  return JSON.parse(text) as AnalysisResult;
+  // Claude sometimes wraps JSON in ```json ... ``` markdown blocks
+  const cleaned = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+  return JSON.parse(cleaned) as AnalysisResult;
 }
