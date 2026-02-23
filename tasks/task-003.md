@@ -15,7 +15,7 @@ estimated_hours: 1
 プライバシーポリシー・利用規約・特商法に記載の `contact@fumuly.com` でメールを受信できるようにする。
 
 ## 実装手順
-1. Cloudflareにドメイン追加（fumuly.appまたはfumuly.com）
+1. Cloudflareにドメイン追加（fumuly.com）
 2. Email Routing を有効化
 3. `contact@fumuly.com` → 個人メールアドレスへの転送ルール作成
 4. DNS MXレコードの設定
