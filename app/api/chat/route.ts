@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6-20250514",
+        model: "claude-sonnet-4-5-20241022",
         max_tokens: 1000,
         system: CHAT_SYSTEM_PROMPT + userContext + recentDocuments,
         messages,
