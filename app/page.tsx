@@ -37,7 +37,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F8FA] to-white">
+      <section className="relative overflow-hidden bg-linear-to-b from-background to-white">
         <div className="max-w-4xl mx-auto px-4 pt-16 pb-20 text-center">
           <div className="inline-flex items-center gap-1.5 bg-[#2C4A7C]/10 text-[#2C4A7C] rounded-full px-3 py-1 text-sm font-medium mb-6">
             <Sparkles className="h-3.5 w-3.5" />
@@ -63,7 +63,7 @@ export default function LandingPage() {
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
-            <p className="text-xs text-[#ABABAB]">
+            <p className="text-xs text-ignore">
               クレジットカード不要・1分で登録
             </p>
           </div>
@@ -73,9 +73,9 @@ export default function LandingPage() {
             <div className="bg-[#F7F8FA] rounded-3xl border-2 border-[#E5E7EB] p-4 shadow-xl">
               <div className="space-y-3">
                 {/* Mock urgent card */}
-                <div className="bg-[#FDF0F0] rounded-xl p-3 text-left border border-[#E05252]/20">
+                <div className="bg-urgent-bg rounded-xl p-3 text-left border border-urgent/20">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="bg-[#E05252] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    <span className="bg-urgent text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
                       緊急対応
                     </span>
                   </div>
@@ -88,9 +88,9 @@ export default function LandingPage() {
                   </p>
                 </div>
                 {/* Mock action card */}
-                <div className="bg-[#FDF8EC] rounded-xl p-3 text-left border border-[#F0A500]/20">
+                <div className="bg-action-bg rounded-xl p-3 text-left border border-action/20">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="bg-[#F0A500] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    <span className="bg-action text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
                       要対応
                     </span>
                   </div>
@@ -101,9 +101,9 @@ export default function LandingPage() {
                   </p>
                 </div>
                 {/* Mock keep card */}
-                <div className="bg-[#F0F8F3] rounded-xl p-3 text-left border border-[#52A06E]/20">
+                <div className="bg-keep-bg rounded-xl p-3 text-left border border-keep/20">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="bg-[#52A06E] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    <span className="bg-keep text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
                       保管
                     </span>
                   </div>
@@ -152,10 +152,10 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="mx-auto w-16 h-16 bg-[#52A06E]/10 rounded-2xl flex items-center justify-center mb-4">
-                <MessageCircle className="h-7 w-7 text-[#52A06E]" />
+              <div className="mx-auto w-16 h-16 bg-keep/10 rounded-2xl flex items-center justify-center mb-4">
+                <MessageCircle className="h-7 w-7 text-keep" />
               </div>
-              <div className="text-sm font-bold text-[#52A06E] mb-1">
+              <div className="text-sm font-bold text-keep mb-1">
                 Step 3
               </div>
               <h3 className="font-bold text-[#2D2D2D] mb-1">相談する</h3>
@@ -177,8 +177,8 @@ export default function LandingPage() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <div className="w-10 h-10 bg-[#E05252]/10 rounded-xl flex items-center justify-center mb-3">
-                <Bell className="h-5 w-5 text-[#E05252]" />
+              <div className="w-10 h-10 bg-urgent/10 rounded-xl flex items-center justify-center mb-3">
+                <Bell className="h-5 w-5 text-urgent" />
               </div>
               <h3 className="font-bold text-[#2D2D2D] mb-1">
                 期限を見逃さない
@@ -201,8 +201,8 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <div className="w-10 h-10 bg-[#F0A500]/10 rounded-xl flex items-center justify-center mb-3">
-                <Heart className="h-5 w-5 text-[#F0A500]" />
+              <div className="w-10 h-10 bg-action/10 rounded-xl flex items-center justify-center mb-3">
+                <Heart className="h-5 w-5 text-action" />
               </div>
               <h3 className="font-bold text-[#2D2D2D] mb-1">
                 あなたの状況を理解する
@@ -213,8 +213,8 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <div className="w-10 h-10 bg-[#52A06E]/10 rounded-xl flex items-center justify-center mb-3">
-                <Mail className="h-5 w-5 text-[#52A06E]" />
+              <div className="w-10 h-10 bg-keep/10 rounded-xl flex items-center justify-center mb-3">
+                <Mail className="h-5 w-5 text-keep" />
               </div>
               <h3 className="font-bold text-[#2D2D2D] mb-1">
                 「読まなくていい」も教える
@@ -234,7 +234,7 @@ export default function LandingPage() {
           <p className="text-lg text-[#2D2D2D] leading-relaxed">
             「机の上の封筒、何日も開けてなかった。
             <br />
-            <span className="text-[#E05252] font-bold">
+            <span className="text-urgent font-bold">
               差押の通知
             </span>
             が混ざってたなんて知らなかった」
@@ -271,7 +271,7 @@ export default function LandingPage() {
         <p className="text-sm text-[#757575]">
           © 2026 Fumuly. All rights reserved.
         </p>
-        <div className="mt-2 flex items-center justify-center gap-4 text-xs text-[#ABABAB]">
+        <div className="mt-2 flex items-center justify-center gap-4 text-xs text-ignore">
           <Link href="/privacy" className="hover:text-[#757575]">
             プライバシーポリシー
           </Link>
