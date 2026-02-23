@@ -278,6 +278,9 @@ export default function LandingPage() {
           <Link href="/terms" className="hover:text-[#757575]">
             利用規約
           </Link>
+          <Link href="/legal" className="hover:text-[#757575]">
+            特定商取引法
+          </Link>
         </div>
       </footer>
     </div>
