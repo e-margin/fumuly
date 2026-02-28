@@ -51,18 +51,9 @@ export default function ScanPage() {
     setAnalyzing(true);
 
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
       const res = await fetch("/api/analyze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(session?.access_token && {
-            Authorization: `Bearer ${session.access_token}`,
-          }),
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64 }),
       });
 
@@ -77,6 +68,10 @@ export default function ScanPage() {
       }
       if (!res.ok) throw new Error("Analysis failed");
       const data = await res.json();
+      if (data.error === "not_a_document") {
+        alert("書類として認識できませんでした。封筒の中身やハガキなど、書類を撮影してください。");
+        return;
+      }
       setResult(data);
     } catch {
       alert("解析に失敗しました。もう一度お試しください。");

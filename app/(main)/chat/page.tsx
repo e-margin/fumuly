@@ -82,18 +82,9 @@ export default function ChatPage() {
     setMessages(newMessages);
 
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(session?.access_token && {
-            Authorization: `Bearer ${session.access_token}`,
-          }),
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
       });
 
@@ -110,7 +101,10 @@ export default function ChatPage() {
         ]);
         return;
       }
-      if (!res.ok) throw new Error("Chat failed");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || `サーバーエラー (${res.status})`);
+      }
       const data = await res.json();
 
       if (data.remaining !== undefined && data.remaining !== null) {
@@ -121,12 +115,14 @@ export default function ChatPage() {
         ...newMessages,
         { role: "assistant", content: data.reply },
       ]);
-    } catch {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "不明なエラー";
+      console.error("Chat error:", errorMessage);
       setMessages([
         ...newMessages,
         {
           role: "assistant",
-          content: "すみません、エラーが発生しました。もう一度お試しください。",
+          content: `すみません、エラーが発生しました（${errorMessage}）。もう一度お試しください。`,
         },
       ]);
     } finally {

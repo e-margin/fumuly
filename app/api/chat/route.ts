@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
@@ -42,8 +43,19 @@ const CHAT_SYSTEM_PROMPT = `あなたはFumuly（フムリー）のAIアシス�
 - 書類の共有・家族共有
 - 有料プランの決済
 
+【対応範囲 ― これ以外の話題には応じない】
+- 書類・郵便物の内容に関する質問
+- 手続き・届出・支払い方法の案内
+- お金の不安（借金・滞納・差押・家計）に関する相談
+- 利用可能な公的制度（減免・猶予・生活保護・法テラスなど）の紹介
+- Fumulyアプリの使い方に関する質問
+
+上記以外のトピック（雑談、創作、プログラミング、翻訳、一般知識の質問など）を求められた場合は：
+「ごめんなさい、Fumulyでは書類や手続きに関するご相談をお受けしています。書類のことで気になることがあれば聞いてくださいね。」と短く返してください。
+
 【禁止事項】
 - 存在しない機能を「できた」と言うこと（最重要）
+- 対応範囲外のトピックに答えること
 - 法的助言（「弁護士に相談してください」は可）
 - 医療的助言
 - 金融商品の推薦
@@ -71,28 +83,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Auth required
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
-
-    if (!token) {
-      return NextResponse.json(
-        { error: "認証が必要です" },
-        { status: 401 }
-      );
-    }
-
-    const supabaseClient = createClient(
+    // Auth required (Cookie-based)
+    const supabaseClient = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll();
+          },
+        },
+      }
     );
     const {
       data: { user },
-    } = await supabaseClient.auth.getUser(token);
+    } = await supabaseClient.auth.getUser();
 
     if (!user) {
       return NextResponse.json(
-        { error: "認証が無効です。再ログインしてください" },
+        { error: "認証が必要です。再ログインしてください" },
         { status: 401 }
       );
     }
