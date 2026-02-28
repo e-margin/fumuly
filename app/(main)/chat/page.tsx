@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { Send, Loader2, Camera, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   id?: string;
@@ -208,7 +209,13 @@ export default function ChatPage() {
                       : "bg-white border rounded-bl-md text-foreground"
                   )}
                 >
-                  <p className="whitespace-pre-wrap">{msg.content}</p>
+                  {msg.role === "user" ? (
+                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                  ) : (
+                    <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-a:text-primary">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  )}
                 </div>
                 {msg.role === "user" && (
                   <div className="w-7 h-7 bg-accent/10 rounded-full flex items-center justify-center shrink-0 mt-1">

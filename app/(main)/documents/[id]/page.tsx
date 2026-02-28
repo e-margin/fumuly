@@ -22,6 +22,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 
 interface DocumentDetail {
   id: string;
@@ -172,9 +173,9 @@ export default function DocumentDetailPage() {
         {doc.detailed_summary && (
           <div className="bg-white rounded-2xl border p-4">
             <p className="text-xs text-sub mb-2">詳しい説明</p>
-            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-              {doc.detailed_summary}
-            </p>
+            <div className="text-sm text-foreground leading-relaxed prose prose-sm max-w-none prose-headings:text-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0">
+              <ReactMarkdown>{doc.detailed_summary}</ReactMarkdown>
+            </div>
           </div>
         )}
 
