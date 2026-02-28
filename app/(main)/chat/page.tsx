@@ -22,6 +22,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [remaining, setRemaining] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -102,6 +103,7 @@ export default function ChatPage() {
       }
       if (res.status === 429) {
         const err = await res.json();
+        setRemaining(0);
         setMessages([
           ...newMessages,
           { role: "assistant", content: err.error || "利用回数の上限に達しました。しばらくしてからお試しください。" },
@@ -110,6 +112,10 @@ export default function ChatPage() {
       }
       if (!res.ok) throw new Error("Chat failed");
       const data = await res.json();
+
+      if (data.remaining !== undefined && data.remaining !== null) {
+        setRemaining(data.remaining);
+      }
 
       setMessages([
         ...newMessages,
@@ -282,9 +288,19 @@ export default function ChatPage() {
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-[10px] text-ignore text-center mt-1.5">
-          AIの回答は参考情報です。重要な判断は専門家にご相談ください。
-        </p>
+        <div className="flex items-center justify-center gap-2 mt-1.5">
+          <p className="text-[10px] text-ignore">
+            AIの回答は参考情報です。重要な判断は専門家にご相談ください。
+          </p>
+          {remaining !== null && (
+            <span className={cn(
+              "text-[10px] shrink-0",
+              remaining <= 3 ? "text-urgent" : "text-ignore"
+            )}>
+              残り{remaining}回/時
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

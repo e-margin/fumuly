@@ -100,8 +100,12 @@ export async function POST(req: NextRequest) {
     const userId = user.id;
 
     // Rate limit (skip for admin user)
+    const RATE_LIMIT = 20;
     const adminUserId = process.env.ADMIN_USER_ID;
-    if (userId !== adminUserId) {
+    const isAdmin = userId === adminUserId;
+    let usedCount = 0;
+
+    if (!isAdmin) {
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
       const { count } = await supabaseAdmin
         .from("conversations")
@@ -110,7 +114,8 @@ export async function POST(req: NextRequest) {
         .eq("role", "user")
         .gte("created_at", oneHourAgo);
 
-      if (count !== null && count >= 20) {
+      usedCount = count ?? 0;
+      if (usedCount >= RATE_LIMIT) {
         return NextResponse.json(
           { error: "利用回数の上限に達しました。1時間後にまたお試しください" },
           { status: 429 }
@@ -224,7 +229,9 @@ export async function POST(req: NextRequest) {
       ]);
     }
 
-    return NextResponse.json({ reply });
+    // remaining = null for admin (unlimited)
+    const remaining = isAdmin ? null : Math.max(0, RATE_LIMIT - (usedCount + 1));
+    return NextResponse.json({ reply, remaining });
   } catch (error) {
     console.error("Chat error:", error);
     return NextResponse.json(
