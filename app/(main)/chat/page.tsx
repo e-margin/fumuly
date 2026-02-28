@@ -130,10 +130,19 @@ export default function ChatPage() {
     }
   };
 
+  const isMobile = typeof window !== "undefined" && "ontouchstart" in window;
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+    if (e.key === "Enter") {
+      if (isMobile && !e.shiftKey) {
+        // スマホ: Enter で送信
+        e.preventDefault();
+        handleSend();
+      } else if (!isMobile && (e.metaKey || e.ctrlKey)) {
+        // PC: Cmd/Ctrl+Enter で送信
+        e.preventDefault();
+        handleSend();
+      }
     }
   };
 
@@ -260,7 +269,7 @@ export default function ChatPage() {
 
       {/* Input */}
       <div className="border-t bg-white px-4 py-3 shrink-0">
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 max-w-md mx-auto">
           <div className="flex-1 relative">
             <Textarea
               ref={textareaRef}
@@ -290,7 +299,7 @@ export default function ChatPage() {
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex items-center justify-center gap-2 mt-1.5">
+        <div className="flex items-center justify-center gap-2 mt-1.5 max-w-md mx-auto">
           <p className="text-[10px] text-ignore">
             AIの回答は参考情報です。重要な判断は専門家にご相談ください。
           </p>
