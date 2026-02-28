@@ -142,9 +142,9 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-4rem)]">
+    <div className="fixed inset-0 bottom-16 flex flex-col bg-[#F7F8FA] z-10">
       {/* Header */}
-      <div className="px-4 py-3 border-b bg-white">
+      <div className="px-4 py-3 border-b bg-white shrink-0">
         <h1 className="text-lg font-bold text-foreground">
           AIに相談
         </h1>
@@ -257,7 +257,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input */}
-      <div className="border-t bg-white px-4 py-3">
+      <div className="border-t bg-white px-4 py-3 shrink-0">
         <div className="flex items-end gap-2 max-w-md mx-auto">
           <div className="flex-1 relative">
             <Textarea
