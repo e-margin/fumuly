@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { BackLink } from "@/components/fumuly/back-link";
 
 const rows = [
   { label: "販売業者", value: "E-margin" },
@@ -8,7 +7,7 @@ const rows = [
   { label: "電話番号", value: "請求があった場合に遅滞なく開示いたします" },
   { label: "メールアドレス", value: "contact@fumuly.com" },
   { label: "サービス名", value: "Fumuly（フムリー）" },
-  { label: "サービスURL", value: "https://fumuly.onrender.com" },
+  { label: "サービスURL", value: "https://fumuly.vercel.app" },
   {
     label: "販売価格",
     value: "各プランの料金はサービス内の料金ページに表示します",
@@ -41,13 +40,7 @@ export default function LegalPage() {
     <div className="min-h-dvh bg-white">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b">
         <div className="max-w-2xl mx-auto flex items-center px-4 h-14">
-          <Link
-            href="/"
-            className="flex items-center gap-1 text-sm text-primary"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            戻る
-          </Link>
+          <BackLink />
         </div>
       </header>
 

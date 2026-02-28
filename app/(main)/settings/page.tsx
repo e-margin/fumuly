@@ -18,6 +18,7 @@ import {
   User,
   Shield,
   FileText,
+  Scale,
   Trash2,
   LogOut,
   Loader2,
@@ -119,6 +120,23 @@ export default function SettingsPage() {
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">
                 利用規約
+              </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-ignore" />
+          </div>
+        </Link>
+
+        <Separator />
+
+        {/* Legal (特商法) */}
+        <Link href="/legal">
+          <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
+            <div className="w-9 h-9 bg-sub/10 rounded-full flex items-center justify-center">
+              <Scale className="h-4 w-4 text-sub" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">
+                特定商取引法に基づく表記
               </p>
             </div>
             <ChevronRight className="h-4 w-4 text-ignore" />
