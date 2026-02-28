@@ -1,0 +1,32 @@
+---
+id: task-023
+title: Claude JSON.parseのtry/catch追加
+parents: [安定性]
+status: waiting
+depends_on: []
+this_week: false
+completed_at: null
+progress: 0
+note: lib/claude.tsの1箇所
+estimated_hours: 0.02
+---
+
+## 概要
+
+`lib/claude.ts` の `JSON.parse(cleaned)` にtry/catchがなく、ClaudeがJSON以外を返すとAPIルート全体がクラッシュする。
+
+## 発生シナリオ
+
+- Claudeが「この書類は〇〇です。」という前置きをJSON前に出力
+- max_tokensに達してJSONが途中で切れる
+- 正規表現のストリップが不完全（複数コードブロック等）
+
+## 実装
+
+```typescript
+try {
+  return JSON.parse(cleaned) as AnalysisResult;
+} catch {
+  throw new Error("解析結果の読み取りに失敗しました。もう一度お試しください");
+}
+```
