@@ -2,12 +2,12 @@
 id: task-015
 title: セキュリティ対策（プロンプトインジェクション・認証・入力制限）
 parents: [セキュリティ]
-status: waiting
+status: done
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
-note: CRITICAL — 公開前に必須
+completed_at: 2026-03-01
+progress: 100
+note: 認証必須化・プロンプトインジェクション対策・入力制限・401ハンドリング完了
 estimated_hours: 4
 ---
 

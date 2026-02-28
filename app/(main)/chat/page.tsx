@@ -63,8 +63,10 @@ export default function ChatPage() {
     }
   }, [messages]);
 
+  const MAX_MESSAGE_LENGTH = 3000;
+
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || input.length > MAX_MESSAGE_LENGTH) return;
 
     const userMessage = input.trim();
     setInput("");
@@ -93,6 +95,10 @@ export default function ChatPage() {
         body: JSON.stringify({ message: userMessage }),
       });
 
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       if (!res.ok) throw new Error("Chat failed");
       const data = await res.json();
 
@@ -232,18 +238,29 @@ export default function ChatPage() {
       {/* Input */}
       <div className="border-t bg-white px-4 py-3">
         <div className="flex items-end gap-2 max-w-md mx-auto">
-          <Textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="メッセージを入力..."
-            className="min-h-[44px] max-h-[120px] resize-none rounded-xl"
-            rows={1}
-          />
+          <div className="flex-1 relative">
+            <Textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="メッセージを入力..."
+              className="min-h-[44px] max-h-[120px] resize-none rounded-xl"
+              maxLength={MAX_MESSAGE_LENGTH}
+              rows={1}
+            />
+            {input.length > MAX_MESSAGE_LENGTH * 0.9 && (
+              <span className={cn(
+                "absolute bottom-1 right-2 text-[10px]",
+                input.length > MAX_MESSAGE_LENGTH ? "text-urgent" : "text-sub"
+              )}>
+                {input.length}/{MAX_MESSAGE_LENGTH}
+              </span>
+            )}
+          </div>
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || loading}
+            disabled={!input.trim() || loading || input.length > MAX_MESSAGE_LENGTH}
             size="icon"
             className="h-11 w-11 bg-primary hover:bg-primary/90 rounded-xl shrink-0"
           >

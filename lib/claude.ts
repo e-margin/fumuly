@@ -65,8 +65,9 @@ export async function analyzeDocument(
     throw new Error("ANTHROPIC_API_KEY is not set");
   }
 
+  // userContext is already sanitized with XML tags by the caller
   const systemPrompt = userContext
-    ? `${userContext}\n\n${SYSTEM_PROMPT}`
+    ? `${SYSTEM_PROMPT}\n\n${userContext}`
     : SYSTEM_PROMPT;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {

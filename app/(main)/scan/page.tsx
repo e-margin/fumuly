@@ -24,9 +24,16 @@ export default function ScanPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [saving, setSaving] = useState(false);
 
+  const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+
   const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      alert("画像サイズが大きすぎます（10MB以下にしてください）");
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = (ev) => {
@@ -58,6 +65,10 @@ export default function ScanPage() {
         body: JSON.stringify({ image: base64 }),
       });
 
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       if (!res.ok) throw new Error("Analysis failed");
       const data = await res.json();
       setResult(data);
