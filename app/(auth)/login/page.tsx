@@ -10,15 +10,18 @@ import { Mail, Lock, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // FormDataから取得することで、ブラウザの自動入力にも対応
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -47,9 +50,9 @@ export default function LoginPage() {
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ignore" />
             <Input
               type="email"
+              name="email"
+              autoComplete="email"
               placeholder="メールアドレス"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="pl-10 h-12"
               required
             />
@@ -58,9 +61,9 @@ export default function LoginPage() {
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ignore" />
             <Input
               type="password"
+              name="password"
+              autoComplete="current-password"
               placeholder="パスワード"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="pl-10 h-12"
               required
             />

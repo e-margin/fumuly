@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import { UpdateBanner } from "@/components/fumuly/update-banner";
+import { SessionKeeper } from "@/components/fumuly/session-keeper";
 import "./globals.css";
 
 const inter = Inter({
@@ -45,6 +46,7 @@ export default function RootLayout({
         className={`${inter.variable} ${notoSansJP.variable} antialiased`}
       >
         <UpdateBanner />
+        <SessionKeeper />
         {children}
       </body>
     </html>
