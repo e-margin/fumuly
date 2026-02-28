@@ -154,7 +154,12 @@ export default function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto px-4 py-4"
+        style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
+      >
+        <div className="max-w-md mx-auto">
         {initialLoading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -254,11 +259,12 @@ export default function ChatPage() {
             )}
           </div>
         )}
+        </div>
       </div>
 
       {/* Input */}
       <div className="border-t bg-white px-4 py-3 shrink-0">
-        <div className="flex items-end gap-2 max-w-md mx-auto">
+        <div className="flex items-end gap-2">
           <div className="flex-1 relative">
             <Textarea
               ref={textareaRef}
