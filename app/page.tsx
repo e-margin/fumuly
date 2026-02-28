@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { QRSection } from "@/components/fumuly/qr-section";
 import {
   Camera,
   Shield,
@@ -244,6 +245,9 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+
+      {/* QR Code (PC only) */}
+      <QRSection />
 
       {/* CTA */}
       <section className="py-16 px-4 bg-[#2C4A7C] text-white text-center">

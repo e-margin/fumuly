@@ -27,7 +27,7 @@ Fumulyの価値は「書類を登録した後」にこそある。
 - Next.js（App Router） + Tailwind CSS + shadcn/ui
 - Supabase（PostgreSQL + Auth）
 - Claude API（Vision解析）
-- Render（ホスティング）
+- Vercel（ホスティング）
 - PWA対応
 
 ---
@@ -68,6 +68,10 @@ estimated_hours: 4
 | `blocked` | ブロック中（依存タスクが未完了等） |
 | `done` | 完了 |
 | `omit` | やらないことに決定 |
+
+## Gitコミット
+
+- コミットメッセージは日本語で書くこと
 
 ## Claudeへの指示
 

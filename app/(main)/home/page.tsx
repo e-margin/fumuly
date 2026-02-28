@@ -107,7 +107,7 @@ export default function HomePage() {
         </div>
       ) : (
         /* Document list */
-        <div className="space-y-3">
+        <div className="space-y-4">
           {documents.map((doc) => (
             <DocumentCard key={doc.id} {...doc} />
           ))}

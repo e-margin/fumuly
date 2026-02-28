@@ -107,7 +107,7 @@ export default function DocumentsPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filtered.map((doc) => (
             <DocumentCard key={doc.id} {...doc} />
           ))}

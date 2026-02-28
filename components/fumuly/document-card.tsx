@@ -52,16 +52,16 @@ export function DocumentCard({
   };
 
   return (
-    <Link href={`/documents/${id}`}>
+    <Link href={`/documents/${id}`} className="block">
       <Card
         className={cn(
-          "flex overflow-hidden transition-all active:scale-[0.98]",
+          "flex overflow-hidden transition-all active:scale-[0.98] py-0",
           categoryBg[category],
           is_done && "opacity-60"
         )}
       >
         <PriorityBar category={category} />
-        <div className="flex-1 p-3 space-y-1.5">
+        <div className="flex-1 p-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
