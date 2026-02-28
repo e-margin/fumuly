@@ -117,8 +117,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Analyze error:", error);
+    const msg = error instanceof Error ? error.message : "";
+    if (msg.includes("overloaded") || msg.includes("529") || msg.includes("503")) {
+      return NextResponse.json(
+        { error: "AIが混み合っています。少し待ってからもう一度お試しください" },
+        { status: 503 }
+      );
+    }
+    const message = msg.includes("Claude API")
+      ? "書類の解析に失敗しました。別の角度から撮り直すか、もう一度お試しください"
+      : "サーバーエラーが発生しました。しばらくしてからお試しください";
     return NextResponse.json(
-      { error: "Analysis failed" },
+      { error: message },
       { status: 500 }
     );
   }

@@ -224,7 +224,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
+      const status = response.status;
+      if (status === 529 || status === 503) {
+        return NextResponse.json(
+          { error: "AIが混み合っています。少し待ってからもう一度お試しください" },
+          { status: 503 }
+        );
+      }
+      throw new Error(`Claude API error: ${status}`);
     }
 
     const data = await response.json();
@@ -243,8 +250,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply, remaining });
   } catch (error) {
     console.error("Chat error:", error);
+    const message = error instanceof Error && error.message.includes("Claude API")
+      ? "AIの応答でエラーが発生しました。もう一度お試しください"
+      : "サーバーエラーが発生しました。しばらくしてからお試しください";
     return NextResponse.json(
-      { error: "Chat failed" },
+      { error: message },
       { status: 500 }
     );
   }

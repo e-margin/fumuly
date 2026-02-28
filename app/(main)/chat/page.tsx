@@ -105,7 +105,7 @@ export default function ChatPage() {
       }
       if (!res.ok) {
         const errData = await res.json().catch(() => null);
-        throw new Error(errData?.error || `サーバーエラー (${res.status})`);
+        throw new Error(errData?.error || "サーバーエラーが発生しました。しばらくしてからお試しください");
       }
       const data = await res.json();
 
@@ -118,13 +118,18 @@ export default function ChatPage() {
         { role: "assistant", content: data.reply },
       ]);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "不明なエラー";
-      console.error("Chat error:", errorMessage);
+      const isOffline = !navigator.onLine;
+      const errorMessage = isOffline
+        ? "ネットワークに接続されていないようです。接続を確認してからもう一度お試しください。"
+        : err instanceof Error
+          ? err.message
+          : "エラーが発生しました。もう一度お試しください";
+      console.error("Chat error:", err);
       setMessages([
         ...newMessages,
         {
           role: "assistant",
-          content: `すみません、エラーが発生しました（${errorMessage}）。もう一度お試しください。`,
+          content: `すみません、${errorMessage}`,
         },
       ]);
     } finally {

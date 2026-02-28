@@ -129,7 +129,11 @@ export async function analyzeDocument(
   });
 
   if (!response.ok) {
-    throw new Error(`Claude API error: ${response.status}`);
+    const status = response.status;
+    if (status === 529 || status === 503) {
+      throw new Error(`Claude API overloaded: ${status}`);
+    }
+    throw new Error(`Claude API error: ${status}`);
   }
 
   const data = await response.json();

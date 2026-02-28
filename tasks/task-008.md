@@ -2,12 +2,12 @@
 id: task-008
 title: エラーハンドリングの改善
 parents: [品質]
-status: waiting
+status: done
 depends_on: []
 this_week: false
-completed_at: null
-progress: 50
-note: 401リダイレクト済み。残りはオフライン検知・リトライ案内
+completed_at: 2026-03-01
+progress: 100
+note: 401リダイレクト・オフライン検知・API混雑検知・エラーメッセージ具体化すべて完了
 estimated_hours: 3
 ---
 

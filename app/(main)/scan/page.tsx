@@ -94,15 +94,24 @@ export default function ScanPage() {
         alert(err.error || "利用回数の上限に達しました。しばらくしてからお試しください。");
         return;
       }
-      if (!res.ok) throw new Error("Analysis failed");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || "サーバーエラーが発生しました");
+      }
       const data = await res.json();
       if (data.error === "not_a_document") {
         alert("書類として認識できませんでした。封筒の中身やハガキなど、書類を撮影してください。");
         return;
       }
       setResult(data);
-    } catch {
-      alert("解析に失敗しました。もう一度お試しください。");
+    } catch (err) {
+      const isOffline = !navigator.onLine;
+      const message = isOffline
+        ? "ネットワークに接続されていないようです。接続を確認してからもう一度お試しください。"
+        : err instanceof Error
+          ? err.message
+          : "解析に失敗しました。もう一度お試しください";
+      alert(message);
     } finally {
       setAnalyzing(false);
     }
