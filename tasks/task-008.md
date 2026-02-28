@@ -6,8 +6,8 @@ status: waiting
 depends_on: []
 this_week: false
 completed_at: null
-progress: 0
-note: ユーザー向けエラーメッセージの具体化
+progress: 50
+note: 401リダイレクト済み。残りはオフライン検知・リトライ案内
 estimated_hours: 3
 ---
 

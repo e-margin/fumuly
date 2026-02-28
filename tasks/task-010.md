@@ -2,12 +2,12 @@
 id: task-010
 title: Claude APIモデルの最新化
 parents: [品質]
-status: waiting
+status: done
 depends_on: []
-this_week: true
-completed_at: null
-progress: 0
-note: claude-sonnet-4-5-20241022 → 最新モデルへの更新検討
+this_week: false
+completed_at: 2026-03-01
+progress: 100
+note: claude-sonnet-4-5-20250929（最新Sonnet）に更新済み
 estimated_hours: 0.5
 ---
 

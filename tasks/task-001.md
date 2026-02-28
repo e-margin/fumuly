@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: fumuly.onrender.com → fumuly.com への変更箇所まとめ
+note: Vercel移行済み。fumuly.onrender.com → fumuly.vercel.app への書き換え＋将来のカスタムドメイン対応
 estimated_hours: 1
 ---
 
