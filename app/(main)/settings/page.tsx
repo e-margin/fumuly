@@ -74,7 +74,7 @@ export default function SettingsPage() {
 
       <div className="space-y-1">
         {/* Profile */}
-        <Link href="/onboarding">
+        <Link href="/settings/profile">
           <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
             <div className="w-9 h-9 bg-primary/10 rounded-full flex items-center justify-center">
               <User className="h-4 w-4 text-primary" />

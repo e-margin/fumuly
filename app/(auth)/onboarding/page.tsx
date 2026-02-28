@@ -180,7 +180,7 @@ export default function OnboardingPage() {
           )}
         >
           <p className="font-medium text-foreground">
-            ADHDの傾向がある
+            後回しにしがち
           </p>
           <p className="text-xs text-sub mt-0.5">
             先延ばし・書類放置・整理が苦手など

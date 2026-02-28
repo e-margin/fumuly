@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
             parts.push(`月収: ${profile.monthly_income}万円`);
           if (profile.debt_total)
             parts.push(`借金総額: ${profile.debt_total}万円`);
-          if (profile.has_adhd) parts.push("ADHD傾向あり");
+          if (profile.has_adhd) parts.push("後回しにしがち（先延ばし・書類放置の傾向）");
           if (profile.phone_difficulty) parts.push("電話が苦手");
           if (profile.current_situation)
             parts.push(`現在の状況: ${profile.current_situation}`);

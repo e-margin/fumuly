@@ -33,8 +33,9 @@ estimated_hours: 1
 - Supabase Dashboard → Authentication → URL Configuration → Site URL を fumuly.com に変更
 - Redirect URLs に fumuly.com を追加
 
-### Render設定
-- Custom Domain の追加
+### ホスティング設定
+- Vercel移行の場合: Vercel ダッシュボードで fumuly.com をカスタムドメインに追加（task-009参照）
+- Render継続の場合: Custom Domain の追加
 - DNS設定（Cloudflare等）
 
 ### 推奨：環境変数化

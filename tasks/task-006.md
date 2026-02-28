@@ -2,12 +2,12 @@
 id: task-006
 title: 画像のIndexedDB保存
 parents: [機能]
-status: waiting
+status: omit
 depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: スキャン画像をローカルに保持し再表示可能にする
+note: 書類特定は送付元・タイプ・カテゴリで十分。画像を見返すニーズが出てから再検討
 estimated_hours: 4
 ---
 

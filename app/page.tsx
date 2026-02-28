@@ -41,7 +41,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-4 pt-16 pb-20 text-center">
           <div className="inline-flex items-center gap-1.5 bg-[#2C4A7C]/10 text-[#2C4A7C] rounded-full px-3 py-1 text-sm font-medium mb-6">
             <Sparkles className="h-3.5 w-3.5" />
-            ADHDの人のために作られたアプリ
+            書類が苦手なあなたのためのアプリ
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[#2D2D2D] leading-tight">
             封筒、無理ー！
@@ -208,7 +208,7 @@ export default function LandingPage() {
                 あなたの状況を理解する
               </h3>
               <p className="text-sm text-[#757575]">
-                収入、借金、ADHDの特性を踏まえて、
+                収入、借金、あなたの特性を踏まえて、
                 あなたに合ったアドバイスを提供。
               </p>
             </div>

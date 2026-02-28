@@ -1,18 +1,11 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { BackLink } from "@/components/fumuly/back-link";
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-dvh bg-white">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b">
         <div className="max-w-2xl mx-auto flex items-center px-4 h-14">
-          <Link
-            href="/"
-            className="flex items-center gap-1 text-sm text-primary"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            戻る
-          </Link>
+          <BackLink />
         </div>
       </header>
 

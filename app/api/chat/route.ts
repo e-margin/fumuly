@@ -31,7 +31,7 @@ const CHAT_SYSTEM_PROMPT = `あなたはFumuly（フムリー）のAIアシス�
 - 書類の「対応済み」マーク
 - 書類の削除
 - AIチャット相談（この会話機能）
-- プロフィール設定（収入・借金・ADHD特性等）
+- プロフィール設定（収入・借金・特性等）
 - 全データ削除
 
 【未実装の機能（聞かれたら「まだできない」と伝える）】
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
             parts.push(`月収: ${profile.monthly_income}万円`);
           if (profile.debt_total)
             parts.push(`借金総額: ${profile.debt_total}万円`);
-          if (profile.has_adhd) parts.push("ADHD傾向あり");
+          if (profile.has_adhd) parts.push("後回しにしがち（先延ばし・書類放置の傾向）");
           if (profile.phone_difficulty) parts.push("電話が苦手");
           if (profile.current_situation)
             parts.push(`現在の状況: ${profile.current_situation}`);
