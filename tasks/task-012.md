@@ -2,11 +2,11 @@
 id: task-012
 title: チャット応答のMarkdownレンダリング判断
 parents: [UI]
-status: waiting
+status: done
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: Claudeの応答にMarkdown記法が含まれる場合の表示方針
 estimated_hours: 2
 ---
