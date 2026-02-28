@@ -173,8 +173,8 @@ export default function SettingsPage() {
         {/* Legal (特商法) */}
         <Link href="/legal">
           <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
-            <div className="w-9 h-9 bg-sub/10 rounded-full flex items-center justify-center">
-              <Scale className="h-4 w-4 text-sub" />
+            <div className="w-9 h-9 bg-ignore/10 rounded-full flex items-center justify-center">
+              <Scale className="h-4 w-4 text-ignore" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">
