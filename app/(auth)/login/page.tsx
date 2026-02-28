@@ -34,7 +34,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/home");
+    // フルリロードでCookieをサーバーに反映させる
+    window.location.href = "/home";
   };
 
   return (

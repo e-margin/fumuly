@@ -41,7 +41,8 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push("/onboarding");
+    // フルリロードでCookieをサーバーに反映させる
+    window.location.href = "/onboarding";
   };
 
   return (
