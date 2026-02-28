@@ -12,49 +12,74 @@ import {
   RotateCcw,
   Save,
   ImagePlus,
+  Plus,
 } from "lucide-react";
 import type { AnalysisResult } from "@/lib/claude";
 import ReactMarkdown from "react-markdown";
+import { resizeImage } from "@/lib/image";
+
+interface CapturedImage {
+  preview: string; // dataURL for display
+  base64: string; // base64 data for API
+}
+
+const MAX_IMAGES = 5;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function ScanPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [base64, setBase64] = useState<string | null>(null);
+  const addInputRef = useRef<HTMLInputElement>(null);
+  const [images, setImages] = useState<CapturedImage[]>([]);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
-
-  const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processFile = async (file: File) => {
     if (file.size > MAX_IMAGE_SIZE) {
       alert("画像サイズが大きすぎます（10MB以下にしてください）");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string;
-      setPreview(dataUrl);
-      // Extract base64 data (remove data:image/...;base64, prefix)
-      setBase64(dataUrl.split(",")[1]);
-    };
-    reader.readAsDataURL(file);
+    const dataUrl = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => resolve(ev.target?.result as string);
+      reader.readAsDataURL(file);
+    });
+
+    const resized = await resizeImage(dataUrl);
+    const base64 = resized.split(",")[1];
+
+    setImages((prev) => {
+      if (prev.length >= MAX_IMAGES) {
+        alert(`画像は${MAX_IMAGES}枚までです`);
+        return prev;
+      }
+      return [...prev, { preview: resized, base64 }];
+    });
+  };
+
+  const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processFile(file);
+    // Reset input so the same file can be selected again
+    e.target.value = "";
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleAnalyze = async () => {
-    if (!base64) return;
+    if (images.length === 0) return;
     setAnalyzing(true);
 
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 }),
+        body: JSON.stringify({ images: images.map((img) => img.base64) }),
       });
 
       if (res.status === 401) {
@@ -113,8 +138,7 @@ export default function ScanPage() {
   };
 
   const handleRetake = () => {
-    setPreview(null);
-    setBase64(null);
+    setImages([]);
     setResult(null);
   };
 
@@ -222,11 +246,11 @@ export default function ScanPage() {
         書類をスキャン
       </h1>
 
-      {!preview ? (
+      {images.length === 0 ? (
         <div className="space-y-4">
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full aspect-[3/4] bg-white rounded-2xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center gap-3 active:bg-primary/5 transition-colors"
+            className="w-full aspect-3/4 bg-white rounded-2xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center gap-3 active:bg-primary/5 transition-colors"
           >
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
               <Camera className="h-7 w-7 text-accent" />
@@ -250,7 +274,6 @@ export default function ScanPage() {
           />
           <button
             onClick={() => {
-              // Open file picker without camera
               const input = document.createElement("input");
               input.type = "file";
               input.accept = "image/*";
@@ -268,20 +291,49 @@ export default function ScanPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {/* Preview */}
-          <div className="relative">
-            <img
-              src={preview}
-              alt="撮影した書類"
-              className="w-full rounded-2xl border"
-            />
-            <button
-              onClick={handleRetake}
-              className="absolute top-2 right-2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center"
-            >
-              <X className="h-4 w-4 text-white" />
-            </button>
+          {/* Image thumbnails */}
+          <div className="grid grid-cols-3 gap-2">
+            {images.map((img, i) => (
+              <div key={i} className="relative aspect-3/4">
+                <img
+                  src={img.preview}
+                  alt={`書類 ${i + 1}`}
+                  className="w-full h-full object-cover rounded-xl border"
+                />
+                <button
+                  onClick={() => handleRemoveImage(i)}
+                  className="absolute top-1 right-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center"
+                >
+                  <X className="h-3 w-3 text-white" />
+                </button>
+                <span className="absolute bottom-1 left-1 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                  {i + 1}/{images.length}
+                </span>
+              </div>
+            ))}
+            {images.length < MAX_IMAGES && (
+              <button
+                onClick={() => addInputRef.current?.click()}
+                className="aspect-3/4 bg-white rounded-xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center gap-1 active:bg-primary/5 transition-colors"
+              >
+                <Plus className="h-5 w-5 text-primary" />
+                <span className="text-[10px] text-sub">追加</span>
+              </button>
+            )}
           </div>
+
+          <input
+            ref={addInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={handleCapture}
+            className="hidden"
+          />
+
+          <p className="text-center text-xs text-sub">
+            裏面や別ページがあれば追加してください（最大{MAX_IMAGES}枚）
+          </p>
 
           {/* Analyze button */}
           <Button
@@ -295,7 +347,7 @@ export default function ScanPage() {
                 AIが読んでいます...
               </div>
             ) : (
-              "解析する"
+              `解析する${images.length > 1 ? `（${images.length}枚）` : ""}`
             )}
           </Button>
 

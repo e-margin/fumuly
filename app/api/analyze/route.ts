@@ -52,22 +52,32 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { image } = body;
+    // Support both single image (legacy) and multiple images
+    const images: string[] = body.images || (body.image ? [body.image] : []);
 
-    if (!image) {
+    if (images.length === 0) {
       return NextResponse.json(
         { error: "Image data is required" },
         { status: 400 }
       );
     }
 
-    // Base64 size check: ~10MB image = ~13.3MB base64
-    const MAX_BASE64_SIZE = 14 * 1024 * 1024; // 14MB in base64 chars
-    if (typeof image !== "string" || image.length > MAX_BASE64_SIZE) {
+    if (images.length > 5) {
       return NextResponse.json(
-        { error: "画像サイズが大きすぎます（10MB以下にしてください）" },
+        { error: "画像は5枚までです" },
         { status: 400 }
       );
+    }
+
+    // Base64 size check per image
+    const MAX_BASE64_SIZE = 14 * 1024 * 1024; // 14MB in base64 chars
+    for (const img of images) {
+      if (typeof img !== "string" || img.length > MAX_BASE64_SIZE) {
+        return NextResponse.json(
+          { error: "画像サイズが大きすぎます（10MB以下にしてください）" },
+          { status: 400 }
+        );
+      }
     }
 
     // Get user context from profile for better analysis
@@ -94,7 +104,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const result = await analyzeDocument(image, userContext || undefined);
+    const result = await analyzeDocument(images, userContext || undefined);
     return NextResponse.json(result);
   } catch (error) {
     console.error("Analyze error:", error);

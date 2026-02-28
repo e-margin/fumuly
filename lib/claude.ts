@@ -74,7 +74,7 @@ export interface AnalysisResult {
 }
 
 export async function analyzeDocument(
-  base64Image: string,
+  base64Images: string | string[],
   userContext?: string
 ): Promise<AnalysisResult> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -82,10 +82,25 @@ export async function analyzeDocument(
     throw new Error("ANTHROPIC_API_KEY is not set");
   }
 
+  const images = Array.isArray(base64Images) ? base64Images : [base64Images];
+
   // userContext is already sanitized with XML tags by the caller
-  const systemPrompt = userContext
+  let systemPrompt = userContext
     ? `${SYSTEM_PROMPT}\n\n${userContext}`
     : SYSTEM_PROMPT;
+
+  if (images.length > 1) {
+    systemPrompt += "\n\n【複数画像】\n送信された複数の画像は同一書類の別ページ・裏表です。すべてを総合して1つの書類として解析してください。";
+  }
+
+  const imageContent = images.map((data) => ({
+    type: "image" as const,
+    source: {
+      type: "base64" as const,
+      media_type: "image/jpeg" as const,
+      data,
+    },
+  }));
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -102,14 +117,7 @@ export async function analyzeDocument(
         {
           role: "user",
           content: [
-            {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: "image/jpeg",
-                data: base64Image,
-              },
-            },
+            ...imageContent,
             {
               type: "text",
               text: USER_PROMPT,

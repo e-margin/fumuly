@@ -2,11 +2,11 @@
 id: task-017
 title: スキャン画像のフロントエンドリサイズ処理
 parents: [機能]
-status: waiting
+status: done
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: 送信前に画像を長辺1568pxにリサイズ。解析精度に影響なし
 estimated_hours: 2
 ---

@@ -2,11 +2,11 @@
 id: task-013
 title: 複数枚撮影・大判書類への対応
 parents: [機能]
-status: waiting
+status: done
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: 1枚に収まらない書類（裏表・大判・複数ページ）の対応
 estimated_hours: 6
 ---
