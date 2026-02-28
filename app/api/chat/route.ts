@@ -98,6 +98,26 @@ export async function POST(req: NextRequest) {
     }
 
     const userId = user.id;
+
+    // Rate limit (skip for admin user)
+    const adminUserId = process.env.ADMIN_USER_ID;
+    if (userId !== adminUserId) {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { count } = await supabaseAdmin
+        .from("conversations")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("role", "user")
+        .gte("created_at", oneHourAgo);
+
+      if (count !== null && count >= 20) {
+        return NextResponse.json(
+          { error: "利用回数の上限に達しました。1時間後にまたお試しください" },
+          { status: 429 }
+        );
+      }
+    }
+
     let userContext = "";
     let recentDocuments = "";
     let conversationHistory: { role: string; content: string }[] = [];

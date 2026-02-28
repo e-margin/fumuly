@@ -70,6 +70,11 @@ export default function ScanPage() {
         window.location.href = "/login";
         return;
       }
+      if (res.status === 429) {
+        const err = await res.json();
+        alert(err.error || "利用回数の上限に達しました。しばらくしてからお試しください。");
+        return;
+      }
       if (!res.ok) throw new Error("Analysis failed");
       const data = await res.json();
       setResult(data);

@@ -35,6 +35,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Rate limit (skip for admin user)
+    const adminUserId = process.env.ADMIN_USER_ID;
+    if (user.id !== adminUserId) {
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { count } = await supabaseAdmin
+        .from("documents")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .gte("created_at", oneDayAgo);
+
+      if (count !== null && count >= 10) {
+        return NextResponse.json(
+          { error: "本日のスキャン上限に達しました。明日またお試しください" },
+          { status: 429 }
+        );
+      }
+    }
+
     const body = await req.json();
     const { image } = body;
 

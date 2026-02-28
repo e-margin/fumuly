@@ -100,6 +100,14 @@ export default function ChatPage() {
         window.location.href = "/login";
         return;
       }
+      if (res.status === 429) {
+        const err = await res.json();
+        setMessages([
+          ...newMessages,
+          { role: "assistant", content: err.error || "利用回数の上限に達しました。しばらくしてからお試しください。" },
+        ]);
+        return;
+      }
       if (!res.ok) throw new Error("Chat failed");
       const data = await res.json();
 
