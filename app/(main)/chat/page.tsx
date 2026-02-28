@@ -130,19 +130,11 @@ export default function ChatPage() {
     }
   };
 
-  const isMobile = typeof window !== "undefined" && "ontouchstart" in window;
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      if (isMobile && !e.shiftKey) {
-        // スマホ: Enter で送信
-        e.preventDefault();
-        handleSend();
-      } else if (!isMobile && (e.metaKey || e.ctrlKey)) {
-        // PC: Cmd/Ctrl+Enter で送信
-        e.preventDefault();
-        handleSend();
-      }
+    // Cmd/Ctrl+Enter で送信（Enter単体は改行）
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
