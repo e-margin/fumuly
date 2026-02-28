@@ -10,10 +10,17 @@ export const supabase = createBrowserClient(
         document.cookie.split(";").forEach((cookie) => {
           const [name, ...rest] = cookie.split("=");
           if (name.trim()) {
-            cookies.push({
-              name: decodeURIComponent(name.trim()),
-              value: decodeURIComponent(rest.join("=").trim()),
-            });
+            try {
+              cookies.push({
+                name: decodeURIComponent(name.trim()),
+                value: decodeURIComponent(rest.join("=").trim()),
+              });
+            } catch {
+              cookies.push({
+                name: name.trim(),
+                value: rest.join("=").trim(),
+              });
+            }
           }
         });
         return cookies;

@@ -6,6 +6,7 @@ import { RefreshCw } from "lucide-react";
 export function UpdateBanner() {
   const [showUpdate, setShowUpdate] = useState(false);
   const waitingWorkerRef = useRef<ServiceWorker | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -27,7 +28,7 @@ export function UpdateBanner() {
       .register("/sw.js")
       .then((registration) => {
         // Check for updates periodically (every 30 minutes)
-        setInterval(() => registration.update(), 30 * 60 * 1000);
+        intervalRef.current = setInterval(() => registration.update(), 30 * 60 * 1000);
 
         // If there's already a waiting worker (e.g., from a previous visit)
         if (registration.waiting) {
@@ -57,6 +58,7 @@ export function UpdateBanner() {
       });
 
     return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
       navigator.serviceWorker.removeEventListener(
         "controllerchange",
         onControllerChange

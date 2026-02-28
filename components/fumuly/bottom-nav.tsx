@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, FileText, MessageCircle, Settings, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
 
 const navItems = [
   { href: "/home", label: "ホーム", icon: Home },
@@ -16,22 +16,7 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    const initialHeight = vv.height;
-    const threshold = 100;
-
-    const handleResize = () => {
-      setKeyboardOpen(initialHeight - vv.height > threshold);
-    };
-
-    vv.addEventListener("resize", handleResize);
-    return () => vv.removeEventListener("resize", handleResize);
-  }, []);
+  const keyboardOpen = useKeyboardOpen();
 
   if (keyboardOpen) return null;
 

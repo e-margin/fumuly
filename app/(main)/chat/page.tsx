@@ -9,6 +9,7 @@ import { Send, Loader2, Camera, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
 
 interface Message {
   id?: string;
@@ -23,26 +24,9 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [remaining, setRemaining] = useState<number | null>(null);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const keyboardOpen = useKeyboardOpen();
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Detect mobile keyboard open/close via visualViewport
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    const initialHeight = vv.height;
-    const threshold = 100; // keyboard is at least 100px
-
-    const handleResize = () => {
-      const isOpen = initialHeight - vv.height > threshold;
-      setKeyboardOpen(isOpen);
-    };
-
-    vv.addEventListener("resize", handleResize);
-    return () => vv.removeEventListener("resize", handleResize);
-  }, []);
 
   // Load conversation history
   useEffect(() => {

@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 
 export function AuthGuard() {
+  const lastCheckRef = useRef(0);
+
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Debounce: skip if checked within last 5 seconds
+      const now = Date.now();
+      if (now - lastCheckRef.current < 5000) return;
+      lastCheckRef.current = now;
+
+      const { data: { user }, error } = await supabase.auth.getUser();
+      // Don't redirect on network errors (allow offline usage)
+      if (error) return;
       if (!user) {
         window.location.href = "/login";
       }
