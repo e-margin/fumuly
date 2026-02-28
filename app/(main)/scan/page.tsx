@@ -41,9 +41,10 @@ export default function ScanPage() {
       return;
     }
 
-    const dataUrl = await new Promise<string>((resolve) => {
+    const dataUrl = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (ev) => resolve(ev.target?.result as string);
+      reader.onerror = () => reject(new Error("ファイルの読み取りに失敗しました"));
       reader.readAsDataURL(file);
     });
 
@@ -62,7 +63,9 @@ export default function ScanPage() {
   const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    processFile(file);
+    processFile(file).catch(() => {
+      alert("画像の処理に失敗しました。別の画像をお試しください。");
+    });
     // Reset input so the same file can be selected again
     e.target.value = "";
   };

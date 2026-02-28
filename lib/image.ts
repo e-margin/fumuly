@@ -11,20 +11,17 @@ export function resizeImage(
     img.onload = () => {
       let { width, height } = img;
 
-      // リサイズ不要ならそのまま返す
-      if (width <= maxSize && height <= maxSize) {
-        resolve(dataUrl);
-        return;
+      if (width > maxSize || height > maxSize) {
+        if (width > height) {
+          height = Math.round((height * maxSize) / width);
+          width = maxSize;
+        } else {
+          width = Math.round((width * maxSize) / height);
+          height = maxSize;
+        }
       }
 
-      if (width > height) {
-        height = Math.round((height * maxSize) / width);
-        width = maxSize;
-      } else {
-        width = Math.round((width * maxSize) / height);
-        height = maxSize;
-      }
-
+      // 常にCanvas経由でJPEGに変換（media_typeの一貫性を保証）
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;

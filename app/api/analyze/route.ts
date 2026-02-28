@@ -69,8 +69,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Base64 size check per image
-    const MAX_BASE64_SIZE = 14 * 1024 * 1024; // 14MB in base64 chars
+    // Base64 size check per image + total
+    const MAX_BASE64_SIZE = 14 * 1024 * 1024; // 14MB per image
+    const MAX_TOTAL_SIZE = 20 * 1024 * 1024; // 20MB total
+    let totalSize = 0;
     for (const img of images) {
       if (typeof img !== "string" || img.length > MAX_BASE64_SIZE) {
         return NextResponse.json(
@@ -78,6 +80,13 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
+      totalSize += img.length;
+    }
+    if (totalSize > MAX_TOTAL_SIZE) {
+      return NextResponse.json(
+        { error: "画像の合計サイズが大きすぎます" },
+        { status: 400 }
+      );
     }
 
     // Get user context from profile for better analysis
