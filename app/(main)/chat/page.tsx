@@ -23,8 +23,26 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Detect mobile keyboard open/close via visualViewport
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const initialHeight = vv.height;
+    const threshold = 100; // keyboard is at least 100px
+
+    const handleResize = () => {
+      const isOpen = initialHeight - vv.height > threshold;
+      setKeyboardOpen(isOpen);
+    };
+
+    vv.addEventListener("resize", handleResize);
+    return () => vv.removeEventListener("resize", handleResize);
+  }, []);
 
   // Load conversation history
   useEffect(() => {
@@ -139,7 +157,10 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="fixed inset-0 bottom-16 flex flex-col bg-[#F7F8FA] z-10">
+    <div className={cn(
+      "fixed inset-0 flex flex-col bg-[#F7F8FA] z-10 transition-[bottom] duration-200",
+      keyboardOpen ? "bottom-0" : "bottom-16"
+    )}>
       {/* Header */}
       <div className="px-4 py-3 border-b bg-white shrink-0">
         <h1 className="text-lg font-bold text-foreground">

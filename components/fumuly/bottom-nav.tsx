@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, FileText, MessageCircle, Settings, Camera } from "lucide-react";
@@ -15,6 +16,24 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const initialHeight = vv.height;
+    const threshold = 100;
+
+    const handleResize = () => {
+      setKeyboardOpen(initialHeight - vv.height > threshold);
+    };
+
+    vv.addEventListener("resize", handleResize);
+    return () => vv.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (keyboardOpen) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white/95 backdrop-blur-sm safe-area-bottom">
