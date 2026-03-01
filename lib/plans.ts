@@ -9,6 +9,7 @@ export type PlanDefinition = {
   features: string[];
   planKey?: PlanKey;
   recommended?: boolean;
+  savingBadge?: string;
 };
 
 export const paidPlans: PlanDefinition[] = [
@@ -31,9 +32,10 @@ export const paidPlans: PlanDefinition[] = [
     name: "年額",
     price: "4,400",
     unit: "円/年",
-    period: "（税込・約23%OFF）",
+    period: "（税込）",
     description: "長く使いたい方におすすめ",
     recommended: true,
+    savingBadge: "1,360円おトク",
     features: [
       "スキャン無制限",
       "AI書類解析",

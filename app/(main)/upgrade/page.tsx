@@ -157,13 +157,18 @@ export default function UpgradePage() {
                   おすすめ
                 </div>
               )}
-              <div className="flex items-baseline gap-1">
+              <div className="flex items-baseline gap-1 flex-wrap">
                 <span className="text-2xl font-bold text-foreground">
                   {plan.price}
                 </span>
                 <span className="text-sm text-sub">{plan.unit}</span>
                 {plan.period && (
                   <span className="text-xs text-ignore">{plan.period}</span>
+                )}
+                {plan.savingBadge && (
+                  <span className="text-xs font-bold text-[#F4845F] bg-[#F4845F]/10 px-2 py-0.5 rounded-full">
+                    {plan.savingBadge}
+                  </span>
                 )}
               </div>
               <p className="text-sm font-medium text-foreground mt-1">
