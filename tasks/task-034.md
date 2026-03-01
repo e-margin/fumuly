@@ -3,6 +3,7 @@ id: task-034
 title: ユーザーデータのアプリレベル暗号化
 parents: [セキュリティ]
 status: waiting
+priority: medium
 depends_on: []
 this_week: true
 completed_at: null

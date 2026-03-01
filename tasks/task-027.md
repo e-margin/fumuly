@@ -3,6 +3,7 @@ id: task-027
 title: 会話履歴の保持期間ポリシー実装
 parents: [プライバシー, バックエンド]
 status: idea
+priority: low
 depends_on: []
 this_week: false
 completed_at: null

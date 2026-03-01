@@ -3,6 +3,7 @@ id: task-014
 title: スマホのリマインダー・カレンダー連携
 parents: [機能]
 status: waiting
+priority: low
 depends_on: [task-005]
 this_week: false
 completed_at: null

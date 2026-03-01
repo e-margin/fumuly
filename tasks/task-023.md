@@ -3,6 +3,7 @@ id: task-023
 title: Claude JSON.parseのtry/catch追加
 parents: [安定性]
 status: waiting
+priority: high
 depends_on: []
 this_week: true
 completed_at: null

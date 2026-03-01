@@ -3,6 +3,7 @@ id: task-028
 title: オフラインフォールバック・SWキャッシュ改善
 parents: [PWA]
 status: waiting
+priority: low
 depends_on: []
 this_week: false
 completed_at: null

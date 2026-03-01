@@ -3,6 +3,7 @@ id: task-029
 title: プロフィール未入力時の告知
 parents: [UX]
 status: waiting
+priority: medium
 depends_on: []
 this_week: true
 completed_at: null

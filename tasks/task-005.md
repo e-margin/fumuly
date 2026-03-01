@@ -3,6 +3,7 @@ id: task-005
 title: Web Push通知・リマインダー機能の実装
 parents: [機能]
 status: waiting
+priority: low
 depends_on: [task-002]
 this_week: false
 completed_at: null

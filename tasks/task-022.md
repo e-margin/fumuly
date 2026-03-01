@@ -3,6 +3,7 @@ id: task-022
 title: 書類一覧・ホーム画面のstale data問題
 parents: [UX, バグ]
 status: waiting
+priority: high
 depends_on: []
 this_week: true
 completed_at: null

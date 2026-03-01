@@ -3,6 +3,7 @@ id: task-033
 title: ホーム画面で最下部のカードと「AIに相談」ボタンが重なる問題の修正
 parents: [UI/UX, バグ修正]
 status: waiting
+priority: high
 depends_on: []
 this_week: true
 completed_at: null

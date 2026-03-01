@@ -3,6 +3,7 @@ id: task-019
 title: DB操作のエラーハンドリング全般
 parents: [安定性, UX]
 status: waiting
+priority: medium
 depends_on: []
 this_week: true
 completed_at: null

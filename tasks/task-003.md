@@ -3,6 +3,7 @@ id: task-003
 title: Cloudflare Email Routing設定
 parents: [インフラ]
 status: waiting
+priority: low
 depends_on: [task-001]
 this_week: false
 completed_at: null

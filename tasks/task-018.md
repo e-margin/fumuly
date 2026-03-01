@@ -3,6 +3,7 @@ id: task-018
 title: パスワードリセット機能の実装
 parents: [認証, UX]
 status: waiting
+priority: medium
 depends_on: []
 this_week: true
 completed_at: null

@@ -3,6 +3,7 @@ id: task-024
 title: 書類一覧のページネーション・select最適化
 parents: [パフォーマンス]
 status: waiting
+priority: low
 depends_on: []
 this_week: false
 completed_at: null

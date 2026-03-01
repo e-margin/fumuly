@@ -3,6 +3,7 @@ id: task-007
 title: Google認証の追加
 parents: [認証]
 status: waiting
+priority: low
 depends_on: []
 this_week: false
 completed_at: null

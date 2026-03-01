@@ -3,6 +3,7 @@ id: task-016
 title: LPページのPC表示対応
 parents: [UI/UX]
 status: idea
+priority: low
 depends_on: []
 this_week: false
 completed_at: null
