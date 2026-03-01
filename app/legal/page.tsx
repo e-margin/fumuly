@@ -10,7 +10,7 @@ const rows = [
     value: "contact@fumuly.com（お問い合わせ対応：平日10:00〜18:00）",
   },
   { label: "サービス名", value: "Fumuly（フムリー）" },
-  { label: "サービスURL", value: "https://fumuly.vercel.app" },
+  { label: "サービスURL", value: "https://fumuly.com" },
   {
     label: "サービス概要",
     value:

@@ -2,11 +2,11 @@
 id: task-021
 title: プライバシーポリシー・同意説明の実態乖離修正
 parents: [法務, プライバシー]
-status: waiting
+status: done
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ1: Stripe審査通過（優先1）。コードではなく文言の問題"
 estimated_hours: 0.1
 ---

@@ -93,31 +93,21 @@ export default function SettingsPage() {
   const handleDeleteAll = async () => {
     setDeleting(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const res = await fetch("/api/delete-account", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || "削除に失敗しました");
+        setDeleting(false);
+        return;
+      }
 
-    // Delete all user data
-    await supabase.from("conversations").delete().eq("user_id", user.id);
-    await supabase.from("documents").delete().eq("user_id", user.id);
-    await supabase
-      .from("profiles")
-      .update({
-        income_type: null,
-        monthly_income: null,
-        debt_total: null,
-        debt_creditors: null,
-        has_adhd: false,
-        phone_difficulty: false,
-        characteristics_other: null,
-        current_situation: null,
-        onboarding_done: false,
-      })
-      .eq("id", user.id);
-
-    setDeleting(false);
-    router.push("/home");
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    } catch {
+      alert("削除に失敗しました");
+      setDeleting(false);
+    }
   };
 
   return (

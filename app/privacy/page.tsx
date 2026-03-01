@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <h1 className="text-xl font-bold text-foreground">
           プライバシーポリシー
         </h1>
-        <p className="text-sub text-sm">制定日：2026年2月23日</p>
+        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 改定日：2026年3月1日</p>
 
         <p>
           E-margin（以下「当方」）は、Fumuly（フムリー）（以下「本サービス」）における個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
@@ -25,6 +25,8 @@ export default function PrivacyPage() {
         <ul>
           <li>郵便物・書類の画像（撮影データ）</li>
           <li>メールアドレス（アカウント登録時）</li>
+          <li>プロフィール情報（収入種別・月収・借金額・特性・現在の状況）</li>
+          <li>チャットでの相談内容</li>
         </ul>
         <p className="font-semibold">2. 自動的に取得される情報</p>
         <ul>
@@ -36,30 +38,39 @@ export default function PrivacyPage() {
         <p>取得した情報は、以下の目的のために利用します。</p>
         <ul>
           <li>本サービスの提供・運営・改善</li>
+          <li>AI解析の精度向上（プロフィール情報を解析コンテキストとして使用）</li>
           <li>ユーザーへのサポート・お問い合わせ対応</li>
           <li>期限・対応事項のリマインダー通知</li>
           <li>利用規約違反等の調査・対応</li>
         </ul>
 
         <h2 className="text-base font-bold mt-8">
-          第3条（画像データの取り扱い）
+          第3条（AIサービスへのデータ送信）
         </h2>
-        <p>撮影された書類の画像データは、以下のとおり取り扱います。</p>
+        <p>
+          本サービスは、書類解析およびAIチャット機能のためにAnthropicが提供するClaude
+          API（以下「外部AIサービス」）を使用しています。以下のデータが外部AIサービスに送信されます。
+        </p>
+        <p className="font-semibold">1. 書類解析時</p>
         <ul>
-          <li>
-            画像データはお使いの端末内（ローカルストレージ）にのみ保存されます
-          </li>
-          <li>
-            画像はAI解析のためAnthropicが提供するClaude
-            API（以下「外部AIサービス」）に送信されます
-          </li>
-          <li>
-            外部AIサービスへの送信は解析処理のみを目的とし、当方のサーバーには画像を保存しません
-          </li>
-          <li>
-            解析結果のテキストデータのみをクラウド上のデータベースに保存します
-          </li>
+          <li>書類の画像データ（解析処理のみに使用。当方のサーバーには画像を保存しません）</li>
+          <li>プロフィール情報（収入種別・月収・借金額・特性。解析精度の向上のため）</li>
         </ul>
+        <p className="font-semibold">2. チャット相談時</p>
+        <ul>
+          <li>ユーザーの入力メッセージ</li>
+          <li>チャット会話履歴（文脈を保持するため、直近の履歴を送信）</li>
+          <li>プロフィール情報（適切なアドバイスのため）</li>
+          <li>登録済み書類の解析結果テキスト（書類に関する質問に回答するため）</li>
+        </ul>
+        <p className="font-semibold">3. サマリー再生成時</p>
+        <ul>
+          <li>書類の解析結果テキスト（送付元・金額・期限・カテゴリ）</li>
+          <li>プロフィール情報</li>
+        </ul>
+        <p>
+          画像データはお使いの端末内（ローカルストレージ）にのみ保存され、解析結果のテキストデータのみをクラウド上のデータベースに保存します。
+        </p>
 
         <h2 className="text-base font-bold mt-8">第4条（第三者提供）</h2>
         <p>
@@ -72,8 +83,8 @@ export default function PrivacyPage() {
         </ul>
         <p className="font-semibold">外部サービスへの送信について</p>
         <p>
-          本サービスは、書類解析のためにAnthropicのClaude
-          APIを使用しています。送信される情報は書類の画像データであり、Anthropicの
+          本サービスは、第3条に記載のデータをAnthropicのClaude
+          APIに送信します。送信されたデータはAnthropicの
           <a
             href="https://www.anthropic.com/privacy"
             target="_blank"
@@ -84,13 +95,17 @@ export default function PrivacyPage() {
           </a>
           に基づいて処理されます。
         </p>
+        <p>
+          また、決済処理のためにStripe,
+          Inc.のサービスを使用しています。決済情報はStripeが直接処理し、当方はクレジットカード番号等の決済情報を保持しません。
+        </p>
 
         <h2 className="text-base font-bold mt-8">
           第5条（データの保管・セキュリティ）
         </h2>
         <ul>
           <li>
-            テキスト解析結果はSupabaseが提供するデータベースに暗号化して保存します
+            テキスト解析結果・チャット履歴・プロフィール情報はSupabaseが提供するデータベースに保存します
           </li>
           <li>
             当方は適切なセキュリティ対策を講じますが、完全な安全性を保証するものではありません
@@ -105,14 +120,14 @@ export default function PrivacyPage() {
           <li>アカウントおよびすべてのデータの削除</li>
         </ul>
         <p>
-          データの削除はアプリ内の設定画面から行えます。設定画面からの削除が困難な場合は、下記お問い合わせ先までご連絡ください。
+          データの削除はアプリ内の設定画面から行えます。アカウント削除を実行すると、認証情報を含むすべてのデータが削除されます。設定画面からの削除が困難な場合は、下記お問い合わせ先までご連絡ください。
         </p>
 
         <h2 className="text-base font-bold mt-8">
           第7条（Cookie・トラッキング）
         </h2>
         <p>
-          本サービスは、サービス改善のためにCookieおよびローカルストレージを使用する場合があります。ブラウザの設定によりCookieを無効にすることができますが、一部機能が利用できなくなる場合があります。
+          本サービスは、認証セッションの管理のためにCookieを使用します。ブラウザの設定によりCookieを無効にすることができますが、一部機能が利用できなくなる場合があります。
         </p>
 
         <h2 className="text-base font-bold mt-8">第8条（広告について）</h2>

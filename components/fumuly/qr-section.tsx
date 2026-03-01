@@ -18,7 +18,7 @@ export function QRSection() {
         </p>
         <div className="inline-block bg-white rounded-2xl p-6 shadow-sm">
           <QRCodeSVG
-            value="https://fumuly.vercel.app"
+            value="https://fumuly.com"
             size={160}
             fgColor="#2C4A7C"
             level="M"

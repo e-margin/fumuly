@@ -70,9 +70,9 @@ export default function OnboardingPage() {
         </p>
       </div>
       <div className="bg-background rounded-xl p-4 text-left text-sm text-sub space-y-2">
-        <p>・送信されるデータ：書類の画像（一時的）</p>
-        <p>・画像はAnthropicのサーバーで処理され、アプリには保存されません</p>
-        <p>・解析結果のテキストのみがクラウドに保存されます</p>
+        <p>・書類の画像、プロフィール情報、チャット内容がAI（Anthropic）に送信されます</p>
+        <p>・画像はAI解析後に破棄され、アプリには保存されません</p>
+        <p>・解析結果とチャット履歴がクラウドに保存されます</p>
       </div>
       <Button
         onClick={() => setStep(1)}

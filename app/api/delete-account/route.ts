@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
-import { getStripe } from "@/lib/stripe";
+import { createServerClient } from "@supabase/ssr";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
@@ -10,6 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth required (Cookie-based)
     const supabaseClient = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -32,34 +32,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("stripe_customer_id")
-      .eq("id", user.id)
-      .single();
+    // Delete user data first (conversations, documents)
+    await supabaseAdmin.from("conversations").delete().eq("user_id", user.id);
+    await supabaseAdmin.from("documents").delete().eq("user_id", user.id);
 
-    if (!profile?.stripe_customer_id) {
+    // Delete auth user (CASCADE will also delete profiles row)
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(user.id);
+
+    if (error) {
+      console.error("Delete account error:", error);
       return NextResponse.json(
-        { error: "Stripeアカウントが見つかりません" },
-        { status: 400 }
+        { error: "アカウントの削除に失敗しました" },
+        { status: 500 }
       );
     }
 
-    const origin =
-      req.headers.get("origin") ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://fumuly.com";
-
-    const portalSession = await getStripe().billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
-      return_url: `${origin}/settings`,
-    });
-
-    return NextResponse.json({ url: portalSession.url });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Portal error:", error);
+    console.error("Delete account error:", error);
     return NextResponse.json(
-      { error: "ポータルの作成に失敗しました" },
+      { error: "サーバーエラーが発生しました" },
       { status: 500 }
     );
   }

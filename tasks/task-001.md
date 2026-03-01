@@ -2,11 +2,11 @@
 id: task-001
 title: 本番ドメイン（fumuly.com）移行時のURL変更
 parents: [インフラ]
-status: waiting
+status: done
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ1: Stripe審査通過（優先2）。fumuly.comへの統一"
 estimated_hours: 1
 ---

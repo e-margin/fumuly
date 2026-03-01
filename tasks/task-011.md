@@ -2,11 +2,11 @@
 id: task-011
 title: LP・設定画面のフッターリンク整備
 parents: [UI]
-status: waiting
+status: done
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ1: Stripe審査通過（優先3）。特商法リンク追加、フッターの統一"
 estimated_hours: 1
 ---
