@@ -2,13 +2,13 @@
 id: task-018
 title: パスワードリセット機能の実装
 parents: [認証, UX]
-status: waiting
+status: blocked
 priority: medium
-depends_on: []
-this_week: true
+depends_on: [task-003]
+this_week: false
 completed_at: null
 progress: 0
-note: "フェーズ2: アーリーアダプター（優先8）。パスワードリセット"
+note: "メール送信未設定のためブロック中。task-003（Email Routing）完了後に着手"
 estimated_hours: 0.05
 ---
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { DocumentCard } from "@/components/fumuly/document-card";
 import { Button } from "@/components/ui/button";
-import { Camera, MessageCircle, AlertTriangle, Loader2 } from "lucide-react";
+import { Camera, MessageCircle, AlertTriangle, Loader2, User } from "lucide-react";
 
 interface Document {
   id: string;
@@ -23,6 +23,7 @@ export default function HomePage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayName, setDisplayName] = useState("");
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,24 +35,23 @@ export default function HomePage() {
       // Get profile
       const { data: profile } = await supabase
         .from("profiles")
-        .select("display_name")
+        .select("display_name, income_type, monthly_income")
         .eq("id", user.id)
         .single();
 
       if (profile?.display_name) {
         setDisplayName(profile.display_name);
       }
+      if (profile && !profile.income_type && profile.monthly_income == null) {
+        setProfileIncomplete(true);
+      }
 
-      // Get urgent/action documents not done
-      const { data } = await supabase
-        .from("documents")
-        .select("*")
-        .eq("is_done", false)
-        .in("category", ["urgent", "action"])
-        .order("deadline", { ascending: true, nullsFirst: false })
-        .limit(10);
-
-      setDocuments((data as Document[]) || []);
+      // Get urgent/action documents (via API for decryption)
+      const res = await fetch("/api/documents?mode=home");
+      if (res.ok) {
+        const docs = await res.json();
+        setDocuments(docs || []);
+      }
       setLoading(false);
     };
 
@@ -89,6 +89,25 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* Profile incomplete banner */}
+      {profileIncomplete && (
+        <Link href="/settings/profile">
+          <div className="mb-4 bg-accent/10 border border-accent/20 rounded-xl p-3 flex items-center gap-3 active:bg-accent/15 transition-colors">
+            <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center shrink-0">
+              <User className="h-4 w-4 text-accent" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">
+                プロフィールを設定しませんか？
+              </p>
+              <p className="text-xs text-sub">
+                あなたに合ったアドバイスが受けられます
+              </p>
+            </div>
+          </div>
+        </Link>
+      )}
 
       {loading ? (
         <div className="flex justify-center py-20">

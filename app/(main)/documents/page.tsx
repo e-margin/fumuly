@@ -27,18 +27,11 @@ export default function DocumentsPage() {
 
   useEffect(() => {
     const fetchDocuments = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data } = await supabase
-        .from("documents")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      setDocuments((data as Document[]) || []);
+      const res = await fetch("/api/documents?mode=all");
+      if (res.ok) {
+        const docs = await res.json();
+        setDocuments(docs || []);
+      }
       setLoading(false);
     };
 

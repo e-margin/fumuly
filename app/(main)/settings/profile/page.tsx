@@ -46,19 +46,14 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      const res = await fetch("/api/profile");
+      if (!res.ok) {
+        setEditing(true);
+        setLoading(false);
+        return;
+      }
 
-      const { data } = await supabase
-        .from("profiles")
-        .select(
-          "income_type, monthly_income, debt_total, has_adhd, phone_difficulty, current_situation, onboarding_done"
-        )
-        .eq("id", user.id)
-        .single();
-
+      const data = await res.json();
       if (data) {
         setProfile(data);
         setIncomeType(data.income_type ?? "");
@@ -87,25 +82,7 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setSaving(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    await supabase
-      .from("profiles")
-      .update({
-        income_type: incomeType || null,
-        monthly_income: monthlyIncome ? parseInt(monthlyIncome) : null,
-        debt_total: debtTotal ? parseInt(debtTotal) : null,
-        has_adhd: hasAdhd,
-        phone_difficulty: phoneDifficulty,
-        current_situation: currentSituation || null,
-        onboarding_done: true,
-      })
-      .eq("id", user.id);
-
-    setProfile({
+    const updates = {
       income_type: incomeType || null,
       monthly_income: monthlyIncome ? parseInt(monthlyIncome) : null,
       debt_total: debtTotal ? parseInt(debtTotal) : null,
@@ -113,10 +90,33 @@ export default function ProfilePage() {
       phone_difficulty: phoneDifficulty,
       current_situation: currentSituation || null,
       onboarding_done: true,
-    });
+    };
 
-    setSaving(false);
-    setEditing(false);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "保存に失敗しました";
+        try {
+          const data = await res.json();
+          errorMessage = data.error || errorMessage;
+        } catch {}
+        alert(errorMessage);
+        setSaving(false);
+        return;
+      }
+
+      setProfile(updates);
+      setSaving(false);
+      setEditing(false);
+    } catch {
+      alert("保存に失敗しました");
+      setSaving(false);
+    }
   };
 
   if (loading) {

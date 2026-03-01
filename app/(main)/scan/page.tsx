@@ -136,32 +136,40 @@ export default function ScanPage() {
     if (!result) return;
     setSaving(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const res = await fetch("/api/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: result.sender,
+          type: result.type,
+          amount: result.amount,
+          deadline: result.deadline,
+          action_required: result.action_required,
+          priority: result.priority,
+          category: result.category,
+          summary: result.summary,
+          recommended_action: result.recommended_action,
+          detailed_summary: result.detailed_summary,
+        }),
+      });
 
-    const { error } = await supabase.from("documents").insert({
-      user_id: user.id,
-      sender: result.sender,
-      type: result.type,
-      amount: result.amount,
-      deadline: result.deadline,
-      action_required: result.action_required,
-      priority: result.priority,
-      category: result.category,
-      summary: result.summary,
-      recommended_action: result.recommended_action,
-      detailed_summary: result.detailed_summary,
-    });
+      if (!res.ok) {
+        let errorMessage = "保存に失敗しました";
+        try {
+          const data = await res.json();
+          errorMessage = data.error || errorMessage;
+        } catch {}
+        alert(errorMessage);
+        setSaving(false);
+        return;
+      }
 
-    if (error) {
+      router.push("/home");
+    } catch {
       alert("保存に失敗しました");
       setSaving(false);
-      return;
     }
-
-    router.push("/home");
   };
 
   const handleSelectAmount = (amount: number) => {

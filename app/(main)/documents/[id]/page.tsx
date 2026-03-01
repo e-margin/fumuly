@@ -54,13 +54,11 @@ export default function DocumentDetailPage() {
 
   useEffect(() => {
     const fetchDocument = async () => {
-      const { data } = await supabase
-        .from("documents")
-        .select("*")
-        .eq("id", params.id)
-        .single();
-
-      setDoc(data as DocumentDetail);
+      const res = await fetch(`/api/documents?id=${params.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setDoc(data as DocumentDetail);
+      }
       setLoading(false);
     };
 
@@ -71,10 +69,17 @@ export default function DocumentDetailPage() {
     if (!doc) return;
     setUpdating(true);
 
-    await supabase
+    const { error } = await supabase
       .from("documents")
       .update({ is_done: !doc.is_done })
       .eq("id", doc.id);
+
+    if (error) {
+      console.error("Toggle done error:", error);
+      alert("更新に失敗しました");
+      setUpdating(false);
+      return;
+    }
 
     setDoc({ ...doc, is_done: !doc.is_done });
     setUpdating(false);
@@ -84,7 +89,15 @@ export default function DocumentDetailPage() {
     if (!doc) return;
     setDeleting(true);
 
-    await supabase.from("documents").delete().eq("id", doc.id);
+    const { error } = await supabase.from("documents").delete().eq("id", doc.id);
+
+    if (error) {
+      console.error("Delete document error:", error);
+      alert("削除に失敗しました");
+      setDeleting(false);
+      return;
+    }
+
     router.push("/documents");
   };
 

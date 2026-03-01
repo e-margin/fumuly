@@ -2,12 +2,12 @@
 id: task-034
 title: ユーザーデータのアプリレベル暗号化
 parents: [セキュリティ]
-status: waiting
+status: done
 priority: medium
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ2: アーリーアダプター（優先10）。データ暗号化"
 estimated_hours: 6
 ---
