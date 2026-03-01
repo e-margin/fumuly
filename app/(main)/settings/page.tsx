@@ -96,8 +96,14 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/delete-account", { method: "POST" });
       if (!res.ok) {
-        const data = await res.json();
-        alert(data.error || "削除に失敗しました");
+        let errorMessage = "削除に失敗しました";
+        try {
+          const data = await res.json();
+          errorMessage = data.error || errorMessage;
+        } catch {
+          // JSONパース失敗時はデフォルトメッセージを使用
+        }
+        alert(errorMessage);
         setDeleting(false);
         return;
       }
