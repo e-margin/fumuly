@@ -1,4 +1,4 @@
-// BUILD_TIMESTAMP: 2026-02-28T18:41:43.121Z
+// BUILD_TIMESTAMP: 2026-03-01T09:23:15.498Z
 const CACHE_NAME = "fumuly-v1";
 
 // Install: do NOT skipWaiting — wait for user to trigger update

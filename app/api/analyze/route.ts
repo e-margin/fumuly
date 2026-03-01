@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { analyzeDocument } from "@/lib/claude";
+import { isPremiumUser } from "@/lib/stripe";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
@@ -33,19 +34,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Rate limit (skip for admin user)
-    const adminUserId = process.env.ADMIN_USER_ID;
-    if (user.id !== adminUserId) {
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    // Get user profile (needed for both rate limiting and context)
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    // Rate limit: free users = 5 scans/month, paid/VIP = unlimited
+    const FREE_MONTHLY_LIMIT = 5;
+    if (profile && !isPremiumUser(profile)) {
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
       const { count } = await supabaseAdmin
         .from("documents")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id)
-        .gte("created_at", oneDayAgo);
+        .gte("created_at", monthStart);
 
-      if (count !== null && count >= 10) {
+      if (count !== null && count >= FREE_MONTHLY_LIMIT) {
         return NextResponse.json(
-          { error: "本日のスキャン上限に達しました。明日またお試しください" },
+          { error: "今月のスキャン上限（5通）に達しました。有料プランにアップグレードすると無制限にスキャンできます" },
           { status: 429 }
         );
       }
@@ -89,13 +98,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get user context from profile for better analysis
+    // Build user context from profile for better analysis
     let userContext = "";
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
 
     if (profile) {
       const profileData: Record<string, string> = {};

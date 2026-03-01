@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS profiles (
   characteristics_other TEXT,
   current_situation  TEXT,
   onboarding_done    BOOLEAN DEFAULT FALSE,
-  plan               TEXT DEFAULT 'free' CHECK (plan IN ('free', 'paid'))
+  plan               TEXT DEFAULT 'free' CHECK (plan IN ('free', 'paid')),
+  is_vip             BOOLEAN DEFAULT FALSE,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT
 );
 
 -- Row Level Security

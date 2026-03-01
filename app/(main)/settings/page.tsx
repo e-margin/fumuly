@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -24,13 +24,65 @@ import {
   LogOut,
   Loader2,
   ChevronRight,
+  CreditCard,
+  Crown,
 } from "lucide-react";
 import Link from "next/link";
+
+type PlanInfo = {
+  plan: string;
+  is_vip: boolean;
+};
 
 export default function SettingsPage() {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [planInfo, setPlanInfo] = useState<PlanInfo | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [upgraded, setUpgraded] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("upgraded") === "true") {
+      setUpgraded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchPlan = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("plan, is_vip")
+        .eq("id", user.id)
+        .single();
+
+      if (data) setPlanInfo(data);
+    };
+    fetchPlan();
+  }, []);
+
+  const handlePortal = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "エラーが発生しました");
+        setPortalLoading(false);
+      }
+    } catch {
+      alert("エラーが発生しました");
+      setPortalLoading(false);
+    }
+  };
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -73,6 +125,69 @@ export default function SettingsPage() {
       <h1 className="text-xl font-bold text-foreground mb-6">
         設定
       </h1>
+
+      {/* Plan section */}
+      {upgraded && (
+        <div className="bg-keep/10 border border-keep/20 rounded-xl p-4 mb-6">
+          <p className="text-sm font-medium text-keep">
+            アップグレードありがとうございます！有料プランが有効になりました。
+          </p>
+        </div>
+      )}
+
+      <div className="bg-background rounded-2xl border p-4 mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-[#F4845F]/10 rounded-full flex items-center justify-center">
+              {planInfo?.is_vip ? (
+                <Crown className="h-4 w-4 text-[#F4845F]" />
+              ) : (
+                <CreditCard className="h-4 w-4 text-[#F4845F]" />
+              )}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                現在のプラン
+              </p>
+              <p className="text-xs text-sub">
+                {planInfo?.is_vip
+                  ? "VIP（無料提供）"
+                  : planInfo?.plan === "paid"
+                    ? "有料プラン"
+                    : "無料プラン（月5通まで）"}
+              </p>
+            </div>
+          </div>
+          {planInfo?.is_vip ? (
+            <span className="text-xs font-bold text-[#F4845F] bg-[#F4845F]/10 px-2.5 py-1 rounded-full">
+              VIP
+            </span>
+          ) : planInfo?.plan === "paid" ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePortal}
+              disabled={portalLoading}
+              className="text-xs"
+            >
+              {portalLoading ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                "プラン管理"
+              )}
+            </Button>
+          ) : (
+            <Link href="/pricing">
+              <Button
+                size="sm"
+                className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white text-xs"
+              >
+                アップグレード
+              </Button>
+            </Link>
+          )}
+        </div>
+      </div>
 
       <div className="space-y-1">
         {/* Profile */}

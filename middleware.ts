@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all paths except static files and images
-    "/((?!_next/static|_next/image|favicon.ico|icons/|sw.js|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // Match all paths except static files, images, and Stripe webhook
+    "/((?!_next/static|_next/image|favicon.ico|icons/|sw.js|manifest.json|api/stripe/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
