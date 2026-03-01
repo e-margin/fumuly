@@ -67,6 +67,14 @@ const CHAT_SYSTEM_PROMPT = `あなたはFumuly（フムリー）のAIアシス�
 AIの回答は参考情報であり、専門家の助言に代わるものではありません。`;
 
 export async function POST(req: NextRequest) {
+  if (!process.env.ENCRYPTION_KEY || process.env.ENCRYPTION_KEY.length !== 64) {
+    console.error("Chat error: ENCRYPTION_KEY is not set or invalid");
+    return NextResponse.json(
+      { error: "サーバー設定エラーが発生しました。管理者にお問い合わせください" },
+      { status: 500 }
+    );
+  }
+
   try {
     const body = await req.json();
     const { message } = body;
@@ -218,7 +226,7 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5-20250929",
+        model: "claude-sonnet-4-6",
         max_tokens: 1000,
         system: CHAT_SYSTEM_PROMPT + userContext + recentDocuments,
         messages,
@@ -251,10 +259,18 @@ export async function POST(req: NextRequest) {
     const remaining = isAdmin ? null : Math.max(0, RATE_LIMIT - (usedCount + 1));
     return NextResponse.json({ reply, remaining });
   } catch (error) {
-    console.error("Chat error:", error);
-    const message = error instanceof Error && error.message.includes("Claude API")
-      ? "AIの応答でエラーが発生しました。もう一度お試しください"
-      : "サーバーエラーが発生しました。しばらくしてからお試しください";
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error("Chat error:", errMsg);
+    let message: string;
+    if (errMsg.includes("Claude API")) {
+      message = "AIの応答でエラーが発生しました。もう一度お試しください";
+    } else if (errMsg.includes("ENCRYPTION_KEY")) {
+      message = "サーバー設定エラーが発生しました。管理者にお問い合わせください";
+    } else if (errMsg.includes("fetch failed") || errMsg.includes("Failed to fetch") || errMsg.includes("ECONNREFUSED") || errMsg.includes("ETIMEDOUT")) {
+      message = "AIへの接続に失敗しました。しばらくしてからお試しください";
+    } else {
+      message = "サーバーエラーが発生しました。しばらくしてからお試しください";
+    }
     return NextResponse.json(
       { error: message },
       { status: 500 }
