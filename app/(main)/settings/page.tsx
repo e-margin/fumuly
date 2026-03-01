@@ -57,9 +57,13 @@ export default function SettingsPage() {
         if (res.ok) {
           const data = await res.json();
           setPlanInfo(data);
+          return;
         }
       } catch {
-        // フォールバック: 直接DBから取得
+        // ネットワークエラー
+      }
+      // フォールバック: 直接DBから取得
+      try {
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -70,6 +74,8 @@ export default function SettingsPage() {
           .eq("id", user.id)
           .single();
         if (data) setPlanInfo({ ...data, plan_type: null });
+      } catch {
+        // フォールバックも失敗
       }
     };
     fetchPlan();

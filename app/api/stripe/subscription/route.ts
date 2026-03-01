@@ -59,6 +59,15 @@ export async function GET(req: NextRequest) {
       profile.stripe_subscription_id
     );
 
+    // アクティブでないサブスクリプションはplan_type: nullを返す
+    if (subscription.status !== "active" && subscription.status !== "trialing") {
+      return NextResponse.json({
+        plan: profile.plan,
+        is_vip: profile.is_vip,
+        plan_type: null,
+      });
+    }
+
     const priceId = subscription.items.data[0]?.price?.id;
     let planType: "monthly" | "yearly" | null = null;
 
