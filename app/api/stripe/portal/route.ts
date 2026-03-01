@@ -45,7 +45,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const origin = req.headers.get("origin") || "https://fumuly.vercel.app";
+    const origin =
+      req.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://fumuly.vercel.app";
 
     const portalSession = await getStripe().billingPortal.sessions.create({
       customer: profile.stripe_customer_id,

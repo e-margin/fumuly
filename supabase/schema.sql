@@ -30,9 +30,18 @@ CREATE POLICY "Users can insert own profile"
   ON profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
+-- ユーザーは自分のプロフィールを更新できるが、
+-- plan, is_vip, stripe_* カラムは直接変更不可（Webhookがservice roleで更新する）
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
-  USING (auth.uid() = id);
+  USING (auth.uid() = id)
+  WITH CHECK (
+    auth.uid() = id
+    AND plan = (SELECT plan FROM profiles WHERE id = auth.uid())
+    AND is_vip = (SELECT is_vip FROM profiles WHERE id = auth.uid())
+    AND stripe_customer_id IS NOT DISTINCT FROM (SELECT stripe_customer_id FROM profiles WHERE id = auth.uid())
+    AND stripe_subscription_id IS NOT DISTINCT FROM (SELECT stripe_subscription_id FROM profiles WHERE id = auth.uid())
+  );
 
 -- サインアップ時に自動でprofileを作成するトリガー
 CREATE OR REPLACE FUNCTION public.handle_new_user()

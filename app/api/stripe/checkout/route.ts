@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, isPremiumUser } from "@/lib/stripe";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+// サーバーサイドで許可されたプランのみ受け付ける
+const PLAN_TO_PRICE: Record<string, string | undefined> = {
+  monthly: process.env.STRIPE_MONTHLY_PRICE_ID,
+  yearly: process.env.STRIPE_YEARLY_PRICE_ID,
+};
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,20 +38,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { priceId } = await req.json();
+    const { plan } = await req.json();
+    const priceId = PLAN_TO_PRICE[plan];
+
     if (!priceId) {
       return NextResponse.json(
-        { error: "priceId is required" },
+        { error: "無効なプランです" },
         { status: 400 }
       );
     }
 
-    // Get or create Stripe customer
+    // Get profile and check if already premium
     const { data: profile } = await supabaseAdmin
       .from("profiles")
-      .select("stripe_customer_id")
+      .select("stripe_customer_id, plan, is_vip")
       .eq("id", user.id)
       .single();
+
+    if (profile && isPremiumUser(profile)) {
+      return NextResponse.json(
+        { error: "既に有料プランをご利用中です" },
+        { status: 400 }
+      );
+    }
 
     let customerId = profile?.stripe_customer_id;
 
@@ -56,13 +71,24 @@ export async function POST(req: NextRequest) {
       });
       customerId = customer.id;
 
-      await supabaseAdmin
+      const { error: updateError } = await supabaseAdmin
         .from("profiles")
         .update({ stripe_customer_id: customerId })
         .eq("id", user.id);
+
+      if (updateError) {
+        console.error("Failed to save stripe_customer_id:", updateError);
+        return NextResponse.json(
+          { error: "顧客情報の保存に失敗しました" },
+          { status: 500 }
+        );
+      }
     }
 
-    const origin = req.headers.get("origin") || "https://fumuly.vercel.app";
+    const origin =
+      req.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://fumuly.vercel.app";
 
     const session = await getStripe().checkout.sessions.create({
       customer: customerId,

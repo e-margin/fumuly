@@ -7,6 +7,8 @@ import { BackLink } from "@/components/fumuly/back-link";
 import { Check, Sparkles, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+type PlanKey = "monthly" | "yearly";
+
 const plans = [
   {
     name: "無料",
@@ -15,7 +17,6 @@ const plans = [
     period: "",
     description: "まずは試してみたい方に",
     features: ["月5通までスキャン", "AI書類解析", "AIチャット相談"],
-    cta: null,
   },
   {
     name: "月額",
@@ -30,7 +31,7 @@ const plans = [
       "リマインダー通知",
       "対応履歴の保存",
     ],
-    priceEnvKey: "NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID",
+    planKey: "monthly" as PlanKey,
     recommended: true,
   },
   {
@@ -46,15 +47,15 @@ const plans = [
       "リマインダー通知",
       "対応履歴の保存",
     ],
-    priceEnvKey: "NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID",
+    planKey: "yearly" as PlanKey,
   },
 ];
 
 export default function PricingPage() {
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading, setLoading] = useState<PlanKey | null>(null);
 
-  const handleSubscribe = async (priceEnvKey: string) => {
-    setLoading(priceEnvKey);
+  const handleSubscribe = async (planKey: PlanKey) => {
+    setLoading(planKey);
 
     const {
       data: { user },
@@ -65,22 +66,11 @@ export default function PricingPage() {
       return;
     }
 
-    const priceId =
-      priceEnvKey === "NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID"
-        ? process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID
-        : process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID;
-
-    if (!priceId) {
-      alert("決済の準備ができていません。しばらくお待ちください。");
-      setLoading(null);
-      return;
-    }
-
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ plan: planKey }),
       });
 
       const data = await res.json();
@@ -152,7 +142,7 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              {plan.priceEnvKey ? (
+              {plan.planKey ? (
                 <Button
                   className={`w-full mt-4 h-11 rounded-xl ${
                     plan.recommended
@@ -160,10 +150,10 @@ export default function PricingPage() {
                       : ""
                   }`}
                   variant={plan.recommended ? "default" : "outline"}
-                  onClick={() => handleSubscribe(plan.priceEnvKey!)}
+                  onClick={() => handleSubscribe(plan.planKey!)}
                   disabled={loading !== null}
                 >
-                  {loading === plan.priceEnvKey ? (
+                  {loading === plan.planKey ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     "アップグレードする"

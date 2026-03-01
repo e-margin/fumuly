@@ -8,6 +8,15 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+async function findProfileByCustomerId(customerId: string) {
+  const { data } = await supabaseAdmin
+    .from("profiles")
+    .select("id")
+    .eq("stripe_customer_id", customerId)
+    .single();
+  return data;
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
@@ -41,14 +50,58 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.supabase_user_id;
 
-        if (userId && session.subscription) {
-          await supabaseAdmin
-            .from("profiles")
-            .update({
-              plan: "paid",
-              stripe_subscription_id: session.subscription as string,
-            })
-            .eq("id", userId);
+        if (!userId) {
+          console.error("checkout.session.completed: missing supabase_user_id in metadata", session.id);
+          break;
+        }
+        if (!session.subscription) {
+          console.error("checkout.session.completed: missing subscription", session.id);
+          break;
+        }
+
+        const { error } = await supabaseAdmin
+          .from("profiles")
+          .update({
+            plan: "paid",
+            stripe_subscription_id: session.subscription as string,
+          })
+          .eq("id", userId);
+
+        if (error) {
+          console.error("Failed to update plan on checkout:", error);
+          return NextResponse.json(
+            { error: "Database update failed" },
+            { status: 500 }
+          );
+        }
+        break;
+      }
+
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+        const profile = await findProfileByCustomerId(customerId);
+
+        if (!profile) {
+          console.error("subscription.updated: profile not found for customer", customerId);
+          break;
+        }
+
+        const plan = subscription.status === "active" ? "paid" : "free";
+        const { error } = await supabaseAdmin
+          .from("profiles")
+          .update({
+            plan,
+            stripe_subscription_id: subscription.id,
+          })
+          .eq("id", profile.id);
+
+        if (error) {
+          console.error("Failed to update plan on subscription.updated:", error);
+          return NextResponse.json(
+            { error: "Database update failed" },
+            { status: 500 }
+          );
         }
         break;
       }
@@ -56,32 +109,34 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
+        const profile = await findProfileByCustomerId(customerId);
 
-        // Find user by stripe_customer_id
-        const { data: profile } = await supabaseAdmin
+        if (!profile) {
+          console.error("subscription.deleted: profile not found for customer", customerId);
+          break;
+        }
+
+        const { error } = await supabaseAdmin
           .from("profiles")
-          .select("id")
-          .eq("stripe_customer_id", customerId)
-          .single();
+          .update({
+            plan: "free",
+            stripe_subscription_id: null,
+          })
+          .eq("id", profile.id);
 
-        if (profile) {
-          await supabaseAdmin
-            .from("profiles")
-            .update({
-              plan: "free",
-              stripe_subscription_id: null,
-            })
-            .eq("id", profile.id);
+        if (error) {
+          console.error("Failed to update plan on subscription.deleted:", error);
+          return NextResponse.json(
+            { error: "Database update failed" },
+            { status: 500 }
+          );
         }
         break;
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        console.error(
-          "Payment failed for customer:",
-          invoice.customer
-        );
+        console.error("Payment failed for customer:", invoice.customer);
         break;
       }
     }
