@@ -55,3 +55,6 @@ next-env.d.ts
 
 # Claude Code
 .claude/
+
+# Sample images (testing only)
+docs/sample_pics/
