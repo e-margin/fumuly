@@ -43,6 +43,16 @@ export default function DocumentsPage() {
     };
 
     fetchDocuments();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchDocuments();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const filtered =

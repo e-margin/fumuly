@@ -2,12 +2,12 @@
 id: task-033
 title: ホーム画面で最下部のカードと「AIに相談」ボタンが重なる問題の修正
 parents: [UI/UX, バグ修正]
-status: waiting
+status: done
 priority: high
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ2: アーリーアダプター（優先4）。ホーム画面ボタン重なりバグ"
 estimated_hours: 1
 ---
@@ -21,3 +21,6 @@ estimated_hours: 1
 
 ## 対応方針
 - ホーム画面のコンテンツ領域に十分な `padding-bottom` を追加して、FABと重ならないようにする
+
+## 作業メモ（2026-03-01）
+- `app/(main)/home/page.tsx` のルートdivに `pb-36` を追加（FAB + ボトムナビ分のパディング）

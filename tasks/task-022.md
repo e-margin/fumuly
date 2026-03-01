@@ -2,12 +2,12 @@
 id: task-022
 title: 書類一覧・ホーム画面のstale data問題
 parents: [UX, バグ]
-status: waiting
+status: done
 priority: high
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ2: アーリーアダプター（優先5）。stale data問題"
 estimated_hours: 0.05
 ---
@@ -36,3 +36,8 @@ estimated_hours: 0.05
 ## 推奨
 
 A案で十分。`visibilitychange` イベントで画面復帰時にrefetchが最もシンプル。
+
+## 作業メモ（2026-03-01）
+- A案を採用。`visibilitychange`イベントリスナーで画面復帰時にデータ再取得
+- `app/(main)/home/page.tsx` と `app/(main)/documents/page.tsx` の両方に適用
+- useEffectのクリーンアップでイベントリスナーを解除

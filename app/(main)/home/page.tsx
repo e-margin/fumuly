@@ -56,12 +56,22 @@ export default function HomePage() {
     };
 
     fetchData();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchData();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const urgentCount = documents.filter((d) => d.category === "urgent").length;
 
   return (
-    <div className="px-4 pt-6">
+    <div className="px-4 pt-6 pb-36">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

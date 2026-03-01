@@ -148,7 +148,12 @@ export async function analyzeDocument(
   const text = data.content[0].text;
   // Claude sometimes wraps JSON in ```json ... ``` markdown blocks
   const cleaned = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-  const result = JSON.parse(cleaned) as AnalysisResult;
+  let result: AnalysisResult;
+  try {
+    result = JSON.parse(cleaned) as AnalysisResult;
+  } catch {
+    throw new Error("解析結果の読み取りに失敗しました。もう一度お試しください");
+  }
   // フォールバック: amount_candidatesが返されなかった場合
   if (!Array.isArray(result.amount_candidates)) {
     result.amount_candidates = result.amount != null ? [result.amount] : [];
@@ -235,5 +240,9 @@ JSON形式のみで返答してください。`;
   const data = await response.json();
   const text = data.content[0].text;
   const cleaned = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-  return JSON.parse(cleaned) as RegenerateResult;
+  try {
+    return JSON.parse(cleaned) as RegenerateResult;
+  } catch {
+    throw new Error("再生成結果の読み取りに失敗しました。もう一度お試しください");
+  }
 }

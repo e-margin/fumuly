@@ -2,12 +2,12 @@
 id: task-023
 title: Claude JSON.parseのtry/catch追加
 parents: [安定性]
-status: waiting
+status: done
 priority: high
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "フェーズ2: アーリーアダプター（優先6）。JSON.parseのtry/catch"
 estimated_hours: 0.02
 ---
@@ -31,3 +31,7 @@ try {
   throw new Error("解析結果の読み取りに失敗しました。もう一度お試しください");
 }
 ```
+
+## 作業メモ（2026-03-01）
+- `analyzeDocument` と `regenerateSummary` の両方の `JSON.parse` にtry/catchを追加
+- パース失敗時はユーザー向けの日本語エラーメッセージをthrow
