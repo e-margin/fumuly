@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
       message = "AIの応答でエラーが発生しました。もう一度お試しください";
     } else if (errMsg.includes("ENCRYPTION_KEY")) {
       message = "サーバー設定エラーが発生しました。管理者にお問い合わせください";
-    } else if (errMsg.includes("content")) {
+    } else if (errMsg.includes("Cannot read properties") || errMsg.includes("data.content")) {
       message = "AIの応答形式が予期しないものでした。もう一度お試しください";
     } else {
       message = "サーバーエラーが発生しました。しばらくしてからお試しください";
