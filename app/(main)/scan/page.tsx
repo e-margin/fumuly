@@ -381,7 +381,6 @@ export default function ScanPage() {
             ref={addInputRef}
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={handleCapture}
             className="hidden"
           />
