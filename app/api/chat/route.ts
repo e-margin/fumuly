@@ -227,7 +227,7 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5-20250929",
+        model: "claude-sonnet-4-6",
         max_tokens: 1000,
         system: CHAT_SYSTEM_PROMPT + userContext + recentDocuments,
         messages,
@@ -270,6 +270,8 @@ export async function POST(req: NextRequest) {
       message = "サーバー設定エラーが発生しました。管理者にお問い合わせください";
     } else if (errMsg.includes("Cannot read properties") || errMsg.includes("data.content")) {
       message = "AIの応答形式が予期しないものでした。もう一度お試しください";
+    } else if (errMsg.includes("fetch failed") || errMsg.includes("Failed to fetch") || errMsg.includes("ECONNREFUSED") || errMsg.includes("ETIMEDOUT")) {
+      message = "AIへの接続に失敗しました。しばらくしてからお試しください";
     } else {
       message = "サーバーエラーが発生しました。しばらくしてからお試しください";
     }
