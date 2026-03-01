@@ -30,6 +30,22 @@ Fumulyの価値は「書類を登録した後」にこそある。
 - Vercel（ホスティング）
 - PWA対応
 
+## Supabase DB操作
+
+スキーマ変更（ALTER TABLE, CREATE POLICY等）はSupabase Management APIで実行する。
+
+```bash
+curl -s -X POST \
+  "https://api.supabase.com/v1/projects/ecrzbrgtrgyoybvaxfbr/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SQL文"}'
+```
+
+- アクセストークンはメモリファイルに保存済み
+- `supabase/schema.sql` を更新した際は、Management APIで実際のDBにも適用すること
+- ユーザーにSQL Editorでの手動実行を依頼しないこと
+
 ---
 
 # タスク管理について

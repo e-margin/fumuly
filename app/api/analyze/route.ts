@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    // Rate limit: free users = 5 scans/month, paid/VIP = unlimited
+    // Rate limit: free users = 5 scans/month, paid/VIP/no_limit = unlimited
     const FREE_MONTHLY_LIMIT = 5;
-    if (profile && !isPremiumUser(profile)) {
+    if (profile && !isPremiumUser(profile) && !profile.no_limit) {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
       const { count } = await supabaseAdmin
