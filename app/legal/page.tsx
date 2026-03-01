@@ -7,12 +7,22 @@ const rows = [
   { label: "電話番号", value: "請求があった場合に遅滞なく開示いたします" },
   { label: "メールアドレス", value: "contact@fumuly.com" },
   { label: "サービス名", value: "Fumuly（フムリー）" },
-  { label: "サービスURL", value: "https://fumuly.vercel.app" },
+  { label: "サービスURL", value: "https://fumuly.com" },
+  {
+    label: "サービス概要",
+    value:
+      "AIを活用した郵便物・書類の管理支援サービス。書類をスキャンしてAIが内容を解析し、期限管理や対応方法のアドバイスを提供します",
+  },
   {
     label: "販売価格",
-    value: "各プランの料金はサービス内の料金ページに表示します",
+    value:
+      "無料プラン：0円（月5通まで）／月額プラン：480円（税込）／年額プラン：4,400円（税込）",
   },
-  { label: "支払方法", value: "クレジットカード" },
+  {
+    label: "支払方法",
+    value:
+      "クレジットカード決済（Visa・Mastercard・American Express・JCB・Diners Club・Discover）",
+  },
   {
     label: "支払時期",
     value:
@@ -25,7 +35,11 @@ const rows = [
   {
     label: "返品・キャンセル",
     value:
-      "デジタルサービスの性質上、返金はいたしません。有料プランはいつでも解約可能で、解約後は契約期間の終了まで引き続きご利用いただけます",
+      "デジタルサービスの性質上、返金はいたしません。有料プランはいつでも解約可能で、解約後は契約期間の終了まで引き続きご利用いただけます。解約はアプリ内の設定画面から行えます",
+  },
+  {
+    label: "追加手数料",
+    value: "なし",
   },
   {
     label: "動作環境",
