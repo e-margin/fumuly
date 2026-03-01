@@ -162,9 +162,12 @@ export default function ScanPage() {
   if (result) {
     return (
       <div className="px-4 pt-6 pb-24">
-        <h1 className="text-lg font-bold text-foreground mb-4">
+        <h1 className="text-lg font-bold text-foreground mb-2">
           解析結果
         </h1>
+        <p className="text-xs text-sub mb-4">
+          AIによる読み取りです。金額・期限は必ず原本と照合してください。
+        </p>
         <div className="space-y-4">
           {/* Priority */}
           <div className="flex items-center gap-3">

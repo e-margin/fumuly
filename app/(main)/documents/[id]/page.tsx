@@ -213,6 +213,9 @@ export default function DocumentDetailPage() {
             <p className="text-xs text-sub">一言サマリー</p>
             <p className="text-foreground">{doc.summary}</p>
           </div>
+          <p className="text-[11px] text-ignore pt-1">
+            AIによる読み取りです。金額・期限は原本と照合してください。
+          </p>
         </div>
 
         {/* Recommended action */}
