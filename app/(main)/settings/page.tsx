@@ -173,7 +173,7 @@ export default function SettingsPage() {
               )}
             </Button>
           ) : (
-            <Link href="/pricing">
+            <Link href="/upgrade">
               <Button
                 size="sm"
                 className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white text-xs"

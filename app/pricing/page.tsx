@@ -1,13 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BackLink } from "@/components/fumuly/back-link";
-import { Check, Sparkles, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-
-type PlanKey = "monthly" | "yearly";
+import { Check, Sparkles } from "lucide-react";
 
 const plans = [
   {
@@ -31,7 +27,6 @@ const plans = [
       "リマインダー通知",
       "対応履歴の保存",
     ],
-    planKey: "monthly" as PlanKey,
     recommended: true,
   },
   {
@@ -47,46 +42,10 @@ const plans = [
       "リマインダー通知",
       "対応履歴の保存",
     ],
-    planKey: "yearly" as PlanKey,
   },
 ];
 
 export default function PricingPage() {
-  const [loading, setLoading] = useState<PlanKey | null>(null);
-
-  const handleSubscribe = async (planKey: PlanKey) => {
-    setLoading(planKey);
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      window.location.href = "/register";
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey }),
-      });
-
-      const data = await res.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || "エラーが発生しました");
-        setLoading(null);
-      }
-    } catch {
-      alert("エラーが発生しました。もう一度お試しください");
-      setLoading(null);
-    }
-  };
-
   return (
     <div className="min-h-dvh bg-white">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b">
@@ -142,33 +101,18 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              {plan.planKey ? (
+              <Link href="/register">
                 <Button
+                  variant={plan.recommended ? "default" : "outline"}
                   className={`w-full mt-4 h-11 rounded-xl ${
                     plan.recommended
                       ? "bg-[#F4845F] hover:bg-[#F4845F]/90 text-white"
                       : ""
                   }`}
-                  variant={plan.recommended ? "default" : "outline"}
-                  onClick={() => handleSubscribe(plan.planKey!)}
-                  disabled={loading !== null}
                 >
-                  {loading === plan.planKey ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "アップグレードする"
-                  )}
+                  無料で始める
                 </Button>
-              ) : (
-                <Link href="/register">
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4 h-11 rounded-xl"
-                  >
-                    無料で始める
-                  </Button>
-                </Link>
-              )}
+              </Link>
             </div>
           ))}
         </div>

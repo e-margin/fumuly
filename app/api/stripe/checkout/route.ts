@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
       success_url: `${origin}/settings?upgraded=true`,
-      cancel_url: `${origin}/pricing`,
+      cancel_url: `${origin}/upgrade`,
       metadata: { supabase_user_id: user.id },
     });
 
