@@ -33,10 +33,10 @@ export default function PricingPage() {
                   : "border-border"
               }`}
             >
-              {plan.recommended && (
+              {plan.savingBadge && (
                 <div className="inline-flex items-center gap-1 bg-[#F4845F] text-white text-xs font-bold px-2.5 py-1 rounded-full mb-3">
                   <Sparkles className="h-3 w-3" />
-                  おすすめ
+                  {plan.savingBadge}
                 </div>
               )}
               <div className="flex items-baseline gap-1 flex-wrap">
@@ -46,11 +46,6 @@ export default function PricingPage() {
                 <span className="text-sm text-sub">{plan.unit}</span>
                 {plan.period && (
                   <span className="text-xs text-ignore">{plan.period}</span>
-                )}
-                {plan.savingBadge && (
-                  <span className="text-xs font-bold text-[#F4845F] bg-[#F4845F]/10 px-2 py-0.5 rounded-full">
-                    {plan.savingBadge}
-                  </span>
                 )}
               </div>
               <p className="text-sm font-medium text-foreground mt-1">

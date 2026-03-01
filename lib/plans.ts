@@ -35,7 +35,7 @@ export const paidPlans: PlanDefinition[] = [
     period: "（税込）",
     description: "長く使いたい方におすすめ",
     recommended: true,
-    savingBadge: "1,360円おトク",
+    savingBadge: "1,360円おトク！",
     features: [
       "スキャン無制限",
       "AI書類解析",
