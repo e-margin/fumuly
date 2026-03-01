@@ -13,6 +13,8 @@ import {
   Save,
   ImagePlus,
   Plus,
+  Pencil,
+  Check,
 } from "lucide-react";
 import type { AnalysisResult } from "@/lib/claude";
 import ReactMarkdown from "react-markdown";
@@ -34,6 +36,8 @@ export default function ScanPage() {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [saving, setSaving] = useState(false);
+  const [editingAmount, setEditingAmount] = useState(false);
+  const [amountInput, setAmountInput] = useState("");
 
   const processFile = async (file: File) => {
     if (file.size > MAX_IMAGE_SIZE) {
@@ -182,9 +186,45 @@ export default function ScanPage() {
             {result.amount != null && (
               <div>
                 <p className="text-xs text-sub">金額</p>
-                <p className="text-lg font-bold text-foreground font-[family-name:var(--font-inter)]">
-                  ¥{new Intl.NumberFormat("ja-JP").format(result.amount)}
-                </p>
+                {editingAmount ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-foreground">¥</span>
+                    <input
+                      type="number"
+                      value={amountInput}
+                      onChange={(e) => setAmountInput(e.target.value)}
+                      className="w-32 text-lg font-bold text-foreground font-[family-name:var(--font-inter)] border-b-2 border-primary bg-transparent outline-none"
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => {
+                        const val = parseInt(amountInput, 10);
+                        if (!isNaN(val) && val >= 0) {
+                          setResult({ ...result, amount: val });
+                        }
+                        setEditingAmount(false);
+                      }}
+                      className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                    >
+                      <Check className="h-4 w-4 text-primary" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <p className="text-lg font-bold text-foreground font-[family-name:var(--font-inter)]">
+                      ¥{new Intl.NumberFormat("ja-JP").format(result.amount)}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setAmountInput(String(result.amount));
+                        setEditingAmount(true);
+                      }}
+                      className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                    >
+                      <Pencil className="h-3 w-3 text-ignore" />
+                    </button>
+                  </div>
+                )}
               </div>
             )}
             {result.deadline && (
