@@ -119,6 +119,7 @@ id: task-001
 title: タスクのタイトル
 parents: [カテゴリA, カテゴリB]
 status: in-progress
+priority: medium
 depends_on: [task-002, task-003]
 this_week: true
 completed_at: null
@@ -130,6 +131,15 @@ estimated_hours: 4
 ## 本文（Markdown自由記述）
 詳細な説明、設計メモ、参考リンクなど
 ```
+
+## 優先度一覧
+
+| 優先度 | 意味 |
+|--------|------|
+| `critical` | 最優先で対応が必要 |
+| `high` | 優先的に対応 |
+| `medium` | 通常の優先度（デフォルト） |
+| `low` | 余裕があるときに対応 |
 
 ## ステータス一覧
 

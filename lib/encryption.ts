@@ -31,25 +31,31 @@ export function decrypt(data: string): string {
   if (!data.startsWith(PREFIX)) {
     return data; // backward compatible: plain text passes through
   }
-  const key = getKey();
-  const parts = data.slice(PREFIX.length).split(":");
-  if (parts.length !== 3) {
-    throw new Error("Invalid encrypted data format");
-  }
-  const [ivHex, authTagHex, ciphertextHex] = parts;
-  const iv = Buffer.from(ivHex, "hex");
-  const authTag = Buffer.from(authTagHex, "hex");
-  const ciphertext = Buffer.from(ciphertextHex, "hex");
+  try {
+    const key = getKey();
+    const parts = data.slice(PREFIX.length).split(":");
+    if (parts.length !== 3) {
+      console.error("Decrypt: invalid format (expected 3 parts)");
+      return "[復号できないデータ]";
+    }
+    const [ivHex, authTagHex, ciphertextHex] = parts;
+    const iv = Buffer.from(ivHex, "hex");
+    const authTag = Buffer.from(authTagHex, "hex");
+    const ciphertext = Buffer.from(ciphertextHex, "hex");
 
-  const decipher = createDecipheriv(ALGORITHM, key, iv, {
-    authTagLength: AUTH_TAG_LENGTH,
-  });
-  decipher.setAuthTag(authTag);
-  const decrypted = Buffer.concat([
-    decipher.update(ciphertext),
-    decipher.final(),
-  ]);
-  return decrypted.toString("utf8");
+    const decipher = createDecipheriv(ALGORITHM, key, iv, {
+      authTagLength: AUTH_TAG_LENGTH,
+    });
+    decipher.setAuthTag(authTag);
+    const decrypted = Buffer.concat([
+      decipher.update(ciphertext),
+      decipher.final(),
+    ]);
+    return decrypted.toString("utf8");
+  } catch (error) {
+    console.error("Decrypt failed:", error);
+    return "[復号できないデータ]";
+  }
 }
 
 export function encryptFields<T extends Record<string, unknown>>(
