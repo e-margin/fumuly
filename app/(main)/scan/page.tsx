@@ -186,50 +186,58 @@ export default function ScanPage() {
               <p className="text-xs text-sub">書類種別</p>
               <p className="text-foreground">{result.type}</p>
             </div>
-            {result.amount != null && (
-              <div>
-                <p className="text-xs text-sub">金額</p>
-                {editingAmount ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-foreground">¥</span>
-                    <input
-                      type="number"
-                      value={amountInput}
-                      onChange={(e) => setAmountInput(e.target.value)}
-                      className="w-32 text-lg font-bold text-foreground font-[family-name:var(--font-inter)] border-b-2 border-primary bg-transparent outline-none"
-                      autoFocus
-                    />
-                    <button
-                      onClick={() => {
-                        const val = parseInt(amountInput, 10);
-                        if (!isNaN(val) && val >= 0) {
-                          setResult({ ...result, amount: val });
-                        }
-                        setEditingAmount(false);
-                      }}
-                      className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
-                    >
-                      <Check className="h-4 w-4 text-primary" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <p className="text-lg font-bold text-foreground font-[family-name:var(--font-inter)]">
-                      ¥{new Intl.NumberFormat("ja-JP").format(result.amount)}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setAmountInput(String(result.amount));
-                        setEditingAmount(true);
-                      }}
-                      className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
-                    >
-                      <Pencil className="h-3 w-3 text-ignore" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+            <div>
+              <p className="text-xs text-sub">金額</p>
+              {editingAmount ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-bold text-foreground">¥</span>
+                  <input
+                    type="number"
+                    value={amountInput}
+                    onChange={(e) => setAmountInput(e.target.value)}
+                    className="w-32 text-lg font-bold text-foreground font-[family-name:var(--font-inter)] border-b-2 border-primary bg-transparent outline-none"
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => {
+                      const val = parseInt(amountInput, 10);
+                      if (!isNaN(val) && val >= 0) {
+                        setResult({ ...result, amount: val });
+                      }
+                      setEditingAmount(false);
+                    }}
+                    className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                  >
+                    <Check className="h-4 w-4 text-primary" />
+                  </button>
+                </div>
+              ) : result.amount != null ? (
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-bold text-foreground font-[family-name:var(--font-inter)]">
+                    ¥{new Intl.NumberFormat("ja-JP").format(result.amount)}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setAmountInput(String(result.amount));
+                      setEditingAmount(true);
+                    }}
+                    className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                  >
+                    <Pencil className="h-3 w-3 text-ignore" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setAmountInput("");
+                    setEditingAmount(true);
+                  }}
+                  className="text-sm text-primary"
+                >
+                  + 金額を追加
+                </button>
+              )}
+            </div>
             {result.deadline && (
               <div>
                 <p className="text-xs text-sub">期限</p>

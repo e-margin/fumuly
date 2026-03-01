@@ -142,65 +142,75 @@ export default function DocumentDetailPage() {
             <p className="text-xs text-sub">書類種別</p>
             <p className="text-foreground">{doc.type}</p>
           </div>
-          {doc.amount != null && (
-            <div>
-              <p className="text-xs text-sub">金額</p>
-              {editingAmount ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-foreground">¥</span>
-                  <input
-                    type="number"
-                    value={amountInput}
-                    onChange={(e) => setAmountInput(e.target.value)}
-                    className="w-36 text-xl font-bold text-foreground font-[family-name:var(--font-inter)] border-b-2 border-primary bg-transparent outline-none"
-                    autoFocus
-                  />
-                  <button
-                    onClick={async () => {
-                      const val = parseInt(amountInput, 10);
-                      if (isNaN(val) || val < 0) {
-                        setEditingAmount(false);
-                        return;
-                      }
-                      setSavingAmount(true);
-                      const { error } = await supabase
-                        .from("documents")
-                        .update({ amount: val })
-                        .eq("id", doc.id);
-                      if (!error) {
-                        setDoc({ ...doc, amount: val });
-                      }
-                      setSavingAmount(false);
+          <div>
+            <p className="text-xs text-sub">金額</p>
+            {editingAmount ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-bold text-foreground">¥</span>
+                <input
+                  type="number"
+                  value={amountInput}
+                  onChange={(e) => setAmountInput(e.target.value)}
+                  className="w-36 text-xl font-bold text-foreground font-[family-name:var(--font-inter)] border-b-2 border-primary bg-transparent outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={async () => {
+                    const val = parseInt(amountInput, 10);
+                    if (isNaN(val) || val < 0) {
                       setEditingAmount(false);
-                    }}
-                    disabled={savingAmount}
-                    className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
-                  >
-                    {savingAmount ? (
-                      <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                    ) : (
-                      <Check className="h-4 w-4 text-primary" />
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <p className="text-xl font-bold text-foreground font-[family-name:var(--font-inter)]">
-                    ¥{new Intl.NumberFormat("ja-JP").format(doc.amount)}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setAmountInput(String(doc.amount));
-                      setEditingAmount(true);
-                    }}
-                    className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
-                  >
-                    <Pencil className="h-3 w-3 text-ignore" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+                      return;
+                    }
+                    setSavingAmount(true);
+                    const { error } = await supabase
+                      .from("documents")
+                      .update({ amount: val })
+                      .eq("id", doc.id);
+                    if (!error) {
+                      setDoc({ ...doc, amount: val });
+                    } else {
+                      alert("保存に失敗しました");
+                    }
+                    setSavingAmount(false);
+                    setEditingAmount(false);
+                  }}
+                  disabled={savingAmount}
+                  className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                >
+                  {savingAmount ? (
+                    <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                  ) : (
+                    <Check className="h-4 w-4 text-primary" />
+                  )}
+                </button>
+              </div>
+            ) : doc.amount != null ? (
+              <div className="flex items-center gap-2">
+                <p className="text-xl font-bold text-foreground font-[family-name:var(--font-inter)]">
+                  ¥{new Intl.NumberFormat("ja-JP").format(doc.amount)}
+                </p>
+                <button
+                  onClick={() => {
+                    setAmountInput(String(doc.amount));
+                    setEditingAmount(true);
+                  }}
+                  className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                >
+                  <Pencil className="h-3 w-3 text-ignore" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setAmountInput("");
+                  setEditingAmount(true);
+                }}
+                className="text-sm text-primary"
+              >
+                + 金額を追加
+              </button>
+            )}
+          </div>
           {doc.deadline && (
             <div>
               <p className="text-xs text-sub">期限</p>
