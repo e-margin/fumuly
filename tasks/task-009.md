@@ -1,11 +1,12 @@
 ---
 id: task-009
 title: ホスティング移行判断（Render vs Vercel）
-parents: [インフラ]
+parents:
+  - インフラ
 status: done
 depends_on: []
 this_week: false
-completed_at: 2026-03-01
+completed_at: '2026-03-01'
 progress: 100
 note: Vercel Hobbyに移行完了。URL: https://fumuly.vercel.app
 estimated_hours: 2
