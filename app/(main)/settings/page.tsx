@@ -32,6 +32,7 @@ import Link from "next/link";
 type PlanInfo = {
   plan: string;
   is_vip: boolean;
+  plan_type: "monthly" | "yearly" | null;
 };
 
 export default function SettingsPage() {
@@ -51,18 +52,25 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const fetchPlan = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data } = await supabase
-        .from("profiles")
-        .select("plan, is_vip")
-        .eq("id", user.id)
-        .single();
-
-      if (data) setPlanInfo(data);
+      try {
+        const res = await fetch("/api/stripe/subscription");
+        if (res.ok) {
+          const data = await res.json();
+          setPlanInfo(data);
+        }
+      } catch {
+        // フォールバック: 直接DBから取得
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data } = await supabase
+          .from("profiles")
+          .select("plan, is_vip")
+          .eq("id", user.id)
+          .single();
+        if (data) setPlanInfo({ ...data, plan_type: null });
+      }
     };
     fetchPlan();
   }, []);
@@ -151,7 +159,11 @@ export default function SettingsPage() {
                   : planInfo.is_vip
                     ? "VIP（無料提供）"
                     : planInfo.plan === "paid"
-                      ? "有料プラン"
+                      ? planInfo.plan_type === "monthly"
+                        ? "有料プラン（月額）"
+                        : planInfo.plan_type === "yearly"
+                          ? "有料プラン（年額）"
+                          : "有料プラン"
                       : "無料プラン（月5通まで）"}
               </p>
             </div>

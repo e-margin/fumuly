@@ -9,23 +9,30 @@ import { paidPlans, type PlanKey } from "@/lib/plans";
 
 export default function UpgradePage() {
   const [loading, setLoading] = useState<PlanKey | null>(null);
-  const [planInfo, setPlanInfo] = useState<{ plan: string; is_vip: boolean } | null>(null);
+  const [planInfo, setPlanInfo] = useState<{ plan: string; is_vip: boolean; plan_type: "monthly" | "yearly" | null } | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
 
   useEffect(() => {
     const fetchPlan = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data } = await supabase
-        .from("profiles")
-        .select("plan, is_vip")
-        .eq("id", user.id)
-        .single();
-
-      if (data) setPlanInfo(data);
+      try {
+        const res = await fetch("/api/stripe/subscription");
+        if (res.ok) {
+          const data = await res.json();
+          setPlanInfo(data);
+        }
+      } catch {
+        // フォールバック: 直接DBから取得
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data } = await supabase
+          .from("profiles")
+          .select("plan, is_vip")
+          .eq("id", user.id)
+          .single();
+        if (data) setPlanInfo({ ...data, plan_type: null });
+      }
     };
     fetchPlan();
   }, []);
@@ -99,7 +106,11 @@ export default function UpgradePage() {
               {isVip
                 ? "VIP（無料提供）"
                 : isPaid
-                  ? "有料プラン"
+                  ? planInfo?.plan_type === "monthly"
+                    ? "有料プラン（月額）"
+                    : planInfo?.plan_type === "yearly"
+                      ? "有料プラン（年額）"
+                      : "有料プラン"
                   : "無料プラン（月5通まで）"}
             </p>
           </div>
