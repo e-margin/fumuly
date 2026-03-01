@@ -11,6 +11,9 @@ export function UpdateBanner() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    // 開発環境ではSWを登録しない（キャッシュが邪魔になるため）
+    if (window.location.hostname === "localhost") return;
+
     // When the new SW takes over, reload the page
     let refreshing = false;
     const onControllerChange = () => {
