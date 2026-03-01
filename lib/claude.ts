@@ -152,6 +152,7 @@ export async function analyzeDocument(
   try {
     result = JSON.parse(cleaned) as AnalysisResult;
   } catch {
+    console.error("JSON parse failed. Raw response:", text);
     throw new Error("解析結果の読み取りに失敗しました。もう一度お試しください");
   }
   // フォールバック: amount_candidatesが返されなかった場合
@@ -243,6 +244,7 @@ JSON形式のみで返答してください。`;
   try {
     return JSON.parse(cleaned) as RegenerateResult;
   } catch {
+    console.error("JSON parse failed. Raw response:", text);
     throw new Error("再生成結果の読み取りに失敗しました。もう一度お試しください");
   }
 }
