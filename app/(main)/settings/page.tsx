@@ -121,6 +121,9 @@ export default function SettingsPage() {
               <p className="text-sm font-medium text-foreground">
                 利用規約
               </p>
+              <p className="text-xs text-sub">
+                AI解析の免責事項を含む
+              </p>
             </div>
             <ChevronRight className="h-4 w-4 text-ignore" />
           </div>
