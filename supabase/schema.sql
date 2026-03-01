@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS profiles (
   onboarding_done    BOOLEAN DEFAULT FALSE,
   plan               TEXT DEFAULT 'free' CHECK (plan IN ('free', 'paid')),
   is_vip             BOOLEAN DEFAULT FALSE,
-  no_limit           BOOLEAN DEFAULT FALSE,
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT
 );
@@ -32,7 +31,7 @@ CREATE POLICY "Users can insert own profile"
   WITH CHECK (auth.uid() = id);
 
 -- ユーザーは自分のプロフィールを更新できるが、
--- plan, is_vip, no_limit, stripe_* カラムは直接変更不可（管理者/Webhookがservice roleで更新する）
+-- plan, is_vip, stripe_* カラムは直接変更不可（Webhookがservice roleで更新する）
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = id)
@@ -40,7 +39,6 @@ CREATE POLICY "Users can update own profile"
     auth.uid() = id
     AND plan = (SELECT plan FROM profiles WHERE id = auth.uid())
     AND is_vip = (SELECT is_vip FROM profiles WHERE id = auth.uid())
-    AND no_limit = (SELECT no_limit FROM profiles WHERE id = auth.uid())
     AND stripe_customer_id IS NOT DISTINCT FROM (SELECT stripe_customer_id FROM profiles WHERE id = auth.uid())
     AND stripe_subscription_id IS NOT DISTINCT FROM (SELECT stripe_subscription_id FROM profiles WHERE id = auth.uid())
   );
