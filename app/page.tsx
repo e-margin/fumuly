@@ -130,8 +130,27 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Empathy / Story — ヒーロー直後で共感を深める */}
+      <section className="py-14 lg:py-20 px-4 bg-white">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-lg lg:text-xl text-[#2D2D2D] leading-relaxed">
+            「机の上の封筒、何日も開けてなかった。
+            <br />
+            <span className="text-urgent font-bold">
+              差押の通知
+            </span>
+            が混ざってたなんて知らなかった」
+          </p>
+          <p className="mt-6 text-sm text-[#757575] leading-relaxed">
+            ── そんな経験から生まれたアプリです。
+            <br />
+            開けられなかった封筒、Fumulyが代わりに読みます。
+          </p>
+        </div>
+      </section>
+
       {/* How it works */}
-      <section className="py-16 lg:py-24 px-4 bg-white">
+      <section className="py-16 lg:py-24 px-4 bg-[#F7F8FA]">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#2D2D2D] mb-12 lg:mb-16">
             使い方は、たったの3ステップ
@@ -182,13 +201,13 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-16 lg:py-24 px-4 bg-[#F7F8FA]">
+      <section className="py-16 lg:py-24 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#2D2D2D] mb-12 lg:mb-16">
             Fumulyがあなたを守る
           </h2>
           <div className="grid sm:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl p-5 lg:p-7 shadow-sm">
+            <div className="bg-[#F7F8FA] rounded-2xl p-5 lg:p-7">
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-urgent/10 rounded-xl flex items-center justify-center mb-3">
                 <Bell className="h-5 w-5 lg:h-6 lg:w-6 text-urgent" />
               </div>
@@ -200,7 +219,7 @@ export default function LandingPage() {
                 期限が近づくとリマインドします。
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-5 lg:p-7 shadow-sm">
+            <div className="bg-[#F7F8FA] rounded-2xl p-5 lg:p-7">
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#2C4A7C]/10 rounded-xl flex items-center justify-center mb-3">
                 <Shield className="h-5 w-5 lg:h-6 lg:w-6 text-[#2C4A7C]" />
               </div>
@@ -212,7 +231,7 @@ export default function LandingPage() {
                 電話不要の対処法を優先的にご案内。
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-5 lg:p-7 shadow-sm">
+            <div className="bg-[#F7F8FA] rounded-2xl p-5 lg:p-7">
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-action/10 rounded-xl flex items-center justify-center mb-3">
                 <Heart className="h-5 w-5 lg:h-6 lg:w-6 text-action" />
               </div>
@@ -224,7 +243,7 @@ export default function LandingPage() {
                 あなたに合ったアドバイスを提供。
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-5 lg:p-7 shadow-sm">
+            <div className="bg-[#F7F8FA] rounded-2xl p-5 lg:p-7">
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-keep/10 rounded-xl flex items-center justify-center mb-3">
                 <Mail className="h-5 w-5 lg:h-6 lg:w-6 text-keep" />
               </div>
@@ -240,25 +259,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonial / Story */}
-      <section className="py-16 lg:py-24 px-4 bg-white">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-lg lg:text-xl text-[#2D2D2D] leading-relaxed">
-            「机の上の封筒、何日も開けてなかった。
-            <br />
-            <span className="text-urgent font-bold">
-              差押の通知
-            </span>
-            が混ざってたなんて知らなかった」
-          </p>
-          <p className="mt-4 text-sm text-[#757575]">
-            ── そんな経験から生まれたアプリです。
-          </p>
-        </div>
-      </section>
-
       {/* Pricing */}
-      <section className="py-16 lg:py-24 px-4 bg-[#F7F8FA]">
+      <section id="pricing" className="py-16 lg:py-24 px-4 bg-[#F7F8FA]">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#2D2D2D] mb-4">
             料金プラン
@@ -297,25 +299,33 @@ export default function LandingPage() {
                 <p className="text-xs text-[#757575] mt-1">
                   {plan.description}
                 </p>
+                <p className="text-xs text-[#2C4A7C] font-medium mt-3">
+                  {plan.features[0]}
+                </p>
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+            <Link href="/register">
+              <Button
+                size="lg"
+                className="bg-[#F4845F] hover:bg-[#F4845F]/90 text-white text-base px-8 h-12 rounded-full shadow-lg"
+              >
+                無料で始める
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
             <Link href="/pricing">
               <Button
                 variant="outline"
                 className="text-[#2C4A7C] border-[#2C4A7C] hover:bg-[#2C4A7C]/5"
               >
                 プランの詳細を見る
-                <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
-
-      {/* QR Code (PC only) */}
-      <QRSection />
 
       {/* CTA */}
       <section className="py-16 lg:py-24 px-4 bg-[#2C4A7C] text-white text-center">
@@ -337,6 +347,9 @@ export default function LandingPage() {
           </Button>
         </Link>
       </section>
+
+      {/* QR Code (PC only) — CTA後に配置 */}
+      <QRSection />
 
       {/* Footer */}
       <footer className="py-8 px-4 bg-[#F7F8FA] text-center">
