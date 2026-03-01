@@ -153,6 +153,8 @@ export async function analyzeDocument(
   if (!Array.isArray(result.amount_candidates)) {
     result.amount_candidates = result.amount != null ? [result.amount] : [];
   }
+  // 重複除外
+  result.amount_candidates = [...new Set(result.amount_candidates)];
   return result;
 }
 
@@ -193,12 +195,13 @@ JSON形式のみで返答してください。`;
 
   const prompt = `以下の書類情報をもとに、summary・recommended_action・detailed_summaryを生成してください。
 
-書類情報:
-- 送付元: ${input.sender}
-- 種別: ${input.type}
-- 金額: ${input.amount != null ? `¥${input.amount.toLocaleString()}` : "なし"}
-- 期限: ${input.deadline || "なし"}
-- カテゴリ: ${input.category}
+<document_info>
+送付元: ${input.sender}
+種別: ${input.type}
+金額: ${input.amount != null ? `¥${input.amount.toLocaleString()}` : "なし"}
+期限: ${input.deadline || "なし"}
+カテゴリ: ${input.category}
+</document_info>
 
 {
   "summary": "一言で内容を説明",
@@ -222,7 +225,11 @@ JSON形式のみで返答してください。`;
   });
 
   if (!response.ok) {
-    throw new Error(`Claude API error: ${response.status}`);
+    const status = response.status;
+    if (status === 529 || status === 503) {
+      throw new Error(`Claude API overloaded: ${status}`);
+    }
+    throw new Error(`Claude API error: ${status}`);
   }
 
   const data = await response.json();

@@ -187,8 +187,18 @@ export default function ScanPage() {
           category: result.category,
         }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      if (res.status === 429) {
+        const err = await res.json();
+        alert(err.error || "再生成の上限に達しました。しばらくしてからお試しください。");
+        return;
+      }
       if (!res.ok) {
-        throw new Error("再生成に失敗しました");
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || "再生成に失敗しました");
       }
       const data = await res.json();
       setResult({
@@ -198,8 +208,8 @@ export default function ScanPage() {
         detailed_summary: data.detailed_summary,
       });
       setAmountChanged(false);
-    } catch {
-      alert("サマリーの更新に失敗しました。もう一度お試しください。");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "サマリーの更新に失敗しました。もう一度お試しください。");
     } finally {
       setRegenerating(false);
     }
