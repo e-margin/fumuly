@@ -26,6 +26,7 @@ import {
   ChevronRight,
   CreditCard,
   Crown,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -218,6 +219,26 @@ export default function SettingsPage() {
               </p>
               <p className="text-xs text-sub">
                 収入・借金・特性の情報を変更
+              </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-ignore" />
+          </div>
+        </Link>
+
+        <Separator />
+
+        {/* Guide */}
+        <Link href="/guide">
+          <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
+            <div className="w-9 h-9 bg-[#2C4A7C]/10 rounded-full flex items-center justify-center">
+              <BookOpen className="h-4 w-4 text-[#2C4A7C]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">
+                使い方ガイド
+              </p>
+              <p className="text-xs text-sub">
+                機能や使い方の説明
               </p>
             </div>
             <ChevronRight className="h-4 w-4 text-ignore" />

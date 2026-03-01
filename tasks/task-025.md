@@ -2,7 +2,7 @@
 id: task-025
 title: 重複スキャン検知
 parents: [UX, AI]
-status: idea
+status: waiting
 priority: low
 depends_on: []
 this_week: false

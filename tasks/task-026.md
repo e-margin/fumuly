@@ -2,7 +2,7 @@
 id: task-026
 title: 解析結果の手動編集機能
 parents: [UX, 機能]
-status: idea
+status: waiting
 priority: low
 depends_on: []
 this_week: false
