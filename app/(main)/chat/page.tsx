@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/lib/supabase";
-import { Send, Loader2, Camera, Bot, User } from "lucide-react";
+import { Send, Loader2, Camera, Bot, User, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -24,6 +24,7 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
   const keyboardOpen = useKeyboardOpen();
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -35,6 +36,16 @@ export default function ChatPage() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
+
+      // Check profile completeness
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("income_type, monthly_income")
+        .eq("id", user.id)
+        .single();
+      if (profile && !profile.income_type && profile.monthly_income == null) {
+        setProfileIncomplete(true);
+      }
 
       const { data } = await supabase
         .from("conversations")
@@ -215,38 +226,45 @@ export default function ChatPage() {
         ) : (
           <div className="space-y-4">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "flex gap-2",
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                )}
-              >
-                {msg.role === "assistant" && (
-                  <div className="w-7 h-7 bg-primary/10 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <Bot className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                )}
+              <div key={i}>
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-                    msg.role === "user"
-                      ? "bg-primary text-white rounded-br-md"
-                      : "bg-white border rounded-bl-md text-foreground"
+                    "flex gap-2",
+                    msg.role === "user" ? "justify-end" : "justify-start"
                   )}
                 >
-                  {msg.role === "user" ? (
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
-                  ) : (
-                    <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-a:text-primary">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  {msg.role === "assistant" && (
+                    <div className="w-7 h-7 bg-primary/10 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <Bot className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+                      msg.role === "user"
+                        ? "bg-primary text-white rounded-br-md"
+                        : "bg-white border rounded-bl-md text-foreground"
+                    )}
+                  >
+                    {msg.role === "user" ? (
+                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                    ) : (
+                      <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-a:text-primary">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    )}
+                  </div>
+                  {msg.role === "user" && (
+                    <div className="w-7 h-7 bg-accent/10 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <User className="h-3.5 w-3.5 text-accent" />
                     </div>
                   )}
                 </div>
-                {msg.role === "user" && (
-                  <div className="w-7 h-7 bg-accent/10 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <User className="h-3.5 w-3.5 text-accent" />
-                  </div>
+                {profileIncomplete && msg.role === "assistant" && i === messages.length - 1 && !loading && (
+                  <Link href="/settings/profile" className="flex items-center gap-2 ml-9 mt-2 text-xs text-primary hover:underline">
+                    <Settings className="h-3 w-3" />
+                    プロフィールを設定するとより的確なアドバイスが受けられます
+                  </Link>
                 )}
               </div>
             ))}

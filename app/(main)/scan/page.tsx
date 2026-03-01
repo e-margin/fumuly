@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
@@ -21,9 +21,11 @@ import {
   Plus,
   Check,
   RefreshCw,
+  Settings,
 } from "lucide-react";
 import type { AnalysisResult } from "@/lib/claude";
 import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 import { resizeImage } from "@/lib/image";
 
 interface CapturedImage {
@@ -48,6 +50,23 @@ export default function ScanPage() {
   const [originalAmount, setOriginalAmount] = useState<number | null>(null);
   const [amountChanged, setAmountChanged] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
+
+  useEffect(() => {
+    const checkProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("income_type, monthly_income")
+        .eq("id", user.id)
+        .single();
+      if (profile && !profile.income_type && profile.monthly_income == null) {
+        setProfileIncomplete(true);
+      }
+    };
+    checkProfile();
+  }, []);
 
   const processFile = async (file: File) => {
     if (file.size > MAX_IMAGE_SIZE) {
@@ -333,6 +352,14 @@ export default function ScanPage() {
                 <ReactMarkdown>{result.detailed_summary}</ReactMarkdown>
               </div>
             </div>
+          )}
+
+          {/* Profile prompt */}
+          {profileIncomplete && (
+            <Link href="/settings/profile" className="flex items-center gap-2 text-xs text-primary bg-primary/5 rounded-xl px-4 py-3 hover:bg-primary/10 transition-colors">
+              <Settings className="h-3.5 w-3.5 shrink-0" />
+              プロフィールを設定すると、あなたの状況に合ったアドバイスが受けられます
+            </Link>
           )}
 
           {/* Actions */}

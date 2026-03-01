@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, FileText, MessageCircle, Settings, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
+import { supabase } from "@/lib/supabase";
 
 const navItems = [
   { href: "/home", label: "ホーム", icon: Home },
@@ -17,6 +19,25 @@ const navItems = [
 export function BottomNav() {
   const pathname = usePathname();
   const keyboardOpen = useKeyboardOpen();
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
+
+  useEffect(() => {
+    const checkProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("income_type, monthly_income")
+        .eq("id", user.id)
+        .single();
+      if (profile && !profile.income_type && profile.monthly_income == null) {
+        setProfileIncomplete(true);
+      } else {
+        setProfileIncomplete(false);
+      }
+    };
+    checkProfile();
+  }, [pathname]);
 
   if (keyboardOpen) return null;
 
@@ -53,7 +74,12 @@ export function BottomNav() {
                 isActive ? "text-[#2C4A7C]" : "text-[#757575]"
               )}
             >
-              <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
+              <div className="relative">
+                <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
+                {item.href === "/settings" && profileIncomplete && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-urgent rounded-full border-2 border-white" />
+                )}
+              </div>
               <span className={cn("text-[10px]", isActive && "font-medium")}>
                 {item.label}
               </span>
