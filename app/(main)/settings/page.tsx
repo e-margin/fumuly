@@ -146,11 +146,13 @@ export default function SettingsPage() {
                 現在のプラン
               </p>
               <p className="text-xs text-sub">
-                {planInfo?.is_vip
-                  ? "VIP（無料提供）"
-                  : planInfo?.plan === "paid"
-                    ? "有料プラン"
-                    : "無料プラン（月5通まで）"}
+                {!planInfo
+                  ? "読み込み中..."
+                  : planInfo.is_vip
+                    ? "VIP（無料提供）"
+                    : planInfo.plan === "paid"
+                      ? "有料プラン"
+                      : "無料プラン（月5通まで）"}
               </p>
             </div>
           </div>
@@ -172,7 +174,7 @@ export default function SettingsPage() {
                 "プラン管理"
               )}
             </Button>
-          ) : (
+          ) : planInfo ? (
             <Link href="/upgrade">
               <Button
                 size="sm"
@@ -181,7 +183,7 @@ export default function SettingsPage() {
                 アップグレード
               </Button>
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
 
