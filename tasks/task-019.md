@@ -4,10 +4,10 @@ title: DB操作のエラーハンドリング全般
 parents: [安定性, UX]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: handleSave/toggleDone/handleDelete/プロフィール保存/全データ削除
+note: "フェーズ2: アーリーアダプター（優先7）。DB操作エラーハンドリング"
 estimated_hours: 0.1
 ---
 

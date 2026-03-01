@@ -4,10 +4,10 @@ title: 本番ドメイン（fumuly.com）移行時のURL変更
 parents: [インフラ]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: Vercel移行済み。fumuly.onrender.com → fumuly.vercel.app への書き換え＋将来のカスタムドメイン対応
+note: "フェーズ1: Stripe審査通過（優先2）。fumuly.comへの統一"
 estimated_hours: 1
 ---
 

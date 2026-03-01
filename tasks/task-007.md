@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: メール/パスワード以外のログイン手段
+note: "フェーズ3: リリース（優先12）。Google認証"
 estimated_hours: 3
 ---
 

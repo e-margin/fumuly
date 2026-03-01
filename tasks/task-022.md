@@ -4,10 +4,10 @@ title: 書類一覧・ホーム画面のstale data問題
 parents: [UX, バグ]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: useEffectの依存配列が空で再フェッチされない
+note: "フェーズ2: アーリーアダプター（優先5）。stale data問題"
 estimated_hours: 0.05
 ---
 

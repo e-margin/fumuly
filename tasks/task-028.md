@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: オフラインで白画面になる問題
+note: "フェーズ3: リリース（優先13）。オフラインフォールバック"
 estimated_hours: 0.1
 ---
 

@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: 100件超で顕在化する
+note: "フェーズ3: リリース（優先16）。ページネーション"
 estimated_hours: 0.1
 ---
 

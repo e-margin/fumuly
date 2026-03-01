@@ -4,10 +4,10 @@ title: プライバシーポリシー・同意説明の実態乖離修正
 parents: [法務, プライバシー]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: コードではなく文言の問題
+note: "フェーズ1: Stripe審査通過（優先1）。コードではなく文言の問題"
 estimated_hours: 0.1
 ---
 

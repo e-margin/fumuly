@@ -4,7 +4,7 @@ title: 金額候補の選択 + サマリー再生成機能
 parents: [UX, AI]
 status: done
 depends_on: []
-this_week: true
+this_week: false
 completed_at: 2026-03-01
 progress: 100
 note: Claude Vision APIの金額誤読を候補選択+再生成で解決

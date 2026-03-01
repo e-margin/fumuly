@@ -7,7 +7,7 @@ depends_on: []
 this_week: true
 completed_at: null
 progress: 0
-note: 設定画面に特商法リンク追加、フッターの統一
+note: "フェーズ1: Stripe審査通過（優先3）。特商法リンク追加、フッターの統一"
 estimated_hours: 1
 ---
 

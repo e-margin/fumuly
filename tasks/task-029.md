@@ -4,10 +4,10 @@ title: プロフィール未入力時の告知
 parents: [UX]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: 空プロフィールだとAIの提案品質が下がることがユーザーに伝わらない
+note: "フェーズ2: アーリーアダプター（優先9）。プロフィール未入力告知"
 estimated_hours: 0.05
 ---
 

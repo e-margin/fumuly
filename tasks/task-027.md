@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: 借金額・差押状況などの機密情報が永遠にDB残留
+note: "保留: task-034（暗号化）で緩和。会話履歴保持期間"
 estimated_hours: 0.1
 ---
 

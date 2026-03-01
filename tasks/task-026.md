@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: AIが緊急度を間違えた場合に直す手段がない
+note: "保留: task-032（金額修正）で一部解決済み。手動編集機能"
 estimated_hours: 0.3
 ---
 

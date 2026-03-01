@@ -7,7 +7,7 @@ depends_on: [task-001]
 this_week: false
 completed_at: null
 progress: 0
-note: contact@fumuly.com の受信設定
+note: "フェーズ3: リリース（優先11）。Email Routing設定"
 estimated_hours: 1
 ---
 

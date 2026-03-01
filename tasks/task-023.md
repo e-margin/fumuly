@@ -4,10 +4,10 @@ title: Claude JSON.parseのtry/catch追加
 parents: [安定性]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: lib/claude.tsの1箇所
+note: "フェーズ2: アーリーアダプター（優先6）。JSON.parseのtry/catch"
 estimated_hours: 0.02
 ---
 

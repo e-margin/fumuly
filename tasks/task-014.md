@@ -7,7 +7,7 @@ depends_on: [task-005]
 this_week: false
 completed_at: null
 progress: 0
-note: iOS/Androidのネイティブリマインダー・カレンダーとの連携
+note: "保留: task-005の後。カレンダー連携"
 estimated_hours: 8
 ---
 

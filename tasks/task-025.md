@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: ADHDユーザーが同じ書類を繰り返しスキャンして「緊急が増え続ける」問題
+note: "保留: 実ユーザーの声を見てから。重複スキャン検知"
 estimated_hours: 0.2
 ---
 

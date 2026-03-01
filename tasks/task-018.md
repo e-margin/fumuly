@@ -4,10 +4,10 @@ title: パスワードリセット機能の実装
 parents: [認証, UX]
 status: waiting
 depends_on: []
-this_week: false
+this_week: true
 completed_at: null
 progress: 0
-note: Supabaseが送信するのでメールインフラ不要
+note: "フェーズ2: アーリーアダプター（優先8）。パスワードリセット"
 estimated_hours: 0.05
 ---
 

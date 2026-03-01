@@ -4,7 +4,7 @@ title: 金額nullの書類に金額を追加できるようにする
 parents: [UX, 機能]
 status: done
 depends_on: []
-this_week: true
+this_week: false
 completed_at: 2026-03-01
 progress: 100
 note: amountがnullの書類に後から金額を入力する手段がない

@@ -7,7 +7,7 @@ depends_on: []
 this_week: true
 completed_at: null
 progress: 0
-note: Supabase Dashboardで閲覧不可にするためのカラム単位暗号化
+note: "フェーズ2: アーリーアダプター（優先10）。データ暗号化"
 estimated_hours: 6
 ---
 

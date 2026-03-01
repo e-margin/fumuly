@@ -7,7 +7,7 @@ depends_on: []
 this_week: false
 completed_at: null
 progress: 0
-note: PCで見ても違和感のないLPレイアウトにする
+note: "フェーズ3: リリース（優先15）。LP PC表示対応"
 estimated_hours: 4
 ---
 

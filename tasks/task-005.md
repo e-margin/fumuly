@@ -7,7 +7,7 @@ depends_on: [task-002]
 this_week: false
 completed_at: null
 progress: 0
-note: 期限通知 + ユーザーが「いつやる」を設定できる機能
+note: "フェーズ3: リリース（優先14）。Web Push通知"
 estimated_hours: 12
 ---
 
