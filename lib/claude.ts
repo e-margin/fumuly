@@ -57,6 +57,7 @@ const USER_PROMPT = `この画像を確認してください。書類・郵便�
   "sender": "送付元",
   "type": "書類種別",
   "amount": 金額（円、なければnull）,
+  "amount_candidates": [画像内で読み取れた全ての金額を数値の配列で返す。重複除外、降順。例: [115918, 16750, 15116]],
   "deadline": "期限（YYYY-MM-DD、なければnull）",
   "action_required": true/false,
   "priority": "high/medium/low/ignore",
@@ -70,6 +71,7 @@ export interface AnalysisResult {
   sender: string;
   type: string;
   amount: number | null;
+  amount_candidates: number[];
   deadline: string | null;
   action_required: boolean;
   priority: "high" | "medium" | "low" | "ignore";
@@ -146,5 +148,85 @@ export async function analyzeDocument(
   const text = data.content[0].text;
   // Claude sometimes wraps JSON in ```json ... ``` markdown blocks
   const cleaned = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-  return JSON.parse(cleaned) as AnalysisResult;
+  const result = JSON.parse(cleaned) as AnalysisResult;
+  // フォールバック: amount_candidatesが返されなかった場合
+  if (!Array.isArray(result.amount_candidates)) {
+    result.amount_candidates = result.amount != null ? [result.amount] : [];
+  }
+  return result;
+}
+
+export interface RegenerateInput {
+  sender: string;
+  type: string;
+  amount: number | null;
+  deadline: string | null;
+  category: "urgent" | "action" | "keep" | "ignore";
+}
+
+export interface RegenerateResult {
+  summary: string;
+  recommended_action: string;
+  detailed_summary: string;
+}
+
+export async function regenerateSummary(
+  input: RegenerateInput,
+  userContext?: string
+): Promise<RegenerateResult> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY is not set");
+  }
+
+  const systemPrompt = `あなたは日本の郵便物・書類の内容を要約するAIです。
+ユーザーが書類の解析結果の金額を修正しました。修正後の金額を正として、サマリーと推奨アクションを再生成してください。
+
+【トーン】
+- やさしく・具体的に・押しつけがましくなく
+- 電話不要の手段（Web・コンビニ・郵送）を優先して案内
+- 免除・猶予・減額の可能性があれば言及
+
+${userContext || ""}
+
+JSON形式のみで返答してください。`;
+
+  const prompt = `以下の書類情報をもとに、summary・recommended_action・detailed_summaryを生成してください。
+
+書類情報:
+- 送付元: ${input.sender}
+- 種別: ${input.type}
+- 金額: ${input.amount != null ? `¥${input.amount.toLocaleString()}` : "なし"}
+- 期限: ${input.deadline || "なし"}
+- カテゴリ: ${input.category}
+
+{
+  "summary": "一言で内容を説明",
+  "recommended_action": "次にすべき具体的な行動",
+  "detailed_summary": "詳しい説明（寄り添うトーン）"
+}`;
+
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Claude API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const text = data.content[0].text;
+  const cleaned = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+  return JSON.parse(cleaned) as RegenerateResult;
 }
