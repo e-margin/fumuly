@@ -16,10 +16,26 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "Fumuly（フムリー）",
+  title: "Fumuly（フムリー）| 封筒、無理ー！を解決するAIアプリ",
   description:
-    "封筒無理ー！を解決するアプリ。写真を撮るだけで、封筒の中身をAIが読んで整理してくれる。",
+    "写真を撮るだけでAIが書類を読んで整理。督促も年金も、何をすべきか教えてくれる。電話なしの対処法を優先案内。",
   manifest: "/manifest.json",
+  metadataBase: new URL("https://fumuly.com"),
+  openGraph: {
+    title: "Fumuly（フムリー）| 封筒、無理ー！を解決するAIアプリ",
+    description:
+      "写真を撮るだけでAIが書類を読んで整理。督促も年金も、何をすべきか教えてくれる。",
+    url: "https://fumuly.com",
+    siteName: "Fumuly",
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Fumuly（フムリー）| 封筒、無理ー！を解決するAIアプリ",
+    description:
+      "写真を撮るだけでAIが書類を読んで整理。督促も年金も、何をすべきか教えてくれる。",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
