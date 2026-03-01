@@ -5,51 +5,11 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { BackLink } from "@/components/fumuly/back-link";
 import { Check, Sparkles, Loader2, Crown, CreditCard } from "lucide-react";
-
-type PlanKey = "monthly" | "yearly";
-
-type PlanInfo = {
-  plan: string;
-  is_vip: boolean;
-};
-
-const plans = [
-  {
-    name: "月額",
-    price: "480",
-    unit: "円/月",
-    period: "（税込）",
-    description: "書類が毎月届く方に",
-    features: [
-      "スキャン無制限",
-      "AI書類解析",
-      "AIチャット相談",
-      "リマインダー通知",
-      "対応履歴の保存",
-    ],
-    planKey: "monthly" as PlanKey,
-    recommended: true,
-  },
-  {
-    name: "年額",
-    price: "4,400",
-    unit: "円/年",
-    period: "（税込・約23%OFF）",
-    description: "長く使いたい方におすすめ",
-    features: [
-      "スキャン無制限",
-      "AI書類解析",
-      "AIチャット相談",
-      "リマインダー通知",
-      "対応履歴の保存",
-    ],
-    planKey: "yearly" as PlanKey,
-  },
-];
+import { paidPlans, type PlanKey } from "@/lib/plans";
 
 export default function UpgradePage() {
   const [loading, setLoading] = useState<PlanKey | null>(null);
-  const [planInfo, setPlanInfo] = useState<PlanInfo | null>(null);
+  const [planInfo, setPlanInfo] = useState<{ plan: string; is_vip: boolean } | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
 
   useEffect(() => {
@@ -182,7 +142,7 @@ export default function UpgradePage() {
       {/* 無料ユーザー → アップグレード */}
       {!isPaid && !isVip && planInfo && (
         <div className="space-y-4">
-          {plans.map((plan) => (
+          {paidPlans.map((plan) => (
             <div
               key={plan.name}
               className={`rounded-2xl border-2 p-5 ${
@@ -227,10 +187,10 @@ export default function UpgradePage() {
                     : ""
                 }`}
                 variant={plan.recommended ? "default" : "outline"}
-                onClick={() => handleSubscribe(plan.planKey)}
+                onClick={() => handleSubscribe(plan.planKey!)}
                 disabled={loading !== null}
               >
-                {loading === plan.planKey ? (
+                {loading === plan.planKey! ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   "アップグレードする"

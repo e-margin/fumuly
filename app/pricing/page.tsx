@@ -4,46 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BackLink } from "@/components/fumuly/back-link";
 import { Check, Sparkles } from "lucide-react";
-
-const plans = [
-  {
-    name: "無料",
-    price: "0",
-    unit: "円",
-    period: "",
-    description: "まずは試してみたい方に",
-    features: ["月5通までスキャン", "AI書類解析", "AIチャット相談"],
-  },
-  {
-    name: "月額",
-    price: "480",
-    unit: "円/月",
-    period: "（税込）",
-    description: "書類が毎月届く方に",
-    features: [
-      "スキャン無制限",
-      "AI書類解析",
-      "AIチャット相談",
-      "リマインダー通知",
-      "対応履歴の保存",
-    ],
-    recommended: true,
-  },
-  {
-    name: "年額",
-    price: "4,400",
-    unit: "円/年",
-    period: "（税込・約23%OFF）",
-    description: "長く使いたい方におすすめ",
-    features: [
-      "スキャン無制限",
-      "AI書類解析",
-      "AIチャット相談",
-      "リマインダー通知",
-      "対応履歴の保存",
-    ],
-  },
-];
+import { allPlans } from "@/lib/plans";
 
 export default function PricingPage() {
   return (
@@ -63,7 +24,7 @@ export default function PricingPage() {
         </div>
 
         <div className="space-y-4">
-          {plans.map((plan) => (
+          {allPlans.map((plan) => (
             <div
               key={plan.name}
               className={`rounded-2xl border-2 p-5 ${

@@ -2,12 +2,12 @@
 id: task-036
 title: 料金ページ分割（公開/認証後）
 parents: [マネタイズ, UI]
-status: in-progress
+status: done
 priority: high
 depends_on: [task-002]
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-01
+progress: 100
 note: "/pricing を公開紹介ページに、/upgrade を認証済みユーザーの決済ページに分割"
 estimated_hours: 3
 ---

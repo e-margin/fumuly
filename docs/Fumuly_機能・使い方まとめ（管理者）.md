@@ -68,7 +68,7 @@ Vercel Dashboard > Settings > Environment Variables:
 1. Stripe Dashboard で新しいPriceを作成（既存Priceは変更不可）
 2. 環境変数のPrice IDを新しい値に更新
 3. Vercelを再デプロイ
-4. `app/pricing/page.tsx` の表示金額も合わせて修正
+4. `lib/plans.ts` の表示金額も合わせて修正（`/pricing` と `/upgrade` で共通利用）
 
 ### Webhookの設定
 

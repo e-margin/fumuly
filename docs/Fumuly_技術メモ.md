@@ -78,7 +78,8 @@
 | パス | ファイル | 用途 |
 |------|---------|------|
 | `/` | `app/page.tsx` | ランディング |
-| `/pricing` | `app/pricing/page.tsx` | 料金プラン |
+| `/pricing` | `app/pricing/page.tsx` | 料金プラン（公開紹介ページ） |
+| `/upgrade` | `app/(main)/upgrade/page.tsx` | プランアップグレード（認証必須） |
 | `/privacy` | `app/privacy/page.tsx` | プライバシーポリシー |
 | `/terms` | `app/terms/page.tsx` | 利用規約 |
 | `/disclaimer` | `app/disclaimer/page.tsx` | 免責事項 |
@@ -277,7 +278,7 @@ base64エンコード → Claude Vision APIへ送信（解析のみ）
 - 年額: 4,400円（税込、約23%OFF）
 
 **決済フロー:**
-1. ユーザーが `/pricing` でプランを選択
+1. ユーザーが `/upgrade` でプランを選択（認証必須、`/pricing` は公開紹介ページ）
 2. `/api/stripe/checkout` で Checkout Session 作成（サーバーサイドで Price ID を解決）
 3. Stripe 決済ページで支払い
 4. Webhook が `checkout.session.completed` を受信 → `profiles.plan = 'paid'` に更新
