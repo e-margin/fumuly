@@ -26,7 +26,6 @@ export const paidPlans: PlanDefinition[] = [
       "対応履歴の保存",
     ],
     planKey: "monthly",
-    recommended: true,
   },
   {
     name: "年額",
@@ -34,6 +33,7 @@ export const paidPlans: PlanDefinition[] = [
     unit: "円/年",
     period: "（税込・約23%OFF）",
     description: "長く使いたい方におすすめ",
+    recommended: true,
     features: [
       "スキャン無制限",
       "AI書類解析",

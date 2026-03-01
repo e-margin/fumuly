@@ -184,9 +184,8 @@ export default function UpgradePage() {
                 className={`w-full mt-4 h-11 rounded-xl ${
                   plan.recommended
                     ? "bg-[#F4845F] hover:bg-[#F4845F]/90 text-white"
-                    : ""
+                    : "bg-primary hover:bg-primary/90 text-white"
                 }`}
-                variant={plan.recommended ? "default" : "outline"}
                 onClick={() => handleSubscribe(plan.planKey!)}
                 disabled={loading !== null}
               >

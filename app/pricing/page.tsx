@@ -64,14 +64,13 @@ export default function PricingPage() {
 
               <Link href="/register">
                 <Button
-                  variant={plan.recommended ? "default" : "outline"}
                   className={`w-full mt-4 h-11 rounded-xl ${
                     plan.recommended
                       ? "bg-[#F4845F] hover:bg-[#F4845F]/90 text-white"
-                      : ""
+                      : "bg-primary hover:bg-primary/90 text-white"
                   }`}
                 >
-                  無料で始める
+                  {plan.planKey ? "まずは無料で登録" : "無料で始める"}
                 </Button>
               </Link>
             </div>
