@@ -19,6 +19,7 @@ import {
   Shield,
   FileText,
   Scale,
+  AlertTriangle,
   Trash2,
   LogOut,
   Loader2,
@@ -121,8 +122,25 @@ export default function SettingsPage() {
               <p className="text-sm font-medium text-foreground">
                 利用規約
               </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-ignore" />
+          </div>
+        </Link>
+
+        <Separator />
+
+        {/* Disclaimer */}
+        <Link href="/disclaimer">
+          <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
+            <div className="w-9 h-9 bg-urgent/10 rounded-full flex items-center justify-center">
+              <AlertTriangle className="h-4 w-4 text-urgent" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">
+                免責事項
+              </p>
               <p className="text-xs text-sub">
-                AI解析の免責事項を含む
+                AI解析の精度・責任範囲について
               </p>
             </div>
             <ChevronRight className="h-4 w-4 text-ignore" />
