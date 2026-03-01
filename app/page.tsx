@@ -20,8 +20,8 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 h-14">
           <span className="text-xl font-bold text-[#2C4A7C]">Fumuly</span>
-          <div className="flex items-center gap-2">
-            <Link href="/pricing">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Link href="/pricing" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm" className="text-[#2C4A7C]">
                 料金
               </Button>
@@ -276,20 +276,22 @@ export default function LandingPage() {
                     : "border border-[#E5E7EB]"
                 }`}
               >
-                {plan.savingBadge && (
+                {plan.savingBadge ? (
                   <span className="inline-block bg-[#F4845F] text-white text-xs font-bold px-3 py-1 rounded-full mb-3">
                     {plan.savingBadge}
                   </span>
+                ) : (
+                  <div className="h-[26px] mb-3" />
                 )}
                 <h3 className="font-bold text-[#2D2D2D] text-lg">
                   {plan.name}
                 </h3>
                 <p className="mt-2">
                   <span className="text-2xl lg:text-3xl font-bold text-[#2C4A7C]">
-                    ¥{plan.price}
+                    {plan.price}
                   </span>
                   <span className="text-sm text-[#757575]">
-                    {plan.unit === "円" ? "" : `/${plan.unit.replace("円/", "")}`}
+                    {plan.unit}
                   </span>
                 </p>
                 <p className="text-xs text-[#757575] mt-1">
