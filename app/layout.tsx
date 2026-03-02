@@ -63,7 +63,9 @@ export default function RootLayout({
         <UpdateBanner />
         {children}
       </body>
-      <GoogleAnalytics gaId="G-LED5D1MCK9" />
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   );
 }

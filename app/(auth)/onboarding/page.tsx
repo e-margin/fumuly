@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,14 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // Google OAuth経由の新規登録時にsign_upイベントを送信
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("method") === "google") {
+      window.gtag?.("event", "sign_up", { method: "google" });
+    }
+  }, []);
 
   // Form state
   const [incomeType, setIncomeType] = useState("");
