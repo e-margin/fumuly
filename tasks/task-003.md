@@ -13,12 +13,12 @@ estimated_hours: 1
 ---
 
 ## 概要
-プライバシーポリシー・利用規約・特商法に記載の `contact@fumuly.com` でメールを受信できるようにする。
+プライバシーポリシー・利用規約・特商法に記載の `support@fumuly.com` でメールを受信できるようにする。
 
 ## 実装手順
 1. Cloudflareにドメイン追加（fumuly.com）
 2. Email Routing を有効化
-3. `contact@fumuly.com` → 個人メールアドレスへの転送ルール作成
+3. `support@fumuly.com` → 個人メールアドレスへの転送ルール作成
 4. DNS MXレコードの設定
 5. 動作確認（テストメール送信）
 
@@ -28,4 +28,4 @@ estimated_hours: 1
 - Vercel向けDNSレコード設定（A: 76.76.21.21、CNAME: cname.vercel-dns.com、DNS only）
 - Email Routing有効化、MX/TXT/DKIMレコード自動追加
 - `support@fumuly.com` を作成し、メール転送の動作確認済み
-- 当初の `contact@fumuly.com` ではなく `support@fumuly.com` で作成（プライバシーポリシー等の記載も要更新）
+- 当初の `support@fumuly.com` ではなく `support@fumuly.com` で作成（プライバシーポリシー等の記載も要更新）

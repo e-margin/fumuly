@@ -118,7 +118,7 @@ E-margin（以下「当方」）は、Fumuly（フムリー）（以下「本サ
 本ポリシーに関するお問い合わせは、以下の窓口までご連絡ください。
 
 **運営者**：E-margin
-**メールアドレス**：contact@fumuly.com
+**メールアドレス**：support@fumuly.com
 
 ---
 

@@ -1,14 +1,14 @@
 ---
 id: task-016
 title: LPページのPC表示対応
-parents: [UI/UX]
-status: idea
+parents:
+  - UI/UX
+status: done
 priority: low
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
-note: "フェーズ3: リリース（優先15）。LP PC表示対応"
+completed_at: '2026-03-01'
+note: 'フェーズ3: リリース（優先15）。LP PC表示対応'
 estimated_hours: 4
 ---
 

@@ -7,7 +7,7 @@ const rows = [
   { label: "電話番号", value: "請求があった場合に遅滞なく開示いたします" },
   {
     label: "メールアドレス",
-    value: "contact@fumuly.com（お問い合わせ対応：平日10:00〜18:00）",
+    value: "support@fumuly.com（お問い合わせ対応：平日10:00〜18:00）",
   },
   { label: "サービス名", value: "Fumuly（フムリー）" },
   { label: "サービスURL", value: "https://fumuly.com" },

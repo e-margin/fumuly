@@ -29,7 +29,7 @@ export const supabase = createBrowserClient(
       setAll(cookies) {
         if (typeof document === "undefined") return;
         cookies.forEach(({ name, value, options }) => {
-          const maxAge = options?.maxAge ?? 86400 * 7; // 7 days
+          const maxAge = options?.maxAge ?? 86400 * 30; // 30 days
           const expires = new Date(Date.now() + maxAge * 1000);
           let cookieStr = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
           cookieStr += `; path=${options?.path ?? "/"}`;

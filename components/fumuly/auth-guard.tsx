@@ -13,11 +13,21 @@ export function AuthGuard() {
       if (now - lastCheckRef.current < 5000) return;
       lastCheckRef.current = now;
 
-      const { data: { user }, error } = await supabase.auth.getUser();
-      // Don't redirect on network errors (allow offline usage)
-      if (error) return;
-      if (!user) {
-        window.location.href = "/login";
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        // Don't redirect on network errors (allow offline usage)
+        if (error?.status && error.status >= 500) return;
+        if (error?.message?.includes("fetch")) return;
+
+        if (!user) {
+          // アクセストークン期限切れの可能性 → リフレッシュを試みる
+          const { data: refreshData } = await supabase.auth.refreshSession();
+          if (!refreshData.session) {
+            window.location.href = "/login";
+          }
+        }
+      } catch {
+        // ネットワークエラー時はリダイレクトしない（オフライン対応）
       }
     };
 

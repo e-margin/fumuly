@@ -16,7 +16,7 @@ MVP開発を始めるために最低限必要なものを先に構築する。
   └─ Stripe
 
 フェーズ3（公開前に必要）
-  └─ Cloudflare / contact@fumuly.com
+  └─ Cloudflare / support@fumuly.com
 ```
 
 ---
@@ -61,7 +61,7 @@ MVP開発を始めるために最低限必要なものを先に構築する。
 - [ ] アカウント作成（https://cloudflare.com）
 - [ ] `fumuly.com`のネームサーバーをCloudflareに移管（お名前ドットコムで変更）
 - [ ] Email Routingを設定
-  - `contact@fumuly.com` → 既存のGmailに転送
+  - `support@fumuly.com` → 既存のGmailに転送
 - [ ] SSL/TLS設定を確認
 
 ### Anthropic API

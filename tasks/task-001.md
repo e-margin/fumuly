@@ -18,7 +18,7 @@ estimated_hours: 1
 - `docs/Fumuly_特定商取引法に基づく表記.md` — 同上
 
 ### メールアドレス
-以下のファイルで `contact@fumuly.com` を使用中。ドメインと一致しているので変更不要。
+以下のファイルで `support@fumuly.com` を使用中。ドメインと一致しているので変更不要。
 - `app/privacy/page.tsx`
 - `app/terms/page.tsx`
 - `app/legal/page.tsx`
