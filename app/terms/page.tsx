@@ -181,7 +181,7 @@ export default function TermsPage() {
         <p>
           <strong>運営者</strong>：E-margin
           <br />
-          <strong>メールアドレス</strong>：contact@fumuly.com
+          <strong>メールアドレス</strong>：support@fumuly.com
         </p>
       </article>
     </div>
