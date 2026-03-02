@@ -59,9 +59,17 @@ export async function GET(req: NextRequest) {
 
     if (mode === "check_duplicate") {
       // 重複チェック: sender + type + amount が一致する書類があるか
+      // 注意: sender, type, amount は平文保存のためeq比較可能。
+      //       これらを暗号化対象にする場合はこのロジックの修正が必要。
       const sender = searchParams.get("sender");
       const type = searchParams.get("type");
       const amount = searchParams.get("amount");
+
+      // 最低1つのフィルタ条件がなければ空を返す
+      const parsedAmount = amount && amount !== "null" ? parseInt(amount, 10) : null;
+      if (!sender && !type && (parsedAmount == null || isNaN(parsedAmount))) {
+        return NextResponse.json({ duplicates: [] });
+      }
 
       let query = supabaseAdmin
         .from("documents")
@@ -72,7 +80,7 @@ export async function GET(req: NextRequest) {
 
       if (sender) query = query.eq("sender", sender);
       if (type) query = query.eq("type", type);
-      if (amount && amount !== "null") query = query.eq("amount", parseInt(amount, 10));
+      if (parsedAmount != null && !isNaN(parsedAmount)) query = query.eq("amount", parsedAmount);
 
       const { data } = await query.order("created_at", { ascending: false }).limit(5);
 
