@@ -2,13 +2,13 @@
 id: task-025
 title: 重複スキャン検知
 parents: [UI/UX, AI]
-status: waiting
+status: done
 priority: low
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
-note: "保留: 実ユーザーの声を見てから。重複スキャン検知"
+completed_at: 2026-03-03
+progress: 100
+note: A案（sender+type+amount一致チェック）で実装。保存前に警告ダイアログ表示
 estimated_hours: 0.2
 ---
 

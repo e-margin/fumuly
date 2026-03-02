@@ -2,13 +2,13 @@
 id: task-028
 title: オフラインフォールバック・SWキャッシュ改善
 parents: [PWA]
-status: waiting
+status: done
 priority: low
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
-note: "フェーズ3: リリース（優先13）。オフラインフォールバック"
+completed_at: 2026-03-03
+progress: 100
+note: オフラインページ・SWプリキャッシュ・CACHE_NAME自動更新を実装
 estimated_hours: 0.1
 ---
 
