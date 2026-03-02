@@ -114,7 +114,7 @@ export default function DocumentDetailPage() {
     setUpdating(false);
   };
 
-  const saveField = async (field: string, value: string) => {
+  const saveField = async (field: string, value: string, resetEditing = true) => {
     if (!doc) return;
     setSavingField(true);
     const res = await fetch("/api/documents", {
@@ -126,10 +126,11 @@ export default function DocumentDetailPage() {
       const updated = await res.json();
       setDoc({ ...doc, ...updated });
     } else {
-      alert("保存に失敗しました");
+      const data = await res.json().catch(() => null);
+      alert(data?.error || "保存に失敗しました");
     }
     setSavingField(false);
-    setEditingField(null);
+    if (resetEditing) setEditingField(null);
   };
 
   const handleDelete = async () => {
@@ -185,7 +186,7 @@ export default function DocumentDetailPage() {
               const categories: DocumentDetail["category"][] = ["urgent", "action", "keep", "ignore"];
               const currentIdx = categories.indexOf(doc.category);
               const next = categories[(currentIdx + 1) % categories.length];
-              saveField("category", next);
+              saveField("category", next, false);
             }}
             disabled={savingField}
             title="タップしてカテゴリを変更"

@@ -251,9 +251,18 @@ export async function PATCH(req: NextRequest) {
     } else if (action === "update_fields") {
       // 許可するフィールドのみ更新
       const allowed = ["sender", "type", "deadline", "category"] as const;
+      const validCategories = ["urgent", "action", "keep", "ignore"];
       for (const key of allowed) {
         if (body[key] !== undefined) {
-          updateData[key] = body[key];
+          const val = body[key];
+          // sender/typeは空文字列を許可しない
+          if ((key === "sender" || key === "type") && (!val || !String(val).trim())) {
+            return NextResponse.json({ error: `${key === "sender" ? "送付元" : "書類種別"}は空にできません` }, { status: 400 });
+          }
+          if (key === "category" && !validCategories.includes(val)) {
+            return NextResponse.json({ error: "不正なカテゴリです" }, { status: 400 });
+          }
+          updateData[key] = key === "sender" || key === "type" ? String(val).trim() : val;
         }
       }
       if (Object.keys(updateData).length === 0) {
