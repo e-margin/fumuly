@@ -2,13 +2,13 @@
 id: task-026
 title: 解析結果の手動編集機能
 parents: [UI/UX, 機能]
-status: waiting
+status: done
 priority: low
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
-note: "保留: task-032（金額修正）で一部解決済み。手動編集機能"
+completed_at: 2026-03-03
+progress: 100
+note: sender/type/deadline/categoryの編集UIを実装。金額修正は既存
 estimated_hours: 0.3
 ---
 
