@@ -2,13 +2,13 @@
 id: task-018
 title: パスワードリセット機能の実装
 parents: [認証, UX]
-status: blocked
+status: done
 priority: medium
 depends_on: [task-003]
 this_week: false
-completed_at: null
-progress: 0
-note: "メール送信未設定のためブロック中。task-003（Email Routing）完了後に着手"
+completed_at: 2026-03-02
+progress: 100
+note: "パスワードリセット機能実装完了。Supabase Auth経由でリセットメール送信"
 estimated_hours: 0.05
 ---
 
@@ -30,3 +30,18 @@ estimated_hours: 0.05
 ## 備考
 
 task-003（メール機能）に依存しない。Supabase Auth がリセットメールを送信してくれる。
+
+## 作業メモ（2026-03-02）
+
+### 実装内容
+- `app/(auth)/login/page.tsx`: 「パスワードをお忘れですか？」リンクを追加
+- `app/(auth)/reset-password/page.tsx`: メールアドレス入力→リセットメール送信ページ（新規作成）
+- `app/(auth)/update-password/page.tsx`: リセットリンクから遷移→新パスワード設定ページ（新規作成）
+
+### フロー
+1. ログイン画面 →「パスワードをお忘れですか？」クリック
+2. `/reset-password` でメールアドレスを入力して送信
+3. Supabase Auth が `resetPasswordForEmail()` でリセットメールを送信
+4. メール内リンクをクリック → `/update-password` に遷移（URLハッシュにトークン付き）
+5. `setSession()` でセッション復元後、`updateUser()` で新パスワードを設定
+6. 成功後2秒で `/home` にリダイレクト
