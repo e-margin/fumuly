@@ -21,7 +21,9 @@ export function AuthGuard() {
 
         if (!user) {
           // アクセストークン期限切れの可能性 → リフレッシュを試みる
-          const { data: refreshData } = await supabase.auth.refreshSession();
+          const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+          if (refreshError?.status && refreshError.status >= 500) return;
+          if (refreshError?.message?.includes("fetch")) return;
           if (!refreshData.session) {
             window.location.href = "/login";
           }
