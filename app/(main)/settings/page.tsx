@@ -27,6 +27,7 @@ import {
   CreditCard,
   Crown,
   BookOpen,
+  Archive,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -239,6 +240,26 @@ export default function SettingsPage() {
               </p>
               <p className="text-xs text-sub">
                 機能や使い方の説明
+              </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-ignore" />
+          </div>
+        </Link>
+
+        <Separator />
+
+        {/* Past documents */}
+        <Link href="/settings/past-documents">
+          <div className="flex items-center gap-3 py-3 active:bg-background rounded-lg px-2 transition-colors">
+            <div className="w-9 h-9 bg-ignore/10 rounded-full flex items-center justify-center">
+              <Archive className="h-4 w-4 text-ignore" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">
+                過去の書類
+              </p>
+              <p className="text-xs text-sub">
+                対応済み・アーカイブした書類
               </p>
             </div>
             <ChevronRight className="h-4 w-4 text-ignore" />

@@ -55,12 +55,13 @@ export async function GET(req: NextRequest) {
     }
 
     if (mode === "home") {
-      // Home: urgent/action, not done, limit 10
+      // Home: urgent/action, not done, not archived, limit 10
       const { data } = await supabaseAdmin
         .from("documents")
         .select("id, sender, type, amount, deadline, category, summary, recommended_action, is_done")
         .eq("user_id", user.id)
         .eq("is_done", false)
+        .eq("is_archived", false)
         .in("category", ["urgent", "action"])
         .order("deadline", { ascending: true, nullsFirst: false })
         .limit(10);
@@ -69,11 +70,26 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(docs);
     }
 
-    // All documents
+    if (mode === "past") {
+      // Past documents: done or archived
+      const { data } = await supabaseAdmin
+        .from("documents")
+        .select("id, sender, type, amount, deadline, category, summary, recommended_action, is_done, is_archived, done_at, archived_at, created_at")
+        .eq("user_id", user.id)
+        .or("is_done.eq.true,is_archived.eq.true")
+        .order("created_at", { ascending: false });
+
+      const docs = (data || []).map((d) => decryptFields(d, ["summary", "recommended_action"]));
+      return NextResponse.json(docs);
+    }
+
+    // All active documents (not done, not archived)
     const { data } = await supabaseAdmin
       .from("documents")
       .select("id, sender, type, amount, deadline, category, summary, recommended_action, is_done, created_at")
       .eq("user_id", user.id)
+      .eq("is_done", false)
+      .eq("is_archived", false)
       .order("created_at", { ascending: false });
 
     const docs = (data || []).map((d) => decryptFields(d, ["summary", "recommended_action"]));
@@ -115,6 +131,23 @@ export async function POST(req: NextRequest) {
       console.error("Document save error:", error);
       return NextResponse.json({ error: "保存に失敗しました" }, { status: 500 });
     }
+
+    // 自動クリーンアップ: 対応済み/アーカイブから30日経過した書類を削除
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    await supabaseAdmin
+      .from("documents")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("is_done", true)
+      .not("done_at", "is", null)
+      .lt("done_at", thirtyDaysAgo);
+    await supabaseAdmin
+      .from("documents")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("is_archived", true)
+      .not("archived_at", "is", null)
+      .lt("archived_at", thirtyDaysAgo);
 
     return NextResponse.json({ success: true });
   } catch (error) {

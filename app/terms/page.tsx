@@ -11,7 +11,7 @@ export default function TermsPage() {
 
       <article className="max-w-2xl mx-auto px-4 py-8 prose prose-sm prose-neutral">
         <h1 className="text-xl font-bold text-foreground">利用規約</h1>
-        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 最終更新：2026年3月1日</p>
+        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 最終更新：2026年3月2日</p>
 
         <p>
           E-margin（以下「当方」）は、Fumuly（フムリー）（以下「本サービス」）の利用について、以下のとおり利用規約を定めます。本サービスをご利用いただく場合は、本規約に同意したものとみなします。
@@ -139,6 +139,15 @@ export default function TermsPage() {
         <ol>
           <li>
             ユーザーは、アプリ内の設定画面からいつでも自身のデータを削除することができます。
+          </li>
+          <li>
+            対応済みまたはアーカイブされた書類データは、その操作から30日経過後に自動的に削除されます。この自動削除は、センシティブな個人情報の保持期間を最小限にするための措置です。
+          </li>
+          <li>
+            自動削除の対象となる書類は、設定画面の「過去の書類」から確認でき、残りの保持日数が表示されます。
+          </li>
+          <li>
+            ユーザーは書類の詳細画面から、自動削除を待たずにいつでも手動で書類を削除することもできます。
           </li>
           <li>アカウント削除後のデータの復旧はできません。</li>
         </ol>

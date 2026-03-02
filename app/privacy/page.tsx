@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <h1 className="text-xl font-bold text-foreground">
           プライバシーポリシー
         </h1>
-        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 改定日：2026年3月1日</p>
+        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 改定日：2026年3月2日</p>
 
         <p>
           E-margin（以下「当方」）は、Fumuly（フムリー）（以下「本サービス」）における個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
@@ -108,7 +108,22 @@ export default function PrivacyPage() {
             テキスト解析結果・チャット履歴・プロフィール情報はSupabaseが提供するデータベースに保存します
           </li>
           <li>
+            書類の解析結果は暗号化した上で保存します
+          </li>
+          <li>
             当方は適切なセキュリティ対策を講じますが、完全な安全性を保証するものではありません
+          </li>
+        </ul>
+        <p className="font-semibold">データの保持期間</p>
+        <ul>
+          <li>
+            対応済み・アーカイブした書類データは、その操作から30日経過後に自動的に削除されます。これはセンシティブな個人情報の保持期間を最小限にするための措置です
+          </li>
+          <li>
+            チャット履歴はユーザーごとに最新50件を保持し、超過分は自動的に削除されます
+          </li>
+          <li>
+            未対応の書類データは自動削除の対象にはなりません
           </li>
         </ul>
 

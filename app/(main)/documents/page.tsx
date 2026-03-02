@@ -105,9 +105,14 @@ export default function DocumentsPage() {
         <div className="text-center py-16">
           <p className="text-sub">
             {filter === "all"
-              ? "まだ書類がありません"
+              ? "未対応の書類はありません"
               : "該当する書類がありません"}
           </p>
+          {filter === "all" && (
+            <p className="text-xs text-ignore mt-2">
+              対応済み・アーカイブした書類は設定から確認できます
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-4">

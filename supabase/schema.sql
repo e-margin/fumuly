@@ -75,6 +75,9 @@ CREATE TABLE IF NOT EXISTS documents (
   recommended_action TEXT,
   detailed_summary   TEXT,
   is_done            BOOLEAN DEFAULT FALSE,
+  done_at            TIMESTAMP WITH TIME ZONE,
+  is_archived        BOOLEAN DEFAULT FALSE,
+  archived_at        TIMESTAMP WITH TIME ZONE,
   local_image_id     TEXT
 );
 
@@ -102,6 +105,7 @@ CREATE POLICY "Users can delete own documents"
 CREATE INDEX IF NOT EXISTS idx_documents_user_id ON documents(user_id);
 CREATE INDEX IF NOT EXISTS idx_documents_priority ON documents(user_id, priority);
 CREATE INDEX IF NOT EXISTS idx_documents_deadline ON documents(user_id, deadline);
+CREATE INDEX IF NOT EXISTS idx_documents_active ON documents(user_id, is_done, is_archived);
 
 -- =============================================
 

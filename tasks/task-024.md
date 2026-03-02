@@ -2,12 +2,12 @@
 id: task-024
 title: 書類一覧のselect最適化
 parents: [パフォーマンス]
-status: waiting
+status: done
 priority: low
 depends_on: []
 this_week: false
-completed_at: null
-progress: 0
+completed_at: 2026-03-02
+progress: 100
 note: "select最適化のみ。書類データはページネーション不要（件数が限定的）"
 estimated_hours: 0.1
 ---

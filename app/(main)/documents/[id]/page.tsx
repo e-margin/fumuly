@@ -17,11 +17,13 @@ import {
 import {
   ArrowLeft,
   CheckCircle2,
+  Archive,
   Trash2,
   Loader2,
   MessageCircle,
   Pencil,
   Check,
+  Undo2,
 } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -38,6 +40,9 @@ interface DocumentDetail {
   recommended_action: string;
   detailed_summary: string;
   is_done: boolean;
+  done_at: string | null;
+  is_archived: boolean;
+  archived_at: string | null;
   created_at: string;
 }
 
@@ -69,9 +74,13 @@ export default function DocumentDetailPage() {
     if (!doc) return;
     setUpdating(true);
 
+    const newDone = !doc.is_done;
     const { error } = await supabase
       .from("documents")
-      .update({ is_done: !doc.is_done })
+      .update({
+        is_done: newDone,
+        done_at: newDone ? new Date().toISOString() : null,
+      })
       .eq("id", doc.id);
 
     if (error) {
@@ -81,7 +90,31 @@ export default function DocumentDetailPage() {
       return;
     }
 
-    setDoc({ ...doc, is_done: !doc.is_done });
+    setDoc({ ...doc, is_done: newDone, done_at: newDone ? new Date().toISOString() : null });
+    setUpdating(false);
+  };
+
+  const toggleArchive = async () => {
+    if (!doc) return;
+    setUpdating(true);
+
+    const newArchived = !doc.is_archived;
+    const { error } = await supabase
+      .from("documents")
+      .update({
+        is_archived: newArchived,
+        archived_at: newArchived ? new Date().toISOString() : null,
+      })
+      .eq("id", doc.id);
+
+    if (error) {
+      console.error("Toggle archive error:", error);
+      alert("更新に失敗しました");
+      setUpdating(false);
+      return;
+    }
+
+    setDoc({ ...doc, is_archived: newArchived, archived_at: newArchived ? new Date().toISOString() : null });
     setUpdating(false);
   };
 
@@ -139,6 +172,12 @@ export default function DocumentDetailPage() {
             <span className="flex items-center gap-1 text-sm text-keep font-medium">
               <CheckCircle2 className="h-4 w-4" />
               対応済み
+            </span>
+          )}
+          {doc.is_archived && (
+            <span className="flex items-center gap-1 text-sm text-ignore font-medium">
+              <Archive className="h-4 w-4" />
+              アーカイブ
             </span>
           )}
         </div>
@@ -280,27 +319,50 @@ export default function DocumentDetailPage() {
 
         {/* Actions */}
         <div className="flex gap-3 pt-2">
-          <Button
-            onClick={toggleDone}
-            disabled={updating}
-            variant={doc.is_done ? "outline" : "default"}
-            className={
-              doc.is_done
-                ? "flex-1 h-12 rounded-xl"
-                : "flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white"
-            }
-          >
-            {updating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : doc.is_done ? (
-              "未対応に戻す"
-            ) : (
-              <>
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                対応済みにする
-              </>
-            )}
-          </Button>
+          {doc.is_done || doc.is_archived ? (
+            /* 対応済み or アーカイブ → 「戻す」ボタン */
+            <Button
+              onClick={doc.is_done ? toggleDone : toggleArchive}
+              disabled={updating}
+              variant="outline"
+              className="flex-1 h-12 rounded-xl"
+            >
+              {updating ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Undo2 className="h-4 w-4 mr-2" />
+                  {doc.is_done ? "未対応に戻す" : "アーカイブを解除"}
+                </>
+              )}
+            </Button>
+          ) : (
+            /* アクティブ → 「対応済み」+「アーカイブ」ボタン */
+            <>
+              <Button
+                onClick={toggleDone}
+                disabled={updating}
+                className="flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white"
+              >
+                {updating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    対応済みにする
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={toggleArchive}
+                disabled={updating}
+                variant="outline"
+                className="h-12 px-4 rounded-xl"
+              >
+                <Archive className="h-4 w-4" />
+              </Button>
+            </>
+          )}
 
           <Dialog>
             <DialogTrigger asChild>
