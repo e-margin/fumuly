@@ -248,6 +248,17 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ error: "金額が必要です" }, { status: 400 });
       }
       updateData = { amount };
+    } else if (action === "update_fields") {
+      // 許可するフィールドのみ更新
+      const allowed = ["sender", "type", "deadline", "category"] as const;
+      for (const key of allowed) {
+        if (body[key] !== undefined) {
+          updateData[key] = body[key];
+        }
+      }
+      if (Object.keys(updateData).length === 0) {
+        return NextResponse.json({ error: "更新するフィールドがありません" }, { status: 400 });
+      }
     } else {
       return NextResponse.json({ error: "不正なアクションです" }, { status: 400 });
     }
@@ -257,7 +268,7 @@ export async function PATCH(req: NextRequest) {
       .update(updateData)
       .eq("id", id)
       .eq("user_id", user.id)
-      .select("is_done, done_at, is_archived, archived_at, amount")
+      .select("is_done, done_at, is_archived, archived_at, amount, sender, type, deadline, category")
       .single();
 
     if (error) {

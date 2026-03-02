@@ -55,6 +55,9 @@ export default function DocumentDetailPage() {
   const [editingAmount, setEditingAmount] = useState(false);
   const [amountInput, setAmountInput] = useState("");
   const [savingAmount, setSavingAmount] = useState(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [fieldInput, setFieldInput] = useState("");
+  const [savingField, setSavingField] = useState(false);
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -111,6 +114,24 @@ export default function DocumentDetailPage() {
     setUpdating(false);
   };
 
+  const saveField = async (field: string, value: string) => {
+    if (!doc) return;
+    setSavingField(true);
+    const res = await fetch("/api/documents", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: doc.id, action: "update_fields", [field]: value || null }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setDoc({ ...doc, ...updated });
+    } else {
+      alert("保存に失敗しました");
+    }
+    setSavingField(false);
+    setEditingField(null);
+  };
+
   const handleDelete = async () => {
     if (!doc) return;
     setDeleting(true);
@@ -159,7 +180,18 @@ export default function DocumentDetailPage() {
       <div className="space-y-4">
         {/* Priority & status */}
         <div className="flex items-center gap-3">
-          <PriorityBadge category={doc.category} size="lg" />
+          <button
+            onClick={() => {
+              const categories: DocumentDetail["category"][] = ["urgent", "action", "keep", "ignore"];
+              const currentIdx = categories.indexOf(doc.category);
+              const next = categories[(currentIdx + 1) % categories.length];
+              saveField("category", next);
+            }}
+            disabled={savingField}
+            title="タップしてカテゴリを変更"
+          >
+            <PriorityBadge category={doc.category} size="lg" />
+          </button>
           {doc.is_done && (
             <span className="flex items-center gap-1 text-sm text-keep font-medium">
               <CheckCircle2 className="h-4 w-4" />
@@ -178,13 +210,65 @@ export default function DocumentDetailPage() {
         <div className="bg-white rounded-2xl border p-4 space-y-3">
           <div>
             <p className="text-xs text-sub">送付元</p>
-            <p className="font-bold text-lg text-foreground">
-              {doc.sender}
-            </p>
+            {editingField === "sender" ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={fieldInput}
+                  onChange={(e) => setFieldInput(e.target.value)}
+                  className="flex-1 font-bold text-lg text-foreground border-b-2 border-primary bg-transparent outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={() => saveField("sender", fieldInput)}
+                  disabled={savingField}
+                  className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                >
+                  {savingField ? <Loader2 className="h-3 w-3 animate-spin text-primary" /> : <Check className="h-4 w-4 text-primary" />}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-lg text-foreground">{doc.sender}</p>
+                <button
+                  onClick={() => { setFieldInput(doc.sender); setEditingField("sender"); }}
+                  className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                >
+                  <Pencil className="h-3 w-3 text-ignore" />
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <p className="text-xs text-sub">書類種別</p>
-            <p className="text-foreground">{doc.type}</p>
+            {editingField === "type" ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={fieldInput}
+                  onChange={(e) => setFieldInput(e.target.value)}
+                  className="flex-1 text-foreground border-b-2 border-primary bg-transparent outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={() => saveField("type", fieldInput)}
+                  disabled={savingField}
+                  className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                >
+                  {savingField ? <Loader2 className="h-3 w-3 animate-spin text-primary" /> : <Check className="h-4 w-4 text-primary" />}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="text-foreground">{doc.type}</p>
+                <button
+                  onClick={() => { setFieldInput(doc.type); setEditingField("type"); }}
+                  className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                >
+                  <Pencil className="h-3 w-3 text-ignore" />
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <p className="text-xs text-sub">金額</p>
@@ -256,14 +340,45 @@ export default function DocumentDetailPage() {
               </button>
             )}
           </div>
-          {doc.deadline && (
-            <div>
-              <p className="text-xs text-sub">期限</p>
-              <p className="font-medium text-foreground">
-                {doc.deadline}
-              </p>
-            </div>
-          )}
+          <div>
+            <p className="text-xs text-sub">期限</p>
+            {editingField === "deadline" ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={fieldInput}
+                  onChange={(e) => setFieldInput(e.target.value)}
+                  placeholder="例: 2026年4月30日"
+                  className="flex-1 font-medium text-foreground border-b-2 border-primary bg-transparent outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={() => saveField("deadline", fieldInput)}
+                  disabled={savingField}
+                  className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"
+                >
+                  {savingField ? <Loader2 className="h-3 w-3 animate-spin text-primary" /> : <Check className="h-4 w-4 text-primary" />}
+                </button>
+              </div>
+            ) : doc.deadline ? (
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-foreground">{doc.deadline}</p>
+                <button
+                  onClick={() => { setFieldInput(doc.deadline || ""); setEditingField("deadline"); }}
+                  className="w-7 h-7 bg-ignore/10 rounded-full flex items-center justify-center"
+                >
+                  <Pencil className="h-3 w-3 text-ignore" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { setFieldInput(""); setEditingField("deadline"); }}
+                className="text-sm text-primary"
+              >
+                + 期限を追加
+              </button>
+            )}
+          </div>
           <div>
             <p className="text-xs text-sub">一言サマリー</p>
             <p className="text-foreground">{doc.summary}</p>
