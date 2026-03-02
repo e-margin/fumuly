@@ -51,6 +51,8 @@ export default function ScanPage() {
   const [amountChanged, setAmountChanged] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [profileIncomplete, setProfileIncomplete] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [duplicates, setDuplicates] = useState<{ id: string; sender: string; type: string; amount: number | null; created_at: string }[]>([]);
 
   useEffect(() => {
     const checkProfile = async () => {
@@ -151,7 +153,7 @@ export default function ScanPage() {
     }
   };
 
-  const handleSave = async () => {
+  const saveDocument = async () => {
     if (!result) return;
     setSaving(true);
 
@@ -189,6 +191,32 @@ export default function ScanPage() {
       alert("保存に失敗しました");
       setSaving(false);
     }
+  };
+
+  const handleSave = async () => {
+    if (!result) return;
+
+    // 重複チェック
+    try {
+      const params = new URLSearchParams({ mode: "check_duplicate" });
+      if (result.sender) params.set("sender", result.sender);
+      if (result.type) params.set("type", result.type);
+      if (result.amount != null) params.set("amount", String(result.amount));
+
+      const res = await fetch(`/api/documents?${params}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.duplicates && data.duplicates.length > 0) {
+          setDuplicates(data.duplicates);
+          setDuplicateDialogOpen(true);
+          return;
+        }
+      }
+    } catch {
+      // 重複チェック失敗時はそのまま保存に進む
+    }
+
+    saveDocument();
   };
 
   const handleSelectAmount = (amount: number) => {
@@ -459,6 +487,49 @@ export default function ScanPage() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Duplicate warning dialog */}
+        <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
+          <DialogContent className="max-w-sm mx-auto">
+            <DialogHeader>
+              <DialogTitle>似た書類が登録済みです</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3 pt-1">
+              <p className="text-sm text-sub">
+                同じ送付元・種別・金額の書類がすでにあります。それでも登録しますか？
+              </p>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {duplicates.map((d) => (
+                  <div key={d.id} className="bg-muted rounded-xl px-3 py-2 text-sm">
+                    <p className="font-medium text-foreground">{d.sender} / {d.type}</p>
+                    <p className="text-xs text-sub">
+                      {d.amount != null && `¥${new Intl.NumberFormat("ja-JP").format(d.amount)} · `}
+                      {new Date(d.created_at).toLocaleDateString("ja-JP")}登録
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-3 pt-1">
+                <Button
+                  variant="outline"
+                  onClick={() => setDuplicateDialogOpen(false)}
+                  className="flex-1 h-10 rounded-xl"
+                >
+                  やめる
+                </Button>
+                <Button
+                  onClick={() => {
+                    setDuplicateDialogOpen(false);
+                    saveDocument();
+                  }}
+                  className="flex-1 h-10 bg-primary hover:bg-primary/90 text-white rounded-xl"
+                >
+                  登録する
+                </Button>
               </div>
             </div>
           </DialogContent>

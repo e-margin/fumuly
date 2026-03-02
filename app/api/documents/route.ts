@@ -57,6 +57,29 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(decrypted);
     }
 
+    if (mode === "check_duplicate") {
+      // 重複チェック: sender + type + amount が一致する書類があるか
+      const sender = searchParams.get("sender");
+      const type = searchParams.get("type");
+      const amount = searchParams.get("amount");
+
+      let query = supabaseAdmin
+        .from("documents")
+        .select("id, sender, type, amount, deadline, category, summary, created_at")
+        .eq("user_id", user.id)
+        .eq("is_done", false)
+        .eq("is_archived", false);
+
+      if (sender) query = query.eq("sender", sender);
+      if (type) query = query.eq("type", type);
+      if (amount && amount !== "null") query = query.eq("amount", parseInt(amount, 10));
+
+      const { data } = await query.order("created_at", { ascending: false }).limit(5);
+
+      const docs = (data || []).map((d) => decryptFields(d, ["summary"]));
+      return NextResponse.json({ duplicates: docs });
+    }
+
     if (mode === "home") {
       // Home: urgent/action, not done, not archived, limit 10
       const { data } = await supabaseAdmin

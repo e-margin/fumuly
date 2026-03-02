@@ -1,9 +1,11 @@
-// BUILD_TIMESTAMP: 2026-03-02T15:14:58.435Z
-const CACHE_NAME = "fumuly-v1";
+// BUILD_TIMESTAMP: 2026-03-02T15:27:59.322Z
+const CACHE_NAME = "fumuly-2026-03-02T15-27-59-322Z";
 
-// Install: do NOT skipWaiting — wait for user to trigger update
+// Install: precache offline page, do NOT skipWaiting
 self.addEventListener("install", (event) => {
-  // New SW waits until user clicks "update" banner
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.add("/offline.html"))
+  );
 });
 
 // Activate: clean up old caches and notify clients
@@ -49,7 +51,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("/offline.html")))
     );
     return;
   }
