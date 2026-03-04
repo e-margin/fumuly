@@ -2,12 +2,12 @@
 id: task-049
 title: 自動クリーンアップのDB負荷軽減
 parents: [品質]
-status: waiting
+status: done
 priority: medium
 depends_on: []
-this_week: false
-completed_at: null
-progress: 0
+this_week: true
+completed_at: 2026-03-05
+progress: 100
 note: "GETリクエスト毎のfire-and-forgetをやめ、実行間隔を制御"
 estimated_hours: 1
 ---

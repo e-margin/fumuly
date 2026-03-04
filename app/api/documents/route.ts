@@ -134,8 +134,16 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// クリーンアップの実行間隔制御（ユーザーごとに1時間に1回まで）
+const cleanupLastRun = new Map<string, number>();
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000; // 1時間
+
 // 自動クリーンアップ: 対応済み/アーカイブから30日経過した書類を削除
 async function runAutoCleanup(userId: string) {
+  const now = Date.now();
+  const lastRun = cleanupLastRun.get(userId) || 0;
+  if (now - lastRun < CLEANUP_INTERVAL_MS) return;
+  cleanupLastRun.set(userId, now);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { error: err1 } = await supabaseAdmin
     .from("documents")
