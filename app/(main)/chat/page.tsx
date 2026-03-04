@@ -28,6 +28,7 @@ export default function ChatPage() {
   const keyboardOpen = useKeyboardOpen();
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const sendingRef = useRef(false);
 
   // Load conversation history
   useEffect(() => {
@@ -82,7 +83,8 @@ export default function ChatPage() {
   const MAX_MESSAGE_LENGTH = 3000;
 
   const handleSend = async () => {
-    if (!input.trim() || loading || input.length > MAX_MESSAGE_LENGTH) return;
+    if (!input.trim() || loading || sendingRef.current || input.length > MAX_MESSAGE_LENGTH) return;
+    sendingRef.current = true;
 
     const userMessage = input.trim();
     setInput("");
@@ -146,6 +148,7 @@ export default function ChatPage() {
       ]);
     } finally {
       setLoading(false);
+      sendingRef.current = false;
     }
   };
 

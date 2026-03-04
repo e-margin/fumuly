@@ -48,6 +48,7 @@ export default function ScanPage() {
   const [manualInput, setManualInput] = useState(false);
   const [amountInput, setAmountInput] = useState("");
   const [originalAmount, setOriginalAmount] = useState<number | null>(null);
+  const analyzeAbortRef = useRef<AbortController | null>(null);
   const [amountChanged, setAmountChanged] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [profileIncomplete, setProfileIncomplete] = useState(false);
@@ -109,15 +110,25 @@ export default function ScanPage() {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  useEffect(() => {
+    return () => {
+      analyzeAbortRef.current?.abort();
+    };
+  }, []);
+
   const handleAnalyze = async () => {
     if (images.length === 0) return;
     setAnalyzing(true);
+    analyzeAbortRef.current?.abort();
+    const abortController = new AbortController();
+    analyzeAbortRef.current = abortController;
 
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ images: images.map((img) => img.base64) }),
+        signal: abortController.signal,
       });
 
       if (res.status === 401) {
@@ -141,6 +152,7 @@ export default function ScanPage() {
       setResult(data);
       setOriginalAmount(data.amount);
     } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
       const isOffline = !navigator.onLine;
       const message = isOffline
         ? "ネットワークに接続されていないようです。接続を確認してからもう一度お試しください。"
