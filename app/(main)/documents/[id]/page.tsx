@@ -199,6 +199,8 @@ export default function DocumentDetailPage() {
     if (!doc?.deadline) return null;
     const deadline = new Date(doc.deadline);
     if (isNaN(deadline.getTime())) return null;
+    // 過去の期限にはカレンダー追加を表示しない
+    if (deadline < new Date()) return null;
     // Google Calendar用の日付フォーマット（YYYYMMDD）
     const formatDate = (d: Date) =>
       `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
@@ -207,9 +209,8 @@ export default function DocumentDetailPage() {
     const nextDay = new Date(deadline.getTime() + 24 * 60 * 60 * 1000);
     const nextDateStr = formatDate(nextDay);
     const title = encodeURIComponent(`【fumuly】${doc.sender} ${doc.type}の期限`);
-    const details = encodeURIComponent(
-      `${doc.summary}\n\n💡 ${doc.recommended_action}`
-    );
+    const parts = [doc.summary, doc.recommended_action].filter(Boolean);
+    const details = encodeURIComponent(parts.join("\n\n💡 "));
     return `https://calendar.google.com/calendar/r/eventedit?text=${title}&dates=${dateStr}/${nextDateStr}&details=${details}`;
   };
 
@@ -628,17 +629,20 @@ export default function DocumentDetailPage() {
           )}
 
           {/* カレンダーに追加 */}
-          {getCalendarUrl() && !doc.is_done && !doc.is_archived && (
-            <a
-              href={getCalendarUrl()!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 flex items-center gap-2 py-2 px-3 bg-accent/10 text-accent rounded-lg text-xs font-medium active:bg-accent/20 transition-colors"
-            >
-              <CalendarPlus className="h-3.5 w-3.5" />
-              Googleカレンダーに期限を追加
-            </a>
-          )}
+          {(() => {
+            const calendarUrl = getCalendarUrl();
+            return calendarUrl && !doc.is_done && !doc.is_archived ? (
+              <a
+                href={calendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 flex items-center gap-2 py-2 px-3 bg-accent/10 text-accent rounded-lg text-xs font-medium active:bg-accent/20 transition-colors"
+              >
+                <CalendarPlus className="h-3.5 w-3.5" />
+                Googleカレンダーに期限を追加
+              </a>
+            ) : null;
+          })()}
 
           {/* リマインダー追加ピッカー */}
           {showReminderPicker && (
