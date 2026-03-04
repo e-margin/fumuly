@@ -37,6 +37,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "不正なSubscriptionデータです" }, { status: 400 });
     }
 
+    // endpoint URLバリデーション
+    try {
+      new URL(endpoint);
+    } catch {
+      return NextResponse.json({ error: "不正なendpoint URLです" }, { status: 400 });
+    }
+
     // upsert: 同じendpointなら更新、なければ挿入
     const { error } = await supabaseAdmin
       .from("push_subscriptions")
@@ -71,8 +78,8 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const endpoint = searchParams.get("endpoint");
+    const body = await req.json();
+    const endpoint = body?.endpoint;
 
     if (!endpoint) {
       return NextResponse.json({ error: "endpointが必要です" }, { status: 400 });

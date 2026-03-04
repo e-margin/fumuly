@@ -78,7 +78,12 @@ export default function SettingsPage() {
         // 通知OFF: unsubscribe
         const sub = await reg.pushManager.getSubscription();
         if (sub) {
-          await fetch(`/api/push/subscribe?endpoint=${encodeURIComponent(sub.endpoint)}`, { method: "DELETE" });
+          const res = await fetch("/api/push/subscribe", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ endpoint: sub.endpoint }),
+          });
+          if (!res.ok) throw new Error("サーバーからの削除に失敗しました");
           await sub.unsubscribe();
         }
         setPushEnabled(false);
@@ -95,7 +100,7 @@ export default function SettingsPage() {
           applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
         });
         const subJson = sub.toJSON();
-        await fetch("/api/push/subscribe", {
+        const res = await fetch("/api/push/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -103,6 +108,10 @@ export default function SettingsPage() {
             keys: subJson.keys,
           }),
         });
+        if (!res.ok) {
+          await sub.unsubscribe();
+          throw new Error("サーバーへの登録に失敗しました");
+        }
         setPushEnabled(true);
       }
     } catch (error) {

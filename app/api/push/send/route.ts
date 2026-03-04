@@ -44,24 +44,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ sent: 0, message: "送信対象なし" });
     }
 
-    let sentCount = 0;
-    let failedCount = 0;
+    // 全ユーザーのSubscriptionを一括取得（N+1回避）
+    const userIds = [...new Set(reminders.map((r) => r.user_id))];
+    const { data: allSubs } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select("user_id, endpoint, keys_p256dh, keys_auth")
+      .in("user_id", userIds);
+
+    const subsByUser = new Map<string, typeof allSubs>();
+    for (const sub of allSubs || []) {
+      if (!subsByUser.has(sub.user_id)) subsByUser.set(sub.user_id, []);
+      subsByUser.get(sub.user_id)!.push(sub);
+    }
+
+    let sentSubscriptions = 0;
+    let failedSubscriptions = 0;
+    const processedReminderIds: string[] = [];
 
     for (const reminder of reminders) {
-      // ユーザーのPush Subscription取得
-      const { data: subs } = await supabaseAdmin
-        .from("push_subscriptions")
-        .select("endpoint, keys_p256dh, keys_auth")
-        .eq("user_id", reminder.user_id);
+      processedReminderIds.push(reminder.id);
 
-      if (!subs || subs.length === 0) {
-        // Subscriptionがないユーザーはスキップ（is_sentはtrueにする）
-        await supabaseAdmin
-          .from("reminders")
-          .update({ is_sent: true })
-          .eq("id", reminder.id);
-        continue;
-      }
+      const subs = subsByUser.get(reminder.user_id);
+      if (!subs || subs.length === 0) continue;
 
       const doc = reminder.documents as unknown as { sender: string; type: string; deadline: string | null };
       const payload = JSON.stringify({
@@ -71,7 +75,6 @@ export async function POST(req: NextRequest) {
         tag: `reminder-${reminder.id}`,
       });
 
-      // 全Subscription端末に送信
       for (const sub of subs) {
         try {
           await webpush.sendNotification(
@@ -84,30 +87,31 @@ export async function POST(req: NextRequest) {
             },
             payload
           );
-          sentCount++;
+          sentSubscriptions++;
         } catch (pushError: unknown) {
           const statusCode = (pushError as { statusCode?: number })?.statusCode;
           if (statusCode === 410 || statusCode === 404) {
-            // Subscription期限切れ → DBから削除
             await supabaseAdmin
               .from("push_subscriptions")
               .delete()
               .eq("endpoint", sub.endpoint);
           }
-          failedCount++;
+          failedSubscriptions++;
         }
       }
+    }
 
-      // リマインダーを送信済みに更新
+    // 処理済みリマインダーを一括更新
+    if (processedReminderIds.length > 0) {
       await supabaseAdmin
         .from("reminders")
         .update({ is_sent: true })
-        .eq("id", reminder.id);
+        .in("id", processedReminderIds);
     }
 
     return NextResponse.json({
-      sent: sentCount,
-      failed: failedCount,
+      sentSubscriptions,
+      failedSubscriptions,
       reminders: reminders.length,
     });
   } catch (error) {
