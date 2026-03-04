@@ -40,6 +40,7 @@ export function DocumentCard({
 
   const formatDeadline = (d: string) => {
     const date = new Date(d);
+    if (isNaN(date.getTime())) return { text: d, urgent: false };
     const now = new Date();
     const diff = Math.ceil(
       (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)

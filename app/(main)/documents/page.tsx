@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { DocumentCard } from "@/components/fumuly/document-card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 
 interface Document {
   id: string;
@@ -23,14 +23,22 @@ type Filter = "all" | "urgent" | "action" | "keep" | "ignore";
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
     const fetchDocuments = async () => {
-      const res = await fetch("/api/documents?mode=all");
-      if (res.ok) {
-        const docs = await res.json();
-        setDocuments(docs || []);
+      try {
+        const res = await fetch("/api/documents?mode=all");
+        if (res.ok) {
+          const docs = await res.json();
+          setDocuments(docs || []);
+          setError(false);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
       }
       setLoading(false);
     };
@@ -100,6 +108,19 @@ export default function DocumentsPage() {
       {loading ? (
         <div className="flex justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-16 space-y-3">
+          <AlertTriangle className="h-8 w-8 text-sub mx-auto" />
+          <p className="text-sm text-sub">
+            読み込みに失敗しました
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-sm text-primary underline"
+          >
+            再読み込み
+          </button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">

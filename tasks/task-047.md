@@ -2,12 +2,12 @@
 id: task-047
 title: APIエラー時のUI表示改善（ホーム・書類一覧・DocumentCard）
 parents: [UI/UX, バグ修正]
-status: waiting
+status: done
 priority: medium
 depends_on: []
 this_week: true
-completed_at: null
-progress: 0
+completed_at: 2026-03-05
+progress: 100
 note: "空表示とエラー表示の区別 + deadline無効日付のフォールバック"
 estimated_hours: 1
 ---

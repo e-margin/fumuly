@@ -22,6 +22,7 @@ interface Document {
 export default function HomePage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [profileIncomplete, setProfileIncomplete] = useState(false);
 
@@ -47,10 +48,17 @@ export default function HomePage() {
       }
 
       // Get urgent/action documents (via API for decryption)
-      const res = await fetch("/api/documents?mode=home");
-      if (res.ok) {
-        const docs = await res.json();
-        setDocuments(docs || []);
+      try {
+        const res = await fetch("/api/documents?mode=home");
+        if (res.ok) {
+          const docs = await res.json();
+          setDocuments(docs || []);
+          setError(false);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
       }
       setLoading(false);
     };
@@ -112,6 +120,19 @@ export default function HomePage() {
       {loading ? (
         <div className="flex justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-16 space-y-3">
+          <AlertTriangle className="h-8 w-8 text-sub mx-auto" />
+          <p className="text-sm text-sub">
+            読み込みに失敗しました
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-sm text-primary underline"
+          >
+            再読み込み
+          </button>
         </div>
       ) : documents.length === 0 ? (
         /* Empty state */
