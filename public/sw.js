@@ -1,5 +1,5 @@
-// BUILD_TIMESTAMP: 2026-03-02T15:37:03.709Z
-const CACHE_NAME = "fumuly-2026-03-02T15-37-03-709Z";
+// BUILD_TIMESTAMP: 2026-03-02T15:45:42.498Z
+const CACHE_NAME = "fumuly-2026-03-02T15-45-42-498Z";
 
 // Install: precache offline page, do NOT skipWaiting
 self.addEventListener("install", (event) => {
