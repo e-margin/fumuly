@@ -177,9 +177,9 @@ export default function DocumentDetailPage() {
         setDoc({ ...doc, ...updated });
         setFieldsChanged(false);
       } else {
-        // 再生成は成功したがDB保存に失敗 → 画面だけ更新
+        // 再生成は成功したがDB保存に失敗 → 画面は更新するが再試行可能に
         setDoc({ ...doc, ...regenerated });
-        setFieldsChanged(false);
+        alert("サマリーは更新されましたが、保存に失敗しました。再度お試しください");
       }
     } catch {
       alert("再生成に失敗しました");
