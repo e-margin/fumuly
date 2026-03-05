@@ -84,3 +84,21 @@ CREATE POLICY "Users can update own profile"
 
 ### VIP付与方法
 Supabase Dashboard → Table Editor → profiles → 対象ユーザーの is_vip を true に変更
+
+### 本番環境移行（2026-03-05）
+
+Stripe審査通過後、サンドボックス→本番モードへ切り替え。
+
+#### 本番で作成したリソース
+- 商品: `prod_U5fyCorXI742qP`（Fumuly プレミアムプラン）
+- 月額Price: `price_1T7Ucs72vnPgRIYViilKK1L7`（480円/月）
+- 年額Price: `price_1T7Ucu72vnPgRIYVMpWVYZOR`（4,400円/年）
+- Webhook: `https://fumuly.com/api/stripe/webhook`（エンドポイントID: `we_1T7Ud072vnPgRIYVJnRyFcmY`）
+
+#### Vercel環境変数（本番値に更新済み）
+- `STRIPE_SECRET_KEY` → `sk_live_...`
+- `STRIPE_WEBHOOK_SECRET` → `whsec_...`
+- `STRIPE_MONTHLY_PRICE_ID` → `price_1T7Ucs72vnPgRIYViilKK1L7`
+- `STRIPE_YEARLY_PRICE_ID` → `price_1T7Ucu72vnPgRIYVMpWVYZOR`
+
+コード変更なし。環境変数の差し替えのみで本番化完了。
