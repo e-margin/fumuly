@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <h1 className="text-xl font-bold text-foreground">
           プライバシーポリシー
         </h1>
-        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 改定日：2026年3月2日</p>
+        <p className="text-sub text-sm">制定日：2026年2月23日 ／ 改定日：2026年3月5日</p>
 
         <p>
           E-margin（以下「当方」）は、Fumuly（フムリー）（以下「本サービス」）における個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
@@ -141,9 +141,40 @@ export default function PrivacyPage() {
         <h2 className="text-base font-bold mt-8">
           第7条（Cookie・トラッキング）
         </h2>
+        <p className="font-semibold">1. Cookie</p>
         <p>
-          本サービスは、認証セッションの管理のためにCookieを使用します。ブラウザの設定によりCookieを無効にすることができますが、一部機能が利用できなくなる場合があります。
+          本サービスは、認証セッションの管理のためにCookieを使用します。ブラウザの設定によりCookieを無効にすることができますが、一部機能が利用できなくなる場合があります。PWA（ホーム画面に追加したアプリ）として利用する場合も同様にCookieが使用されます。
         </p>
+        <p className="font-semibold">2. Google アナリティクス</p>
+        <p>
+          本サービスは、利用状況の把握とサービス改善のためにGoogle
+          LLC が提供する Google アナリティクスを使用しています。Google
+          アナリティクスはCookieを使用してアクセス情報を収集しますが、個人を特定する情報は含まれません。収集されたデータはGoogleのプライバシーポリシーに基づいて管理されます。
+        </p>
+        <ul>
+          <li>
+            Googleのプライバシーポリシー：
+            <a
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              https://policies.google.com/privacy
+            </a>
+          </li>
+          <li>
+            Google アナリティクスのオプトアウト：
+            <a
+              href="https://tools.google.com/dlpage/gaoptout"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              https://tools.google.com/dlpage/gaoptout
+            </a>
+          </li>
+        </ul>
 
         <h2 className="text-base font-bold mt-8">第8条（広告について）</h2>
         <p>
