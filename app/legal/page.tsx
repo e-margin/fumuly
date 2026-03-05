@@ -2,9 +2,9 @@ import { BackLink } from "@/components/fumuly/back-link";
 
 const rows = [
   { label: "販売業者", value: "E-margin" },
-  { label: "代表者", value: "武田 昌之" },
-  { label: "所在地", value: "〒193-0821 東京都八王子市川町244-32" },
-  { label: "電話番号", value: "090-3720-8018（お問い合わせ対応：平日10:00〜18:00）" },
+  { label: "代表者", value: "請求があった場合、遅滞なく開示いたします" },
+  { label: "所在地", value: "請求があった場合、遅滞なく開示いたします" },
+  { label: "電話番号", value: "請求があった場合、遅滞なく開示いたします" },
   {
     label: "メールアドレス",
     value: "support@fumuly.com（お問い合わせ対応：平日10:00〜18:00）",
