@@ -157,7 +157,7 @@ export default function LandingPage() {
           </h2>
         </div>
         {/* Snap scroll on mobile, grid on PC */}
-        <div className="flex snap-x snap-mandatory overflow-x-auto gap-5 px-[calc((100vw-75vw)/2)] pb-4 sm:grid sm:grid-cols-3 sm:overflow-visible sm:snap-none sm:gap-8 lg:gap-12 sm:px-4 max-w-3xl sm:mx-auto scrollbar-hide">
+        <div className="flex snap-x snap-mandatory overflow-x-auto gap-5 px-[calc((100vw-75vw)/2)] pb-4 sm:grid sm:grid-cols-3 sm:overflow-visible sm:snap-none sm:gap-8 lg:gap-12 sm:px-4 sm:max-w-3xl sm:mx-auto scrollbar-hide">
           {/* Step 1: 写真を撮る */}
           <div className="snap-center shrink-0 w-[75vw] sm:w-auto flex flex-col items-center text-center">
             <div className="text-sm font-bold text-[#F4845F] mb-3">Step 1</div>
