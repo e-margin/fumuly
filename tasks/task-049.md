@@ -17,3 +17,17 @@ estimated_hours: 1
 
 ## 対応
 - 最後の実行時刻をメモリまたはDBで管理し、一定間隔（例: 1時間）以内は再実行しない
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/documents/route.ts` - `cleanupLastRun` Map（メモリ内）でユーザーごとの最終実行時刻を管理、`CLEANUP_INTERVAL_MS = 60 * 60 * 1000`（1時間）以内は再実行をスキップ
+
+### 実装内容
+- `const cleanupLastRun = new Map<string, number>()` でユーザーIDごとの最終クリーンアップ実行時刻をメモリ内に保持
+- `runAutoCleanup()` 関数の冒頭で `Date.now() - lastRun < CLEANUP_INTERVAL_MS` をチェックし、1時間以内の再実行をスキップ
+- GETリクエストごとにクリーンアップクエリが2本走っていた問題を解消
+- メモリ内管理のため、サーバーレス環境ではインスタンス再起動でリセットされるが、DB負荷軽減としては十分
+
+### 補足
+- Vercelサーバーレス環境ではインスタンスが再起動するとMapがリセットされるが、頻度は十分低い

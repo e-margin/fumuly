@@ -54,3 +54,21 @@ Render Freeプランは15分アクセスがないとスリープする。
 4. Supabase Auth の Redirect URL に Vercel ドメインを追加
 5. fumuly.com をカスタムドメインとして設定
 6. 動作確認（スキャン・チャット・認証）
+
+## 実装内容
+
+### 変更ファイル
+- `next.config.ts` - `output: "standalone"` を削除（空の設定に）
+- Vercel Dashboard - GitHubリポジトリをインポート、環境変数設定、カスタムドメイン設定
+- Supabase Dashboard - Redirect URLにVercelドメインを追加
+
+### 実装内容
+- Render FreeからVercel Hobbyプランに移行
+- `next.config.ts` から `output: "standalone"` を削除（Vercelでは不要）
+- GitHub連携によるVercel自動デプロイを設定
+- 環境変数（SUPABASE_URL、ANTHROPIC_API_KEY等）をVercelダッシュボードで設定
+- fumuly.comをカスタムドメインとしてVercelに設定
+- 動作確認完了（スキャン・チャット・認証）
+
+### 補足
+- Vercel HobbyプランはCron Jobsが1日1回制限。後にProプラン（$20/月）へ移行（task-057時）

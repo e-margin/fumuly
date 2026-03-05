@@ -24,3 +24,15 @@ AI解析で金額を読み取れなかった（amount: null）書類に対して
 ### 書類詳細画面
 - `doc.amount == null` の場合にも「金額を追加」リンクを表示
 - 入力→DB保存の流れはamount編集と同じ
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/documents/[id]/page.tsx` - `doc.amount == null` の場合に「+ 金額を追加」ボタンを表示し、タップで編集モードに切り替え
+- `app/(main)/scan/page.tsx` - 解析結果の金額表示部分に常に「金額を修正」ボタンを表示（amountがnullでも修正可能）
+
+### 実装内容
+- 書類詳細ページで `doc.amount == null` の場合、「+ 金額を追加」リンクを表示
+- タップすると `setAmountInput(""); setEditingAmount(true)` で金額入力モードに切り替わる
+- 入力→確定のフローは既存の金額編集と同じ仕組みを再利用
+- スキャン結果画面でも金額修正ダイアログからnullの金額に値を設定可能

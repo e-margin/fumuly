@@ -35,3 +35,17 @@ estimated_hours: 0.1
 - `app/privacy/page.tsx`
 - `app/(auth)/onboarding/page.tsx` — 同意説明テキスト
 - `app/(main)/settings/page.tsx` — handleDeleteAllでauth.usersも削除
+
+## 実装内容
+
+### 変更ファイル
+- `app/privacy/page.tsx` - Anthropicへの送信データ範囲を「画像」から「画像・解析済みテキスト・プロフィール情報・会話履歴」に更新
+- `app/(auth)/onboarding/page.tsx` - 同意説明テキストを「画像はAnthropicで処理されます」から「テキストデータ・プロフィール情報もAnthropicに送信」に修正
+- `app/api/delete-account/route.ts` - アカウント削除APIを新規作成（documents/conversations/profiles/push_subscriptions/reminders + auth.usersを一括削除）
+- `app/(main)/settings/page.tsx` - `handleDeleteAll` を `/api/delete-account` API経由に変更し、auth.usersも含めた完全削除に対応
+
+### 実装内容
+- プライバシーポリシーのAnthropicへの送信データ範囲を実態と一致するよう修正
+- オンボーディング画面の同意説明を実態と一致するよう修正
+- アカウント削除時にSupabase auth.usersからもユーザーを削除するAPIを実装（supabaseAdmin.auth.admin.deleteUser）
+- 設定画面の全データ削除を専用API経由に変更

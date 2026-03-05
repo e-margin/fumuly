@@ -35,3 +35,12 @@ try {
 ## 作業メモ（2026-03-01）
 - `analyzeDocument` と `regenerateSummary` の両方の `JSON.parse` にtry/catchを追加
 - パース失敗時はユーザー向けの日本語エラーメッセージをthrow
+
+## 実装内容
+
+### 変更ファイル
+- `lib/claude.ts` - `analyzeDocument()` の `JSON.parse(cleaned)` にtry/catchを追加、`regenerateSummary()` にも同様に追加
+
+### 実装内容
+- `analyzeDocument()` の `JSON.parse` にtry/catchを追加し、パース失敗時に `console.error` でRaw responseをログ出力後、「解析結果の読み取りに失敗しました。もう一度お試しください」をthrow
+- `regenerateSummary()` にも同様にtry/catchを追加し、「再生成結果の読み取りに失敗しました。もう一度お試しください」をthrow

@@ -29,3 +29,20 @@ estimated_hours: 1
 - Email Routing有効化、MX/TXT/DKIMレコード自動追加
 - `support@fumuly.com` を作成し、メール転送の動作確認済み
 - 当初の `support@fumuly.com` ではなく `support@fumuly.com` で作成（プライバシーポリシー等の記載も要更新）
+
+## 実装内容
+
+### 変更ファイル
+- Cloudflare Dashboard - ドメイン追加、Email Routing設定、MX/TXT/DKIMレコード設定
+- お名前ドットコム - ネームサーバーをCloudflareに変更（paris.ns.cloudflare.com / vern.ns.cloudflare.com）
+- Cloudflare DNS - Vercel向けレコード設定（A: 76.76.21.21、CNAME: cname.vercel-dns.com）
+
+### 実装内容
+- Cloudflareアカウント作成、fumuly.comをドメインとして追加
+- お名前ドットコムのネームサーバーをCloudflareに委譲
+- Vercel向けDNSレコード（A / CNAME）をDNS onlyモードで設定
+- Email Routing有効化、MX/TXT/DKIMレコード自動追加
+- `support@fumuly.com` の転送ルールを作成し、メール受信を確認済み
+
+### 補足
+- コードベースの変更はなし（インフラ設定のみ）

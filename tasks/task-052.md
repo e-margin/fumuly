@@ -29,3 +29,16 @@ estimated_hours: 2
 - `app/(main)/documents/[id]/page.tsx` — 再生成ボタンと呼び出しロジック追加
 - `/api/regenerate` — 既存APIをそのまま利用（変更なし）
 - `/api/documents` PATCH — 再生成結果の保存（summary/recommended_action/detailed_summary更新）
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/documents/[id]/page.tsx` - `fieldsChanged` state + `handleRegenerate()` 関数を追加。フィールド編集後に「サマリーを再生成」ボタンを表示、クリックで `/api/regenerate` → `/api/documents` PATCH(update_summaries) の2段階処理
+- `app/api/documents/route.ts` - PATCH action=`update_summaries` を新規追加（summary/recommended_action/detailed_summaryを暗号化して保存）
+
+### 実装内容
+- 書類詳細ページでsender/type/amount/deadline/categoryのいずれかを編集すると `fieldsChanged = true` になり、「内容が変更されました — サマリーを再生成」ボタンが表示される
+- ボタンクリックで既存の `/api/regenerate` APIを呼び出し、再生成結果を取得
+- 取得した結果を `/api/documents` PATCH(action=update_summaries)で暗号化してDBに保存
+- 再生成成功後に `fieldsChanged = false` でボタンを非表示に
+- DB保存失敗時は画面上は更新するが再試行可能な状態を維持

@@ -38,3 +38,15 @@ estimated_hours: 0.1
 - 無限スクロールやページネーションUIは、実際にパフォーマンス問題が顕在化してから検討する
 
 ※ チャット履歴の件数制限（ユーザーごと最新50件を保持・超過分を自動削除）はtask-027で別途対応済み
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/documents/route.ts` - GET mode=home/all/past で `.select()` に必要なカラムのみ指定（`detailed_summary` を除外）
+
+### 実装内容
+- 書類一覧（mode=all）のselectを `id, sender, type, amount, deadline, category, summary, recommended_action, is_done, created_at` に限定
+- ホーム（mode=home）のselectを `id, sender, type, amount, deadline, category, summary, recommended_action, is_done` に限定
+- 過去の書類（mode=past）のselectも必要カラムのみに限定
+- 単体取得（id指定）は `select("*")` のまま（詳細表示に全カラム必要）
+- ページネーションは見送り（件数が限定的なため）

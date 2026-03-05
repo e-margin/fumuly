@@ -86,3 +86,17 @@ AuthGuardの `visibilitychange` ハンドラで、タブ復帰時にも
 - `components/fumuly/auth-guard.tsx` — メイン修正
 - `lib/supabase.ts` — Cookie有効期限延長
 - `middleware.ts` — 参考（ミドルウェアレベルのセッション処理）
+
+## 実装内容
+
+### 変更ファイル
+- `components/fumuly/auth-guard.tsx` - `getUser()` 失敗時に `refreshSession()` を試行、サーバーエラー(status>=500)とネットワークエラー(fetchエラー)時はリダイレクトしない、デバウンス(5秒)追加
+- `lib/supabase.ts` - Cookie有効期限を `maxAge: 86400 * 30`（30日）に設定
+
+### 実装内容
+- AuthGuardで `getUser()` がnullを返した場合、即リダイレクトせず `refreshSession()` でリフレッシュトークンによるセッション復活を試行
+- リフレッシュも失敗した場合のみ `/login` にリダイレクト
+- サーバーエラー（status >= 500）やネットワークエラー（fetchエラー）時はリダイレクトしない（オフライン対応）
+- try-catchでネットワーク例外もキャッチ
+- Cookie有効期限を30日に延長し、PWA閉じ→再開時のセッション維持を改善
+- `lastCheckRef` でデバウンス（5秒以内の重複チェックをスキップ）

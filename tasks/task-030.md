@@ -19,3 +19,12 @@ estimated_hours: 0.05
 ## 対応
 
 - `app/(main)/documents/[id]/page.tsx` の金額保存処理で `error` 時に `alert("保存に失敗しました")` を追加
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/documents/[id]/page.tsx` - 金額保存のPATCHリクエスト失敗時に `alert("保存に失敗しました")` を追加
+
+### 実装内容
+- 金額編集の確定時にPATCHリクエストのレスポンスをチェックし、`!res.ok` の場合に `alert("保存に失敗しました")` を表示
+- 成功時のみ `setDoc` でUI更新を行うよう制御

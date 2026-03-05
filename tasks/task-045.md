@@ -17,3 +17,15 @@ estimated_hours: 0.5
 
 ## 対応
 - API側のレスポンスで更新後の書類データを返し、クライアントはそれで `setDoc` を上書きする
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/documents/route.ts` - PATCH `toggle_done`/`toggle_archive` で既存のDB状態（`existing.is_done`/`existing.is_archived`）を参照して反転、更新後の書類データを `.select()` で返却
+- `app/(main)/documents/[id]/page.tsx` - `toggleDone`/`toggleArchive` でAPIレスポンスの更新後データで `setDoc` を上書き
+
+### 実装内容
+- API側でDB状態ベースの反転を実施: `const newDone = !existing.is_done` のようにDBから取得した現在値を使用
+- PATCHレスポンスで更新後の書類データ（is_done/done_at/is_archived/archived_at等）を返却
+- クライアント側は `const updated = await res.json(); setDoc({ ...doc, ...updated })` でAPIレスポンスを信頼してUI更新
+- 複数タブで操作しても、各タブがDBの最新状態に基づいて更新されるため矛盾が解消

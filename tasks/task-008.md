@@ -20,3 +20,19 @@ estimated_hours: 3
 3. ネットワークエラー時のオフライン検知と案内
 4. Supabase接続エラー時の案内
 5. 認証切れ時の自動リダイレクト
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/analyze/route.ts` - Claude APIエラー時の具体的メッセージ（529/503でAI混雑案内、その他で撮り直し案内）
+- `app/api/chat/route.ts` - Claude APIエラー時の具体的メッセージ（混雑/接続失敗/応答形式エラーなど分岐）、401認証エラー返却
+- `app/(main)/chat/page.tsx` - オフライン検知（`navigator.onLine`）、401でログイン画面リダイレクト、エラー時の日本語メッセージ表示
+- `app/(main)/scan/page.tsx` - 401でログイン画面リダイレクト、429でレート制限メッセージ、オフライン検知
+- `components/fumuly/auth-guard.tsx` - `getUser()` 失敗時に `refreshSession()` を試行、サーバーエラー/ネットワークエラー時はリダイレクトしない
+
+### 実装内容
+- APIルートで529/503（Claude API過負荷）を検知し「AIが混み合っています」メッセージを返却
+- 接続失敗（fetch failed/ECONNREFUSED/ETIMEDOUT）を検知し「接続に失敗しました」メッセージを返却
+- フロントエンドで `navigator.onLine` によるオフライン検知を実装
+- 401レスポンス時にクライアント側から `/login` へ自動リダイレクト
+- AuthGuardでネットワークエラー時はリダイレクトせずオフライン利用を許容

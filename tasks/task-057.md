@@ -62,3 +62,27 @@ CREATE TABLE push_subscriptions (
 
 ## 追加改善（2026-03-05）
 - 設定画面のプッシュ通知トグルUIを自作CSS実装からshadcn/ui `Switch`コンポーネントに置き換え（表示ズレ修正）
+
+## 実装内容
+
+### 変更ファイル
+- `supabase/schema.sql` - `push_subscriptions` テーブルを新規作成（id, user_id, endpoint, keys_p256dh, keys_auth, UNIQUE(user_id, endpoint)）
+- `app/api/push/subscribe/route.ts` - POST（Subscription保存、upsert）、DELETE（Subscription削除）を新規作成
+- `app/api/push/send/route.ts` - POST（Cronジョブから呼ばれ、期限到来リマインダーをWeb Push送信）を新規作成
+- `public/sw.js` - `push` イベントハンドラ（通知表示）、`notificationclick` イベントハンドラ（タップでアプリ画面を開く）を追加
+- `app/(main)/settings/page.tsx` - プッシュ通知のON/OFFトグルUI（`Switch` コンポーネント）を追加
+- `components/ui/switch.tsx` - shadcn/ui Switchコンポーネントを追加
+- `vercel.json` - Cron設定（`/api/push/send` を15分間隔で実行）
+
+### 実装内容
+- VAPID鍵を生成し、`NEXT_PUBLIC_VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` としてVercel環境変数に設定
+- `push_subscriptions` テーブルでユーザーのPush Subscription（endpoint/keys）を管理
+- 設定画面にプッシュ通知トグルUIを追加: ONで `Notification.requestPermission()` → `pushManager.subscribe()` → API保存、OFFで `unsubscribe()` → API削除
+- Service Workerに `push` イベントハンドラを追加: 通知表示（タイトル、本文、アイコン、タグ）
+- `notificationclick` ハンドラ: 既存ウィンドウがあればフォーカス、なければ新規ウィンドウを開く
+- Vercel Cron（15分間隔）で `/api/push/send` を実行: remind_at が到来したリマインダーを検出し、web-pushライブラリでプッシュ通知を送信
+- 410/404レスポンスの無効なSubscriptionを自動削除
+- N+1クエリ回避: ユーザーIDをまとめてSubscriptionを一括取得
+
+### 補足
+- Vercel Proプラン必須（15分間隔のCron Jobs）。Hobbyプランでは1日1回制限のためデプロイがブロックされる

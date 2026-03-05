@@ -17,3 +17,13 @@ estimated_hours: 0.5
 
 ## 対応
 - `origin` の取得をやめ、`process.env.NEXT_PUBLIC_APP_URL || "https://fumuly.com"` に固定する
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/stripe/checkout/route.ts` - `req.headers.get("origin")` を `process.env.NEXT_PUBLIC_APP_URL || "https://fumuly.com"` に変更
+- `app/api/stripe/portal/route.ts` - 同様に `origin` を環境変数ベースに変更
+
+### 実装内容
+- Stripe Checkout/Portal APIの `success_url`/`cancel_url`/`return_url` で使用するoriginを、リクエストヘッダーからの取得をやめ、`process.env.NEXT_PUBLIC_APP_URL || "https://fumuly.com"` に固定
+- 悪意あるクライアントがOriginヘッダーを偽装して任意URLにリダイレクトさせるオープンリダイレクト脆弱性を解消

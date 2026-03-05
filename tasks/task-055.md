@@ -53,3 +53,18 @@ CREATE TABLE reminders (
 ## 追加改善（2026-03-05）
 - カスタム日時の手入力UI（`datetime-local`）を追加。プリセット選択に加え、任意の日時でリマインダーを設定可能に
 - 期限（deadline）がない書類でもリマインダーを追加可能に変更（「この日に対応する」的な使い方に対応）
+
+## 実装内容
+
+### 変更ファイル
+- `supabase/schema.sql` - `reminders` テーブルを新規作成（id, user_id, document_id, remind_at, type, is_sent, created_at）
+- `app/api/reminders/route.ts` - GET（一覧/upcoming/書類別）、POST（作成、バリデーション・重複チェック・上限50件チェック付き）、DELETE（削除）を新規作成
+- `app/(main)/documents/[id]/page.tsx` - リマインダーセクション追加（既存リマインダー一覧、プリセット選択、カスタム日時入力、削除）
+- `app/(main)/home/page.tsx` - 直近3日以内のリマインダーをバナー表示（Bellアイコン、残り時間ラベル）
+
+### 実装内容
+- `reminders` テーブルをDBに作成し、書類ごと・ユーザーごとのリマインダー管理を実装
+- API: GET（mode=upcoming: 未送信かつ未来のリマインダー）、POST（所有権確認、重複チェック、上限50件チェック、UUID・日時バリデーション）、DELETE（所有権確認付き）
+- 書類詳細ページにリマインダーセクションを追加: プリセット（当日/1日前/3日前/1週間前）とカスタム日時(`datetime-local`)の入力UI
+- ホーム画面に直近3日以内のリマインダーをバナー表示（残り時間ラベル付き）
+- 期限がない書類でもカスタム日時でリマインダーを追加可能

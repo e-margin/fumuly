@@ -39,3 +39,16 @@ estimated_hours: 6
 - IndexedDB保存時の容量管理（task-006と連携）
 - フロント側で画像リサイズが必須（task-016）。Claude APIは内部で長辺1568pxに自動縮小するため、送信前に1568pxにリサイズしても解析精度は変わらない
 - Vercel移行時は4.5MBのボディ制限があるが、リサイズ後なら1枚300-500KB程度になるため10枚でも余裕
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/scan/page.tsx` - 複数画像のキャプチャ・サムネイル表示・追加/削除UI、`images[]` 配列でAPIに送信
+- `app/api/analyze/route.ts` - `body.images` 配列を受け取る対応（`body.image` との後方互換あり）、5枚上限・サイズチェック
+- `lib/claude.ts` - `analyzeDocument()` が `string | string[]` を受け取り、複数image contentをClaude APIに送信。「複数画像は同一書類として解析」指示をシステムプロンプトに追加
+
+### 実装内容
+- スキャン画面をステートマシン的に再設計: 0枚→撮影ボタン、1枚以上→サムネイルグリッド+追加ボタン+解析ボタン
+- 画像は最大5枚まで（`MAX_IMAGES = 5`）、各画像にサムネイル番号と削除ボタンを表示
+- APIリクエストを `{ images: string[] }` 形式に変更し、レガシーの `{ image: string }` も後方互換でサポート
+- Claude APIに複数のimage contentブロックを送信し、全体を1つの書類として解析

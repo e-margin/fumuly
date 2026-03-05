@@ -40,3 +40,16 @@ Supabase DB操作の結果を確認せず楽観的更新しているコード全
 
 - 各所で `{ error }` を確認し、失敗時にユーザーへ通知
 - getUser() null時の早期returnでローディング状態をリセット
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/scan/page.tsx` - `saveDocument()` をtry/catchで囲み、DB保存失敗時にalert表示・`setSaving(false)` でローディング解除
+- `app/(main)/documents/[id]/page.tsx` - `toggleDone`/`toggleArchive`/`handleDelete` でAPIレスポンスのエラーチェックとalert表示、`setDeleting(false)` 追加
+- `app/(main)/settings/page.tsx` - `handleDeleteAll` を `/api/delete-account` API経由に変更し、エラーハンドリング・ローディング解除を実装
+- `app/(main)/settings/profile/page.tsx` - プロフィール保存を `/api/profile` PUT経由に変更（暗号化対応と合わせて）
+
+### 実装内容
+- 各DB操作の結果を確認し、失敗時にユーザーへalert通知を追加
+- ローディング状態（saving/deleting/updating）がエラー時に固着しないよう、finally/catchでリセット
+- `handleDeleteAll` は専用API（`/api/delete-account`）経由に変更し、サーバーサイドで一括削除

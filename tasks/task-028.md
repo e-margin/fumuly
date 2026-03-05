@@ -35,3 +35,17 @@ Service Workerの2つの問題を修正する。
 ### キャッシュ名
 - `next.config.ts` のビルド時にSWのCACHE_NAMEを書き換えるスクリプト
 - または `fumuly-${Date.now()}` のようなテンプレート
+
+## 実装内容
+
+### 変更ファイル
+- `public/offline.html` - オフラインフォールバックページを新規作成（日本語UI、再読み込みボタン、online復帰時の自動リロード）
+- `public/sw.js` - installイベントで `offline.html` をプリキャッシュ、fetchのナビゲーションリクエストでnetwork-first→cache→offline.htmlのフォールバックチェーン、静的アセットのcache-first戦略、CACHE_NAMEにビルドタイムスタンプを含める
+
+### 実装内容
+- `public/offline.html` を作成: 「インターネットに接続されていません」メッセージ、再読み込みボタン、`window.addEventListener('online', ...)` で自動リロード
+- Service Workerのinstallイベントで `offline.html` をプリキャッシュ
+- ナビゲーションリクエストでネットワーク失敗時にキャッシュ→`offline.html` の順でフォールバック
+- `_next/static/` のアセットはcache-first戦略
+- CACHE_NAMEを `fumuly-{ビルドタイムスタンプ}` 形式にし、activateイベントで古いキャッシュを自動削除
+- `clients.claim()` でactivate直後に全タブを制御

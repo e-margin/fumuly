@@ -40,3 +40,19 @@ estimated_hours: 1
 
 ### 推奨：環境変数化
 将来的に `NEXT_PUBLIC_APP_URL` を導入し、ハードコードを排除する。
+
+## 実装内容
+
+### 変更ファイル
+- `app/legal/page.tsx` - サービスURLを `https://fumuly.com` に更新
+- `app/layout.tsx` - metadataBaseを `https://fumuly.com` に設定、OGP URLも統一
+- `public/manifest.json` - start_urlの確認（相対パス `/` のため変更不要）
+- Supabase Dashboard - Site URLとRedirect URLsにfumuly.comを追加
+- Vercel Dashboard - fumuly.comをカスタムドメインとして設定
+
+### 実装内容
+- ハードコードされていたURL（`https://fumuly.onrender.com`）を `https://fumuly.com` に統一
+- `app/layout.tsx` の `metadataBase` を `new URL("https://fumuly.com")` に設定
+- OGP（openGraph.url）、twitter cardのURLもfumuly.comに統一
+- Supabase AuthのRedirect URLにVercelドメインとfumuly.comを追加
+- Vercel Dashboardでfumuly.comをカスタムドメインに設定済み

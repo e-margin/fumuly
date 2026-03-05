@@ -24,3 +24,12 @@ estimated_hours: 1
 
 ## 作業メモ（2026-03-01）
 - `app/(main)/home/page.tsx` のルートdivに `pb-36` を追加（FAB + ボトムナビ分のパディング）
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/home/page.tsx` - ルートdivに `pb-36` クラスを追加
+
+### 実装内容
+- ホーム画面のルートdivに `pb-36`（padding-bottom: 9rem）を追加し、FAB（AIに相談ボタン）とボトムナビゲーションバーの高さ分のスペースを確保
+- 最下部のドキュメントカードとFABの重なりを解消

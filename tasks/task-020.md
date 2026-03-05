@@ -26,3 +26,12 @@ WCAG 1.4.4 違反。ユーザーがピンチズームで拡大できない。督
 ```
 
 1行削除。
+
+## 実装内容
+
+### 変更ファイル
+- `app/layout.tsx` - viewport設定から `maximumScale: 1` を削除
+
+### 実装内容
+- `app/layout.tsx` の `Viewport` 設定から `maximumScale: 1` を削除し、ピンチズームを許可
+- WCAG 1.4.4（テキストのリサイズ）に準拠

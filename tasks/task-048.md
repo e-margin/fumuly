@@ -21,3 +21,14 @@ estimated_hours: 1
 1. chat APIの認証チェック順序を修正
 2. documents POST に基本的なバリデーション追加
 3. regenerateのレート制限を再生成リクエスト自体のカウントに変更（または制限方法の見直し）
+
+## 実装内容
+
+### 変更ファイル
+- `app/api/chat/route.ts` - 認証チェックをbodyパースより先に移動（bodyパース前に認証を実施）
+- `app/api/documents/route.ts` - POST時にsender/typeの型・存在チェック、categoryの有効値チェックを追加
+
+### 実装内容
+- チャットAPIの認証チェック順序を修正: `req.json()` でbodyをパースする前に `getUser()` で認証を実施し、未認証リクエストの不要なbodyパースを防止
+- ドキュメントPOSTにバリデーション追加: `sender`/`type` が文字列かつ空でないことをチェック、`category` が `urgent/action/keep/ignore` のいずれかであることをチェック
+- regenerateのレート制限については現状維持と判断（使用頻度が低く、他のレート制限で十分カバー）

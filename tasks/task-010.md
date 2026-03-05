@@ -22,3 +22,14 @@ estimated_hours: 0.5
 - 最新モデルIDの正確な確認が必要（APIドキュメント参照）
 - モデル変更による応答品質・速度・コストの変化を検証
 - 書類解析の精度が落ちないか、テスト書類で確認してから適用
+
+## 実装内容
+
+### 変更ファイル
+- `lib/claude.ts` - model指定を `claude-sonnet-4-6` に更新（analyzeDocument関数・regenerateSummary関数の両方）
+- `app/api/chat/route.ts` - model指定を `claude-sonnet-4-6` に更新
+
+### 実装内容
+- 書類解析API（`lib/claude.ts`）のモデルを `claude-sonnet-4-6` に更新
+- チャットAPI（`app/api/chat/route.ts`）のモデルを `claude-sonnet-4-6` に更新
+- 再生成API（`lib/claude.ts` の `regenerateSummary`）のモデルも同様に更新

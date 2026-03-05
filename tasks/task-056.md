@@ -35,3 +35,19 @@ https://calendar.google.com/calendar/r/eventedit?
 - iOSカレンダーには非対応（Google Calendar URLスキームのため）
 - ファイルダウンロードが不要なのでゴミファイル問題なし
 - 将来的にiOS対応が必要なら `.ics` を追加検討
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/documents/[id]/page.tsx` - リマインダーセクション内に「Googleカレンダーに期限を追加」ボタンを追加、`getCalendarUrl()` 関数を実装
+
+### 実装内容
+- `getCalendarUrl()` 関数を実装: Google Calendar URLスキーム（`https://calendar.google.com/calendar/r/eventedit`）でイベント作成画面を生成
+- タイトル: 「【fumuly】{送付元} {書類種別}の期限」
+- 日付: 期限日を終日イベントとして設定（翌日を終了日に）
+- 詳細: サマリーと推奨アクションを含める
+- 過去の期限にはボタンを非表示、対応済み/アーカイブ済みにもボタンを非表示
+- `target="_blank" rel="noopener noreferrer"` で新しいタブで開く（OAuth不要）
+
+### 補足
+- iOSカレンダーには非対応（Google Calendar URLスキームのため）。将来的に `.ics` ファイルでの対応を検討

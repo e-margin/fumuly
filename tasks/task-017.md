@@ -65,3 +65,16 @@ export async function resizeImage(
 
 ### scan/page.tsx の変更
 `handleCapture` 内でリサイズ関数を呼び出し、リサイズ後のdataUrlをプレビューとBase64に設定する。
+
+## 実装内容
+
+### 変更ファイル
+- `lib/image.ts` - `resizeImage()` 関数を新規作成（Canvas APIで長辺1568pxにリサイズ、JPEG quality 0.85）
+- `app/(main)/scan/page.tsx` - `processFile()` 内で `resizeImage()` を呼び出し、リサイズ後のdataURLをプレビュー・Base64に使用
+
+### 実装内容
+- `lib/image.ts` に `resizeImage(dataUrl, maxSize=1568)` 関数を作成
+- Canvas APIで画像を長辺1568pxに縮小し、JPEG形式（quality 0.85）で出力
+- 元画像が1568px以下の場合でもCanvas経由でJPEGに変換（media_typeの一貫性を保証）
+- `img.onerror` ハンドリングを追加し、画像読み込み失敗時にエラーをreject
+- スキャン画面の `processFile()` で `resizeImage()` を呼び出し、リサイズ後のデータを使用

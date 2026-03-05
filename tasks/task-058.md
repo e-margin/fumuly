@@ -31,3 +31,20 @@ estimated_hours: 3
 - 金額編集と同じパターン（タップで編集モード→確定/キャンセル）
 - 変更があったフィールドをハイライト表示
 - 1つでも変更があれば「サマリーを再生成」ボタンを表示（task-052）
+
+## 実装内容
+
+### 変更ファイル
+- `app/(main)/documents/[id]/page.tsx` - sender/type/deadline/categoryの各フィールドにインライン編集UI（Pencilアイコン→入力→確定ボタン）を実装
+
+### 実装内容
+- task-052の実装時にsender/type/deadline/categoryの編集機能も同時に実装済み
+- 各フィールドの編集パターン: タップでPencilアイコン→入力モード（`editingField` state）→Checkボタンで確定（`saveField()` で `/api/documents` PATCHを呼び出し）
+- sender: テキスト入力
+- type: テキスト入力
+- deadline: テキスト入力（「例: 2026年4月30日」プレースホルダー付き）
+- category: PriorityBadgeタップでurgent→action→keep→ignoreのサイクル切替え
+- 変更後は `fieldsChanged = true` となり、task-052の再生成ボタンと連動
+
+### 補足
+- task-052の実装と同時に完了したため、個別の変更差分はなし
