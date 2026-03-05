@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     const { data } = await supabaseAdmin
       .from("profiles")
-      .select("income_type, monthly_income, debt_total, has_adhd, phone_difficulty, current_situation, onboarding_done")
+      .select("display_name, income_type, monthly_income, debt_total, has_adhd, phone_difficulty, current_situation, onboarding_done")
       .eq("id", user.id)
       .single();
 
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       data.current_situation = decrypt(data.current_situation);
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json({ ...data, email: user.email });
   } catch (error) {
     console.error("Profile GET error:", error);
     return NextResponse.json({ error: "サーバーエラー" }, { status: 500 });
@@ -63,7 +63,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const updates = {
+    const updates: Record<string, unknown> = {
       income_type: body.income_type || null,
       monthly_income: body.monthly_income ?? null,
       debt_total: body.debt_total ?? null,
@@ -72,6 +72,11 @@ export async function PUT(req: NextRequest) {
       current_situation: body.current_situation ? encrypt(body.current_situation) : null,
       onboarding_done: true,
     };
+
+    // display_name が送られた場合のみ更新
+    if ("display_name" in body) {
+      updates.display_name = body.display_name || null;
+    }
 
     const { error } = await supabaseAdmin
       .from("profiles")

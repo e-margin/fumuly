@@ -6,9 +6,18 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, Loader2, Check, Pencil } from "lucide-react";
+import { ChevronLeft, Loader2, Check, Pencil, Mail, Lock, UserCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const incomeTypes = [
   { value: "salary", label: "給与（会社員）" },
@@ -20,6 +29,8 @@ const incomeTypes = [
 ];
 
 type Profile = {
+  display_name: string | null;
+  email: string | null;
   income_type: string | null;
   monthly_income: number | null;
   debt_total: number | null;
@@ -35,6 +46,15 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  // Account state
+  const [displayName, setDisplayName] = useState("");
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [savingEmail, setSavingEmail] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
 
   // Form state
   const [incomeType, setIncomeType] = useState("");
@@ -56,6 +76,7 @@ export default function ProfilePage() {
       const data = await res.json();
       if (data) {
         setProfile(data);
+        setDisplayName(data.display_name ?? "");
         setIncomeType(data.income_type ?? "");
         setMonthlyIncome(
           data.monthly_income != null ? String(data.monthly_income) : ""
@@ -83,6 +104,7 @@ export default function ProfilePage() {
     setSaving(true);
 
     const updates = {
+      display_name: displayName || null,
       income_type: incomeType || null,
       monthly_income: monthlyIncome ? parseInt(monthlyIncome) : null,
       debt_total: debtTotal ? parseInt(debtTotal) : null,
@@ -110,7 +132,7 @@ export default function ProfilePage() {
         return;
       }
 
-      setProfile(updates);
+      setProfile({ ...updates, email: profile?.email ?? null });
       setSaving(false);
       setEditing(false);
     } catch {
@@ -154,6 +176,147 @@ export default function ProfilePage() {
       <h1 className="text-xl font-bold text-foreground mb-6">
         プロフィール設定
       </h1>
+
+      {/* Account info section (always visible) */}
+      <div className="bg-white rounded-2xl border p-4 mb-6 space-y-4">
+        <h2 className="text-sm font-bold text-foreground">アカウント情報</h2>
+
+        {/* Display name */}
+        <div>
+          <p className="text-xs text-sub">表示名</p>
+          {editing ? (
+            <Input
+              type="text"
+              placeholder="名前を入力"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="mt-1 h-10"
+            />
+          ) : (
+            <p className="text-sm text-foreground mt-1">{profile?.display_name || "未設定"}</p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-sub">メールアドレス</p>
+            <p className="text-sm text-foreground mt-1">{profile?.email || "未設定"}</p>
+          </div>
+          <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+            <DialogTrigger asChild>
+              <button className="flex items-center gap-1 text-xs text-primary">
+                <Mail className="h-3 w-3" />
+                変更
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>メールアドレスの変更</DialogTitle>
+                <DialogDescription>
+                  新しいメールアドレスを入力してください。
+                </DialogDescription>
+              </DialogHeader>
+              <Input
+                type="email"
+                placeholder="新しいメールアドレス"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="h-12"
+              />
+              <DialogFooter>
+                <Button
+                  onClick={async () => {
+                    setSavingEmail(true);
+                    try {
+                      const res = await fetch("/api/account", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: "update_email", email: newEmail }),
+                      });
+                      if (res.ok) {
+                        setProfile(profile ? { ...profile, email: newEmail } : null);
+                        setEmailDialogOpen(false);
+                        setNewEmail("");
+                      } else {
+                        const data = await res.json().catch(() => null);
+                        alert(data?.error || "変更に失敗しました");
+                      }
+                    } catch {
+                      alert("変更に失敗しました");
+                    }
+                    setSavingEmail(false);
+                  }}
+                  disabled={savingEmail || !newEmail}
+                  className="w-full h-12"
+                >
+                  {savingEmail ? <Loader2 className="h-4 w-4 animate-spin" /> : "変更する"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Password */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-sub">パスワード</p>
+            <p className="text-sm text-foreground mt-1">••••••••</p>
+          </div>
+          <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+            <DialogTrigger asChild>
+              <button className="flex items-center gap-1 text-xs text-primary">
+                <Lock className="h-3 w-3" />
+                変更
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>パスワードの変更</DialogTitle>
+                <DialogDescription>
+                  新しいパスワードを入力してください（6文字以上）。
+                </DialogDescription>
+              </DialogHeader>
+              <Input
+                type="password"
+                placeholder="新しいパスワード"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="h-12"
+              />
+              <DialogFooter>
+                <Button
+                  onClick={async () => {
+                    setSavingPassword(true);
+                    try {
+                      const res = await fetch("/api/account", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: "update_password", password: newPassword }),
+                      });
+                      if (res.ok) {
+                        setPasswordDialogOpen(false);
+                        setNewPassword("");
+                        alert("パスワードを変更しました");
+                      } else {
+                        const data = await res.json().catch(() => null);
+                        alert(data?.error || "変更に失敗しました");
+                      }
+                    } catch {
+                      alert("変更に失敗しました");
+                    }
+                    setSavingPassword(false);
+                  }}
+                  disabled={savingPassword || newPassword.length < 6}
+                  className="w-full h-12"
+                >
+                  {savingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : "変更する"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
 
       {editing ? (
         /* Edit mode */
