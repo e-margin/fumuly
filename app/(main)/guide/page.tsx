@@ -7,6 +7,7 @@ import {
   FileText,
   Shield,
   CircleDot,
+  Footprints,
   Smartphone,
   Image,
   Search,
@@ -124,7 +125,7 @@ export default function GuidePage() {
                 送付元・書類種別・金額・期限・緊急度を自動抽出
               </li>
               <li className="flex items-start gap-2">
-                <CircleDot className="h-3.5 w-3.5 mt-0.5 shrink-0 text-ignore" />
+                <Footprints className="h-3.5 w-3.5 mt-0.5 shrink-0 text-ignore" />
                 次にすべき具体的なアクションを提示
               </li>
             </ul>
