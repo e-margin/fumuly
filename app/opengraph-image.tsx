@@ -7,13 +7,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  const notoSansBold = fetch(
+  const fontData = await fetch(
     new URL(
-      "https://fonts.gstatic.com/s/notosansjp/v53/-F6jfjtqLzI2JPCgQBnw7HFYwQgP-UBF.woff",
+      "https://fonts.gstatic.com/s/notosansjp/v56/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFPYk75s.ttf",
     ),
   ).then((res) => res.arrayBuffer());
-
-  const fontData = await notoSansBold;
 
   return new ImageResponse(
     (
