@@ -58,3 +58,6 @@ next-env.d.ts
 
 # Sample images (testing only)
 docs/sample_pics/
+
+# Screenshots
+screenshots/
