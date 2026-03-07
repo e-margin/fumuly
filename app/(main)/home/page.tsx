@@ -7,6 +7,7 @@ import { DocumentCard } from "@/components/fumuly/document-card";
 import { Button } from "@/components/ui/button";
 import { Camera, MessageCircle, AlertTriangle, Loader2, User, Bell } from "lucide-react";
 import { HomeSkeleton } from "@/components/fumuly/skeletons";
+import { PwaInstallBanner } from "@/components/fumuly/pwa-install-banner";
 
 interface Document {
   id: string;
@@ -127,6 +128,9 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* PWA install banner */}
+      <PwaInstallBanner />
 
       {/* Profile incomplete banner */}
       {profileIncomplete && (
